@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { CommitStrip, PageHero, ProductCard } from '../components/Blocks';
+import { Search } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 import { noAccent } from '../lib/utils';
 
@@ -50,7 +51,7 @@ export default function Products() {
           </aside>
           <div>
             <div className="toolbar">
-              <input className="input search" value={q} onChange={e => setQ(e.target.value)} placeholder="🔍 Tìm sản phẩm..." />
+              <label className="search-wrap"><Search /><input className="input search" value={q} onChange={e => setQ(e.target.value)} placeholder="Tìm sản phẩm..." /></label>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <span style={{ fontSize: 14, color: 'var(--muted)' }}>{list.length} sản phẩm</span>
                 <select className="input" style={{ width: 'auto' }} value={sort} onChange={e => setSort(e.target.value)}>
@@ -60,7 +61,7 @@ export default function Products() {
             </div>
             <div className="grid grid-3">
               {list.length ? list.map(p => <ProductCard key={p.id} p={p} />)
-                : <p className="empty" style={{ gridColumn: '1/-1' }}>Không tìm thấy sản phẩm phù hợp 🙈</p>}
+                : <p className="empty" style={{ gridColumn: '1/-1' }}>Không tìm thấy sản phẩm phù hợp</p>}
             </div>
           </div>
         </div>

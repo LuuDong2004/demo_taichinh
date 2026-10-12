@@ -1,7 +1,8 @@
 import { CommitStrip, PageHero } from '../components/Blocks';
+import { Clock, Mail, Phone, Pin } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 
-const INFO = [['📍', 'Địa chỉ', '123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội'], ['📞', 'Hotline / Zalo', '0900 123 456'], ['✉️', 'Email', 'xinchao@uocmokids.vn'], ['🕗', 'Giờ làm việc', '08:00 – 21:00, cả thứ 7 & chủ nhật']];
+const INFO = [[<Pin size={22} />, 'Địa chỉ', '123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội'], [<Phone size={22} />, 'Hotline / Zalo', '0900 123 456'], [<Mail size={22} />, 'Email', 'xinchao@uocmokids.vn'], [<Clock size={22} />, 'Giờ làm việc', '08:00 – 21:00, cả thứ 7 & chủ nhật']];
 
 export default function Contact() {
   const { setMessages, toast } = useShop();
@@ -24,7 +25,7 @@ export default function Contact() {
               {INFO.map(([i, h, t]) => <div className="info-item" key={h}><span className="ic">{i}</span><div><b>{h}</b><div style={{ color: 'var(--muted)' }}>{t}</div></div></div>)}
             </div>
             <div className="map">
-              <span className="pin">📍</span>
+              <span className="pin"><Pin size={46} /></span>
               <span style={{ position: 'absolute', bottom: 12, fontWeight: 700, color: 'var(--brown)', fontSize: 13 }}>Ước Mơ Kids – Cầu Giấy</span>
             </div>
           </div>

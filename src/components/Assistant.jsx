@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { PageHero } from '../components/Blocks';
 import { aiReply } from '../lib/ai';
 import { money } from '../lib/utils';
+import { Chat, Jar, Pig, Target, X } from './Icons';
 
 const SUGGESTIONS = ['Bé 6 tuổi nên chơi gì?', 'Nên cho con tiêu vặt bao nhiêu?', 'Luật chơi thế nào?', 'Phí giao hàng?', 'Cách dạy con tiết kiệm'];
 const JARS = [['Tiêu', .5, 'var(--orange)'], ['Tiết kiệm', .4, 'var(--green)'], ['Chia sẻ', .1, 'var(--blue)']];
+const TABS = [['chat', Chat, 'Trò chuyện'], ['goal', Target, 'Mục tiêu'], ['jars', Jar, '3 hũ']];
 const Typing = () => <span className="typing"><span /><span /><span /></span>;
 
-function ChatBox() {
-  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! 🐷 Mình là <b>Heo Vàng</b> – trợ lý giúp bố mẹ dạy con về tiền và chọn đồ chơi phù hợp. Bạn cần mình giúp gì?</> }]);
+function ChatPane({ active }) {
+  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! Mình là <b>Heo Vàng</b> – trợ lý giúp bố mẹ dạy con về tiền và chọn đồ chơi phù hợp. Bạn cần mình giúp gì?</> }]);
   const [input, setInput] = useState('');
   const bodyRef = useRef(null);
+  const inputRef = useRef(null);
   const timers = useRef([]);
 
-  useEffect(() => { bodyRef.current.scrollTop = bodyRef.current.scrollHeight; }, [msgs]);
+  useEffect(() => { bodyRef.current.scrollTop = bodyRef.current.scrollHeight; }, [msgs, active]);
+  useEffect(() => { if (active) inputRef.current.focus({ preventScroll: true }); }, [active]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const ask = text => {
@@ -26,11 +29,7 @@ function ChatBox() {
   };
 
   return (
-    <div className="chat">
-      <div className="chat-head">
-        <span className="avatar">🐷</span>
-        <div><b>Heo Vàng – Trợ lý tài chính nhí</b><small>● Đang trực tuyến · trả lời tức thì</small></div>
-      </div>
+    <>
       <div className="chat-body" ref={bodyRef}>
         {msgs.map((m, i) => <div key={i} className={`msg ${m.who}`}>{m.body}</div>)}
       </div>
@@ -38,10 +37,10 @@ function ChatBox() {
         {SUGGESTIONS.map(s => <button key={s} onClick={() => ask(s)}>{s}</button>)}
       </div>
       <form className="chat-form" onSubmit={e => { e.preventDefault(); ask(input); setInput(''); }}>
-        <input className="input" value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi Heo Vàng bất cứ điều gì..." autoComplete="off" />
+        <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi Heo Vàng bất cứ điều gì..." autoComplete="off" />
         <button className="btn btn-sm">Gửi</button>
       </form>
-    </div>
+    </>
   );
 }
 
@@ -51,7 +50,7 @@ function GoalCalculator() {
   const weeks = Math.ceil((goal || 0) / weekly);
   return (
     <div className="panel tool">
-      <h3>🎯 Máy tính mục tiêu tiết kiệm</h3>
+      <h3><Target size={22} />Máy tính mục tiêu tiết kiệm</h3>
       <div className="field"><label>Món đồ bé muốn mua (giá)</label><input className="input" type="number" step="10000" value={goal} onChange={e => setGoal(+e.target.value)} /></div>
       <div style={{ marginTop: 12 }}>
         <div className="range-row"><span>Tiết kiệm mỗi tuần</span><span>{money(weekly)}</span></div>
@@ -68,7 +67,7 @@ function JarSplitter() {
   const [amount, setAmount] = useState(200000);
   return (
     <div className="panel tool">
-      <h3>🫙 Chia 3 hũ tiền</h3>
+      <h3><Jar size={22} />Chia 3 hũ tiền</h3>
       <div className="field"><label>Bé vừa nhận được (đ)</label><input className="input" type="number" step="10000" value={amount} onChange={e => setAmount(+e.target.value)} /></div>
       <div className="result-box">
         {JARS.map(([n, r, c]) => (
@@ -80,19 +79,30 @@ function JarSplitter() {
   );
 }
 
-export default function AI() {
+// Cửa sổ popup trợ lý: luôn được mount để giữ nguyên đoạn chat khi đóng/mở
+export default function Assistant({ open, onClose }) {
+  const [tab, setTab] = useState('chat');
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
   return (
-    <>
-      <PageHero eyebrow="Trợ lý thông minh" title="Heo Vàng AI">Trợ lý AI</PageHero>
-      <section className="section">
-        <div className="container ai-layout">
-          <ChatBox />
-          <div style={{ display: 'grid', gap: 20 }}>
-            <GoalCalculator />
-            <JarSplitter />
-          </div>
-        </div>
-      </section>
-    </>
+    <div className={`ai-pop ${open ? 'open' : ''}`} role="dialog" aria-label="Trợ lý Heo Vàng" aria-hidden={!open}>
+      <div className="chat-head">
+        <span className="avatar"><Pig size={38} /></span>
+        <div><b>Heo Vàng – Trợ lý tài chính nhí</b><small>● Đang trực tuyến · trả lời tức thì</small></div>
+        <button className="ai-close" onClick={onClose} aria-label="Đóng trợ lý"><X /></button>
+      </div>
+      <div className="ai-tabs">
+        {TABS.map(([k, Icon, label]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}><Icon size={16} />{label}</button>)}
+      </div>
+      <div className="ai-pane" hidden={tab !== 'chat'}><ChatPane active={open && tab === 'chat'} /></div>
+      <div className="ai-pane tools" hidden={tab !== 'goal'}><GoalCalculator /></div>
+      <div className="ai-pane tools" hidden={tab !== 'jars'}><JarSplitter /></div>
+    </div>
   );
 }

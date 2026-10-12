@@ -1,7 +1,8 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogCard, CommitStrip, Counter, ProductCard, ReviewSlider, SectionHead } from '../components/Blocks';
 import Crop from '../components/Crop';
-import { Arrow, Cloud, Coin } from '../components/Icons';
+import { Arrow, CartIcon, Cloud, Coin, Star, Stars } from '../components/Icons';
 import { BLOG } from '../data';
 import { useShop } from '../lib/ShopContext';
 
@@ -19,13 +20,24 @@ const INSIDE = [
   ['kit', 'Xu game & quân cờ', 'Xu mệnh giá 1–5, xúc xắc và 4 quân cờ nhiều màu.'],
 ];
 
-const FEATS = [['🧑‍🍳', 'Khám phá 8 nghề nghiệp'], ['💰', 'Học cách quản lý tiền'], ['🧠', 'Phát triển tư duy'], ['👨‍👩‍👧', 'Vui chơi cùng gia đình']];
+const FLOAT_CARDS = ['cardChef', 'cardFire', 'cardChance', 'cardArtist'];
 
 export default function Home() {
   const { products } = useShop();
+  // Hộp nghiêng 3D và các thẻ trôi theo con trỏ (giá trị -1..1 truyền qua biến CSS)
+  const visualRef = useRef(null);
+  const onHeroMove = e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    visualRef.current.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+    visualRef.current.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+  };
+  const onHeroLeave = () => {
+    visualRef.current.style.setProperty('--mx', 0);
+    visualRef.current.style.setProperty('--my', 0);
+  };
   return (
     <>
-      <section className="hero">
+      <section className="hero" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
         <Coin style={{ left: '1%', bottom: '18%', width: 44 }} />
         <Coin style={{ left: '47%', top: '8%', width: 44, animationDelay: '1s' }} />
         <div className="container">
@@ -35,15 +47,18 @@ export default function Home() {
             <div className="tagline">Làm việc – Kiếm tiền – Mua đồ – Hoàn thành ước mơ!</div>
             <p className="lead">Board game nhập vai giúp bé hiểu tiền đến từ lao động, biết so sánh giá, lên kế hoạch chi tiêu và tiết kiệm – qua những giờ chơi rộn rã tiếng cười cùng gia đình.</p>
             <div className="hero-ctas">
-              <Link to="/san-pham/uoc-mo-vang" className="btn">🛒 Đặt hàng ngay</Link>
-              <Link to="/gioi-thieu" className="btn btn-ghost">Khám phá trò chơi <Arrow /></Link>
+              <Link to="/san-pham/uoc-mo-vang" className="btn btn-lg"><CartIcon /> Đặt hàng ngay</Link>
+              <Link to="/gioi-thieu" className="btn btn-lg btn-light">Khám phá trò chơi <Arrow /></Link>
             </div>
-            <div className="hero-feats">
-              {FEATS.map(([ic, t]) => <div className="hero-feat" key={t}><span className="ic">{ic}</span>{t}</div>)}
+            <div className="hero-trust">
+              <Stars size={17} /><b>4.9/5</b><i /><span>Hơn <b>12.000</b> gia đình đã chơi</span>
             </div>
           </div>
-          <div className="hero-visual reveal">
-            <Crop img="yellow" area="box" />
+          <div className="hero-visual reveal" ref={visualRef}>
+            <span className="orbit" aria-hidden="true"><i>₫</i><i>₫</i><i>₫</i></span>
+            <span className="spark s1" aria-hidden="true" /><span className="spark s2" aria-hidden="true" /><span className="spark s3" aria-hidden="true" />
+            {FLOAT_CARDS.map((area, i) => <div className={`fcard f${i + 1}`} key={area} aria-hidden="true"><Crop img="yellow" area={area} /></div>)}
+            <div className="box-float"><div className="box-tilt"><Crop img="yellow" area="box" /></div></div>
             <div className="sticker"><span><b>-17%</b>Mở bán</span></div>
           </div>
         </div>
@@ -53,7 +68,7 @@ export default function Home() {
       <div className="container">
         <div className="story-banner reveal">
           <div className="txt">
-            <h2>Khám phá<br />câu chuyện<br />Ước Mơ Kids</h2>
+            <h2>Khám phá câu chuyện Ước Mơ Kids</h2>
             <p>Mỗi ván chơi là một hành trình: bé chọn nghề, đi làm nhận xu, gặp cơ hội và thử thách, rồi tự tay mua đủ đồ nghề để chạm tới ước mơ.</p>
             <div><Link to="/gioi-thieu" className="btn btn-yellow btn-sm">Tìm hiểu thêm <Arrow /></Link></div>
           </div>
@@ -67,7 +82,7 @@ export default function Home() {
         <div className="container">
           <SectionHead eyebrow="Sản phẩm nổi bật" title="Bé học – Bé chơi – Bé lớn" sub="Những món đồ chơi được hàng nghìn phụ huynh tin chọn để bắt đầu hành trình tài chính của con." />
           <div className="grid grid-4">{products.slice(0, 4).map(p => <ProductCard key={p.id} p={p} />)}</div>
-          <div style={{ textAlign: 'center', marginTop: 36 }}><Link to="/san-pham" className="btn btn-yellow">Xem tất cả sản phẩm <Arrow /></Link></div>
+          <div style={{ textAlign: 'center', marginTop: 24 }}><Link to="/san-pham" className="btn btn-yellow">Xem tất cả sản phẩm <Arrow /></Link></div>
         </div>
       </section>
 
@@ -112,7 +127,7 @@ export default function Home() {
           <div><Counter to={12000} suffix="+" /><span>gia đình đã chơi</span></div>
           <div><Counter to={8} /><span>nghề nghiệp</span></div>
           <div><Counter to={120} suffix="+" /><span>thẻ bài</span></div>
-          <div><b>4.9★</b><span>đánh giá trung bình</span></div>
+          <div><b>4.9<Star size={24} /></b><span>đánh giá trung bình</span></div>
         </div>
       </section>
 
@@ -130,10 +145,10 @@ export default function Home() {
         <div className="container">
           <SectionHead eyebrow="Góc phụ huynh" title="Tin tức & bài viết" />
           <div className="grid grid-3">{BLOG.slice(0, 3).map(b => <BlogCard key={b.id} b={b} />)}</div>
-          <div style={{ textAlign: 'center', marginTop: 36 }}><Link to="/blog" className="btn btn-yellow">Xem tất cả bài viết <Arrow /></Link></div>
+          <div style={{ textAlign: 'center', marginTop: 24 }}><Link to="/blog" className="btn btn-yellow">Xem tất cả bài viết <Arrow /></Link></div>
         </div>
       </section>
-      <div style={{ height: 60 }} />
+      <div style={{ height: 44 }} />
       <CommitStrip />
     </>
   );

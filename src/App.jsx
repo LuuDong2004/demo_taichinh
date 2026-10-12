@@ -1,8 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import About from './pages/About';
 import Admin from './pages/Admin';
-import AI from './pages/AI';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Cart from './pages/Cart';
@@ -24,7 +23,7 @@ export default function App() {
         <Route path="thanh-toan" element={<Checkout />} />
         <Route path="gioi-thieu" element={<About />} />
         <Route path="lien-he" element={<Contact />} />
-        <Route path="ai" element={<AI />} />
+        <Route path="ai" element={<Navigate to="/" replace state={{ ai: true }} />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<BlogPost />} />
         <Route path="admin" element={<Admin />} />

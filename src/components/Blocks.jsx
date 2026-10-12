@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { REVIEWS } from '../data';
 import { useShop } from '../lib/ShopContext';
-import { fmtDate, money, stars } from '../lib/utils';
+import { fmtDate, money } from '../lib/utils';
 import Crop from './Crop';
-import { Card, Chat, Cloud, Coin, Plus, Shield, Truck } from './Icons';
+import { Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
 
 export function ProductCard({ p }) {
   const { addToCart } = useShop();
@@ -17,7 +17,7 @@ export function ProductCard({ p }) {
       </Link>
       <div className="body">
         <h3><Link to={`/san-pham/${p.id}`}>{p.name}</Link></h3>
-        <div className="meta"><span className="stars">{stars(p.rating)}</span> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
+        <div className="meta"><Stars n={p.rating} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
         <div className="price-row">
           <div className="price">{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
           <button className="add-btn" onClick={() => addToCart(p.id)} aria-label="Thêm vào giỏ"><Plus /></button>
@@ -107,7 +107,7 @@ export function ReviewSlider() {
         {REVIEWS.map(r => (
           <div className="slide" key={r.name}>
             <div className="review">
-              <span className="stars">{stars(r.stars)}</span>
+              <Stars n={r.stars} size={17} />
               <p>{r.text}</p>
               <div className="who">
                 <span className="avatar">{r.name.split(' ').pop()[0]}</span>

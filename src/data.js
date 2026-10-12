@@ -1,5 +1,6 @@
 // Dữ liệu mẫu. Ảnh sản phẩm được cắt từ 2 ảnh gốc bằng CSS (xem components/Crop.jsx).
-export const IMG = { yellow: '/assets/set-yellow.png', teal: '/assets/set-teal.png', W: 1536, H: 1024 };
+// Ảnh hiển thị là bản phóng 2x đã làm nét (3072x2048); toạ độ cắt vẫn tính theo ảnh gốc 1536x1024
+export const IMG = { yellow: '/assets/set-yellow-2x.webp', teal: '/assets/set-teal-2x.webp', W: 1536, H: 1024 };
 
 // Vùng cắt [x, y, w, h] trên ảnh gốc 1536x1024
 export const CROPS = {
@@ -11,6 +12,11 @@ export const CROPS = {
   events: [765, 755, 380, 180],
   mission: [1230, 740, 300, 200],
   whole: [0, 0, 1536, 940],
+  // Từng thẻ lẻ – dùng cho các thẻ bay quanh hộp ở hero
+  cardChef: [668, 72, 97, 166],
+  cardFire: [866, 72, 97, 166],
+  cardArtist: [1282, 72, 100, 166],
+  cardChance: [778, 765, 118, 170],
 };
 
 export const DEFAULT_PRODUCTS = [

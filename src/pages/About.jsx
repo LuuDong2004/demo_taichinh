@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { CommitStrip, PageHero, SectionHead } from '../components/Blocks';
 import Crop from '../components/Crop';
-import { Arrow, Cloud } from '../components/Icons';
+import { Arrow, Briefcase, Bulb, Cloud, Heart, Wallet } from '../components/Icons';
 
 const VALUES = [
-  ['var(--orange)', '👩‍🚒', 'Khám phá nghề nghiệp', '8 nghề quen thuộc giúp bé hiểu mỗi công việc đều có giá trị.'],
-  ['var(--green)', '💵', 'Quản lý tiền', 'Nhận, đếm, chi tiêu và để dành xu một cách có kế hoạch.'],
-  ['var(--blue)', '🧩', 'Phát triển tư duy', 'Ra quyết định, so sánh, ước lượng và chấp nhận rủi ro.'],
-  ['var(--red)', '🤗', 'Gắn kết gia đình', 'Bố mẹ và bé cùng chơi, cùng trò chuyện về tiền bạc.'],
+  ['var(--orange)', <Briefcase size={30} />, 'Khám phá nghề nghiệp', '8 nghề quen thuộc giúp bé hiểu mỗi công việc đều có giá trị.'],
+  ['var(--green)', <Wallet size={30} />, 'Quản lý tiền', 'Nhận, đếm, chi tiêu và để dành xu một cách có kế hoạch.'],
+  ['var(--blue)', <Bulb size={30} />, 'Phát triển tư duy', 'Ra quyết định, so sánh, ước lượng và chấp nhận rủi ro.'],
+  ['var(--red)', <Heart size={30} />, 'Gắn kết gia đình', 'Bố mẹ và bé cùng chơi, cùng trò chuyện về tiền bạc.'],
 ];
 const SPECS = [
   'Độ tuổi: 5–7 tuổi (chơi cùng người lớn từ 4 tuổi)', 'Số người chơi: 2–4 người · Thời gian: 20–30 phút',
@@ -32,7 +32,7 @@ export default function About() {
           <div className="reveal"><Crop img="yellow" area="whole" /></div>
           <div className="reveal">
             <span className="eyebrow left">Câu chuyện của chúng tôi</span>
-            <h2 className="title" style={{ fontSize: 44 }}>Dạy con về tiền – bằng niềm vui</h2>
+            <h2 className="title" style={{ fontSize: 34 }}>Dạy con về tiền – bằng niềm vui</h2>
             <p>Ước Mơ Kids ra đời từ một câu hỏi của con gái nhà sáng lập: <i>“Mẹ ơi, tiền ở đâu ra?”</i>. Chúng tôi tin rằng hiểu biết tài chính nên bắt đầu từ sớm, và cách tốt nhất để trẻ học là <b>chơi</b>.</p>
             <p>Bộ trò chơi <b>Ước Mơ Nghề Nghiệp</b> được thiết kế cùng giáo viên mầm non và chuyên gia giáo dục tài chính, giúp trẻ 5–7 tuổi hình thành 4 thói quen: <b>làm việc – kiếm tiền – chi tiêu thông minh – theo đuổi mục tiêu</b>.</p>
             <b style={{ color: 'var(--brown)' }}>Bảng màu vui tươi, an toàn cho mắt bé</b>
@@ -57,7 +57,7 @@ export default function About() {
         <div className="container split">
           <div className="reveal">
             <span className="eyebrow left">Thông số</span>
-            <h2 className="title" style={{ fontSize: 40 }}>Chi tiết bộ trò chơi</h2>
+            <h2 className="title" style={{ fontSize: 34 }}>Chi tiết bộ trò chơi</h2>
             <ul className="includes" style={{ gridTemplateColumns: '1fr' }}>{SPECS.map(s => <li key={s}>{s}</li>)}</ul>
             <div style={{ marginTop: 24 }}><Link to="/san-pham" className="btn">Chọn phiên bản <Arrow /></Link></div>
           </div>

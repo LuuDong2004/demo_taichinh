@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { PageHero } from '../components/Blocks';
+import { Bank, Cash, Check, Mobile } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 import { OrderSummary } from './Cart';
 
 const PAYS = [
-  ['COD', '💵', 'Thanh toán khi nhận hàng (COD)', 'Kiểm tra hàng rồi mới thanh toán'],
-  ['Chuyển khoản', '🏦', 'Chuyển khoản / Quét mã QR', 'Nhận mã QR sau khi đặt hàng'],
-  ['Ví điện tử', '📱', 'Ví điện tử', 'MoMo, ZaloPay, VNPay'],
+  ['COD', <Cash />, 'Thanh toán khi nhận hàng (COD)', 'Kiểm tra hàng rồi mới thanh toán'],
+  ['Chuyển khoản', <Bank />, 'Chuyển khoản / Quét mã QR', 'Nhận mã QR sau khi đặt hàng'],
+  ['Ví điện tử', <Mobile />, 'Ví điện tử', 'MoMo, ZaloPay, VNPay'],
 ];
 
 function Success({ order, info }) {
   return (
     <section className="section">
       <div className="container success">
-        <div className="big">✓</div>
-        <h1 className="title" style={{ fontSize: 44 }}>Đặt hàng thành công!</h1>
+        <div className="big"><Check size={60} /></div>
+        <h1 className="title" style={{ fontSize: 36 }}>Đặt hàng thành công!</h1>
         <p style={{ fontSize: 16 }}>Cảm ơn <b>{info.name}</b>! Mã đơn hàng của bạn là <b style={{ color: 'var(--orange)' }}>{order.id}</b>. Chúng tôi sẽ gọi xác nhận qua số <b>{info.phone}</b> trong ít phút.</p>
         {info.pay === 'Chuyển khoản' && (
           <div className="panel" style={{ display: 'inline-block', margin: '10px 0' }}>
@@ -74,7 +75,7 @@ export default function Checkout() {
               <div className="pay-opts">
                 {PAYS.map(([v, ic, h, d], i) => (
                   <label className="pay-opt" key={v}>
-                    <input type="radio" name="pay" value={v} defaultChecked={i === 0} /> {ic}
+                    <input type="radio" name="pay" value={v} defaultChecked={i === 0} /><span className="pay-ic">{ic}</span>
                     <div><b>{h}</b><div style={{ fontSize: 13, color: 'var(--muted)' }}>{d}</div></div>
                   </label>
                 ))}

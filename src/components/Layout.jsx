@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useShop } from '../lib/ShopContext';
-import { CartIcon, Chat, Cloud, Menu, Phone } from './Icons';
+import Assistant from './Assistant';
+import { CartIcon, Clock, Cloud, Facebook, Instagram, Mail, Menu, Phone, Pig, Pin, TikTok, YouTube } from './Icons';
 
+// Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Heo Vàng mở bằng nút nổi góc phải
 const NAV = [
-  ['/', 'Trang chủ'],
   ['/san-pham', 'Sản phẩm'],
   ['/gioi-thieu', 'Giới thiệu'],
-  ['/ai', 'Trợ lý Heo Vàng', 'ai-link'],
   ['/blog', 'Blog'],
   ['/lien-he', 'Liên hệ'],
   // ['/admin', 'Quản trị'], // tạm ẩn nút; trang /admin vẫn truy cập trực tiếp được
@@ -25,14 +25,19 @@ function Header() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   useEffect(() => { setOpen(false); }, [pathname]);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   return (
-    <header className="header">
+    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         <Logo />
         <nav className={`nav ${open ? 'open' : ''}`}>
-          {NAV.map(([to, label, cls]) => (
-            <NavLink key={to} to={to} end={to === '/'} className={cls}>{label}</NavLink>
-          ))}
+          {NAV.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
         </nav>
         <div className="header-actions">
           <Link to="/gio-hang" className="icon-btn" aria-label="Giỏ hàng">
@@ -46,7 +51,7 @@ function Header() {
   );
 }
 
-function Footer() {
+function Footer({ onAi }) {
   const { toast } = useShop();
   return (
     <footer className="footer">
@@ -57,14 +62,14 @@ function Footer() {
             <Logo />
             <p style={{ fontSize: 14, marginTop: 18 }}>Đồ chơi giáo dục tài chính giúp trẻ hiểu giá trị lao động, biết chi tiêu và tiết kiệm – qua những giờ chơi vui vẻ cùng gia đình.</p>
             <div className="socials">
-              <a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="YouTube">▶</a><a href="#" aria-label="TikTok">♪</a>
+              <a href="#" aria-label="Facebook"><Facebook /></a><a href="#" aria-label="Instagram"><Instagram /></a><a href="#" aria-label="YouTube"><YouTube /></a><a href="#" aria-label="TikTok"><TikTok /></a>
             </div>
           </div>
           <div>
             <h5>Liên kết nhanh</h5>
             <ul>
               <li><Link to="/">Trang chủ</Link></li><li><Link to="/san-pham">Sản phẩm</Link></li><li><Link to="/gioi-thieu">Giới thiệu sản phẩm</Link></li>
-              <li><Link to="/blog">Góc phụ huynh</Link></li><li><Link to="/ai">Trợ lý AI</Link></li><li><Link to="/lien-he">Liên hệ</Link></li>
+              <li><Link to="/blog">Góc phụ huynh</Link></li><li><a href="/ai" onClick={e => { e.preventDefault(); onAi(); }}>Trợ lý AI</a></li><li><Link to="/lien-he">Liên hệ</Link></li>
             </ul>
           </div>
           <div>
@@ -75,11 +80,11 @@ function Footer() {
           </div>
           <div>
             <h5>Liên hệ &amp; đăng ký</h5>
-            <ul>
-              <li>📍 123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội</li>
-              <li>📞 Hotline: 0900 123 456 (Zalo)</li>
-              <li>✉️ xinchao@uocmokids.vn</li>
-              <li>🕗 08:00 – 21:00, cả cuối tuần</li>
+            <ul className="footer-contact">
+              <li><Pin />123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội</li>
+              <li><Phone size={18} /><a href="tel:0900123456">Hotline: 0900 123 456 (Zalo)</a></li>
+              <li><Mail /><a href="mailto:xinchao@uocmokids.vn">xinchao@uocmokids.vn</a></li>
+              <li><Clock />08:00 – 21:00, cả cuối tuần</li>
             </ul>
             <form className="subscribe" onSubmit={e => { e.preventDefault(); e.target.reset(); toast('Đã đăng ký nhận ưu đãi 🎉'); }}>
               <input type="email" required placeholder="Email của bạn..." />
@@ -118,25 +123,33 @@ function useReveal(ref) {
 }
 
 export default function Layout() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const mainRef = useRef(null);
   useReveal(mainRef);
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   const isAdmin = pathname.startsWith('/admin');
-  const hideFab = isAdmin || pathname === '/ai';
+
+  const [aiOpen, setAiOpen] = useState(false);
+  const openAi = useCallback(() => setAiOpen(true), []);
+  const closeAi = useCallback(() => setAiOpen(false), []);
+  // Link cũ /ai chuyển về trang chủ kèm state → mở popup
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (state?.ai) { setAiOpen(true); navigate(pathname, { replace: true, state: null }); }
+  }, [state, pathname, navigate]);
 
   return (
     <>
       <Header />
       <main ref={mainRef}><Outlet /></main>
-      {!isAdmin && <Footer />}
-      {!hideFab && (
+      {!isAdmin && <Footer onAi={openAi} />}
+      {!isAdmin && !aiOpen && (
         <div className="floating">
-          <Link to="/ai" className="fab-ai" aria-label="Hỏi trợ lý AI"><Chat size={26} /></Link>
+          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý Heo Vàng"><Pig size={42} /></button>
           <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}
-      <Toast />
+      <Assistant open={aiOpen} onClose={closeAi} />      <Toast />
     </>
   );
 }

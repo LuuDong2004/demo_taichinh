@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHero, QtyInput } from '../components/Blocks';
 import Crop from '../components/Crop';
+import { ArrowLeft, Pig, Truck, X } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 
@@ -41,7 +42,7 @@ export default function Cart() {
       {hero}
       <section className="section">
         <div className="container panel empty">
-          <div className="big">🐷</div>
+          <div className="big"><Pig size={96} /></div>
           <h3>Giỏ hàng đang trống</h3>
           <p>Heo đất đang chờ bé bỏ đồ chơi vào nè!</p>
           <Link to="/san-pham" className="btn">Mua sắm ngay</Link>
@@ -60,7 +61,7 @@ export default function Cart() {
             <h3>Sản phẩm ({t.count})</h3>
             {freeLeft > 0 && (
               <div className="result-box" style={{ margin: '0 0 10px' }}>
-                Mua thêm <b>{money(freeLeft)}</b> để được <b>miễn phí vận chuyển</b> 🚚
+                <span className="with-ic"><Truck size={20} /><span>Mua thêm <b>{money(freeLeft)}</b> để được <b>miễn phí vận chuyển</b></span></span>
                 <div className="jar-bar" style={{ background: '#fff' }}><i style={{ width: `${t.sub / 5000}%`, background: 'var(--green)' }} /></div>
               </div>
             )}
@@ -70,10 +71,10 @@ export default function Cart() {
                 <div><h4>{l.p.name}</h4><span style={{ fontSize: 13, color: 'var(--muted)' }}>{money(l.p.price)}</span></div>
                 <QtyInput value={l.qty} onChange={v => changeQty(l.id, v - l.qty)} />
                 <b className="line-total" style={{ color: 'var(--red)' }}>{money(l.p.price * l.qty)}</b>
-                <button className="remove" onClick={() => removeFromCart(l.id)} aria-label="Xóa">✕</button>
+                <button className="remove" onClick={() => removeFromCart(l.id)} aria-label="Xóa"><X size={14} /></button>
               </div>
             ))}
-            <div style={{ marginTop: 16 }}><Link to="/san-pham" className="btn btn-ghost btn-sm">← Tiếp tục mua sắm</Link></div>
+            <div style={{ marginTop: 16 }}><Link to="/san-pham" className="btn btn-ghost btn-sm"><ArrowLeft /> Tiếp tục mua sắm</Link></div>
           </div>
           <div className="panel">
             <h3>Tóm tắt đơn hàng</h3>

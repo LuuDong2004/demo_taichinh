@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Crop from '../components/Crop';
+import { Box, Chart, Chat, Edit, LogOut, Receipt, Trash } from '../components/Icons';
 import { BLOG, CROPS, DEFAULT_PRODUCTS } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money, noAccent } from '../lib/utils';
 
-const TABS = [['dash', '📊 Tổng quan'], ['products', '🧸 Sản phẩm'], ['orders', '🧾 Đơn hàng'], ['msgs', '💬 Liên hệ'], ['posts', '📝 Bài viết']];
+const TABS = [['dash', Chart, 'Tổng quan'], ['products', Box, 'Sản phẩm'], ['orders', Receipt, 'Đơn hàng'], ['msgs', Chat, 'Liên hệ'], ['posts', Edit, 'Bài viết']];
 const STATUSES = ['Chờ xác nhận', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
 const STATUS_CLS = { 'Hoàn thành': 'st-ok', 'Đang giao': 'st-ship', 'Chờ xác nhận': 'st-wait', 'Đã hủy': 'st-cancel' };
 const MONTHLY = [42, 55, 48, 70, 66, 88, 95, 110, 124];
@@ -158,8 +159,8 @@ function ProductsAdmin() {
               <tr key={p.id}>
                 <td><Crop img={p.img} area={p.crop} /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{p.age}</td>
                 <td className="row-actions">
-                  <button onClick={() => setEditing(p)}>✏️ Sửa</button>
-                  <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : '🗑️'}</button>
+                  <button onClick={() => setEditing(p)}><Edit size={14} />Sửa</button>
+                  <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : <Trash size={14} />}</button>
                 </td>
               </tr>
             ))}
@@ -211,8 +212,8 @@ export default function Admin() {
     <div className="admin">
       <aside className="admin-side">
         <div className="logo-text">Ước Mơ Admin</div>
-        {TABS.map(([k, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
-        <button onClick={() => setIsAdmin(false)}>🚪 Đăng xuất</button>
+        {TABS.map(([k, Icon, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}><Icon size={18} />{l}</button>)}
+        <button onClick={() => setIsAdmin(false)}><LogOut />Đăng xuất</button>
       </aside>
       <div className="admin-main">
         {tab === 'dash' && <Dashboard />}
