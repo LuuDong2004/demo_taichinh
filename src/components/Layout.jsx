@@ -13,8 +13,11 @@ const NAV = [
   // ['/admin', 'Quản trị'], // tạm ẩn nút; trang /admin vẫn truy cập trực tiếp được
 ];
 
+// Bấm vào link của chính trang đang xem thì router không đổi trang → tự cuộn lên đầu
+const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
 export const Logo = () => (
-  <Link to="/" className="logo" aria-label="Ước Mơ Kids – Trang chủ">
+  <Link to="/" className="logo" aria-label="Ước Mơ Kids – Trang chủ" onClick={toTop}>
     <span className="logo-mark">₫</span>
     <span className="logo-text">Ước Mơ Kids<small>Tài chính nhí</small></span>
   </Link>
@@ -37,7 +40,7 @@ function Header() {
       <div className="container">
         <Logo />
         <nav className={`nav ${open ? 'open' : ''}`}>
-          {NAV.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}
+          {NAV.map(([to, label]) => <NavLink key={to} to={to} onClick={toTop}>{label}</NavLink>)}
         </nav>
         <div className="header-actions">
           <Link to="/gio-hang" className="icon-btn" aria-label="Giỏ hàng">
