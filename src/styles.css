@@ -862,7 +862,6 @@ td .thumb-sm { width: 52px; height: 52px; }
   0%, 100% { border-radius: 42% 58% 55% 45% / 48% 42% 58% 52%; rotate: 0deg; }
   50% { border-radius: 56% 44% 46% 54% / 40% 56% 44% 60%; rotate: 8deg; }
 }
-.stage-ring { position: absolute; inset: 1%; border-radius: 50%; border: 2px dashed color-mix(in srgb, var(--yellow-2) 60%, transparent); animation: spin 40s linear infinite; }
 .stage-logo {
   position: absolute; z-index: 4; width: 40%; left: 30%; top: 6%;
   filter: drop-shadow(0 10px 14px rgba(42, 33, 23, .2));
@@ -872,7 +871,7 @@ td .thumb-sm { width: 52px; height: 52px; }
 @keyframes logo-pop { from { scale: 0; rotate: -20deg; } }
 @keyframes logo-bob { 50% { transform: translateY(-8px) rotate(-3deg); } }
 .stage-kids {
-  position: absolute; z-index: 3; width: 80%; left: 10%; bottom: 5%;
+  position: absolute; z-index: 3; width: 74%; left: 13%; bottom: 15%;
   filter: drop-shadow(0 16px 18px rgba(42, 33, 23, .22));
   translate: calc(var(--mx) * 10px) calc(var(--my) * 6px); transition: translate .3s ease-out;
   animation: kids-in .9s .15s cubic-bezier(.2, 1.3, .4, 1) both;
@@ -880,8 +879,8 @@ td .thumb-sm { width: 52px; height: 52px; }
 @keyframes kids-in { from { opacity: 0; transform: translateY(30px) scale(.9); } }
 .hero-stage .fcard { width: 19%; z-index: 2; }
 .hero-stage .fcard.f1 { left: 3%; top: 10%; }
-.hero-stage .fcard.f2 { left: 9%; top: auto; bottom: 14%; width: 15%; }
-.hero-stage .fcard.f3 { right: 7%; bottom: 13%; width: 17%; }
+.hero-stage .fcard.f2 { left: 3%; top: auto; bottom: 26%; width: 15%; }
+.hero-stage .fcard.f3 { right: 3%; bottom: 25%; width: 16%; }
 .hero-stage .fcard.f4 { right: 2%; top: 8%; }
 .stage-badge {
   position: absolute; z-index: 6; left: 50%; bottom: 3%; translate: -50% 0;
@@ -915,22 +914,39 @@ td .thumb-sm { width: 52px; height: 52px; }
   animation: spin 30s linear infinite;
 }
 .stage-blob { animation: blob 7s ease-in-out infinite, breathe 4s ease-in-out infinite; }
-.stage-ring { animation-duration: 28s; }
 
-/* Icon chạy vòng quanh đường nét đứt; icon xoay ngược để luôn đứng thẳng */
-.stage-orbit { position: absolute; inset: 1%; z-index: 5; pointer-events: none; animation: spin 26s linear infinite; translate: calc(var(--mx) * -10px) calc(var(--my) * -10px); transition: translate .4s ease-out; }
-.orbit-arm { position: absolute; inset: 0; rotate: var(--a); }
-.stage-tile {
-  position: absolute; left: 50%; top: 0; width: 12%; aspect-ratio: 1; translate: -50% -50%;
-  rotate: calc(-1 * var(--a)); animation: art-pop .6s cubic-bezier(.2, 1.5, .4, 1) both;
+/* Đường bàn cờ dưới chân nhân vật: mỗi ô sáng 1s, quân cờ nhảy lần lượt qua 6 ô (chu kỳ 6s) */
+.stage-track {
+  position: absolute; z-index: 5; left: 4%; right: 4%; bottom: 3%; display: flex; justify-content: space-between; gap: 2%;
+  padding: 12px 14px; border-radius: 22px; background: rgba(255, 255, 255, .55);
+  border: 2px dashed color-mix(in srgb, var(--yellow-2) 70%, transparent);
+  backdrop-filter: blur(6px); box-shadow: 0 14px 30px rgba(42, 33, 23, .12);
+  translate: calc(var(--mx) * -6px) 0; transition: translate .4s ease-out;
+  animation: kids-in .8s .3s cubic-bezier(.2, 1.3, .4, 1) both;
 }
-.tile-in {
-  display: grid; place-items: center; width: 100%; height: 100%; padding: 18%;
-  background: #fff; border-radius: 28%; box-shadow: 0 10px 20px rgba(42, 33, 23, .16);
-  animation: spin 26s linear infinite reverse, tile-bob 2.4s ease-in-out infinite;
+.track-tile {
+  position: relative; flex: 1 1 0; min-width: 0; aspect-ratio: 1; display: grid; place-items: center; padding: 9px;
+  background: #fff; border-radius: 26%; box-shadow: 0 6px 12px rgba(42, 33, 23, .12);
+  animation: tile-turn 6s ease-in-out calc(var(--i) * 1s + 1s) infinite;
 }
-.tile-in img { max-width: 100%; max-height: 100%; }
-@keyframes tile-bob { 50% { transform: scale(1.12); } }
+.track-tile img { width: 100%; height: 100%; object-fit: contain; }
+.track-tile::after {
+  content: ''; position: absolute; left: 50%; top: -34%; width: 36%; aspect-ratio: 1; margin-left: -18%; border-radius: 50% 50% 46% 46%;
+  background: radial-gradient(circle at 35% 30%, #FF9C8C, var(--red) 70%); box-shadow: 0 4px 0 rgba(0, 0, 0, .15), 0 0 0 2.5px #fff;
+  opacity: 0; animation: pawn-hop 6s ease-in-out calc(var(--i) * 1s + 1s) infinite;
+}
+@media (max-width: 560px) { .stage-track { padding: 8px; border-radius: 16px; } .track-tile { padding: 5px; } }
+@keyframes tile-turn {
+  0%, 17%, 100% { transform: none; box-shadow: 0 6px 12px rgba(42, 33, 23, .12); }
+  4%, 13% { transform: translateY(-9px) scale(1.1); box-shadow: 0 0 0 3px var(--yellow), 0 14px 22px rgba(42, 33, 23, .2); }
+}
+@keyframes pawn-hop {
+  0% { opacity: 0; transform: translateY(-16px) scale(.6); }
+  4% { opacity: 1; transform: none; }
+  8% { transform: translateY(-5px); }
+  12% { opacity: 1; transform: none; }
+  16.6%, 100% { opacity: 0; transform: translateY(-16px) scale(.6); }
+}
 
 /* Logo nảy & phập phồng */
 .stage-logo { animation: logo-pop .8s cubic-bezier(.2, 1.6, .4, 1) both, logo-bounce 2.8s ease-in-out .8s infinite; }

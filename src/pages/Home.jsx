@@ -15,7 +15,7 @@ const STEPS = [
 ];
 
 // Thẻ thật bay quanh hộp ở hero
-const STAGE_TILES = ['cong-tien', 'tui-mu', 'mua-sam', 'start', 'them-luot', 'dong-bang'];
+const STAGE_TILES = ['start', 'cong-tien', 'mua-sam', 'tui-mu', 'them-luot', 'dong-bang'];
 const FLOAT_CARDS = ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'items/ong-nghe', 'cards/tui-mu/sinh-nhat-vui-ve', 'cards/tru/troi-nong-ban-mua-mot-cay-kem'];
 
 export default function Home() {
@@ -54,21 +54,16 @@ export default function Home() {
           <div className="hero-stage reveal" ref={visualRef} aria-hidden="true">
             <span className="stage-rays" />
             <span className="stage-blob" />
-            <span className="stage-ring" />
-            {/* Icon ô bàn cờ chạy vòng quanh theo đường nét đứt (cánh tay xoay, icon xoay ngược để luôn đứng thẳng) */}
-            <div className="stage-orbit">
+            {/* Đường bàn cờ dưới chân nhân vật: từng ô lần lượt sáng lên, quân cờ nhảy sang ô kế tiếp */}
+            <div className="stage-track">
               {STAGE_TILES.map((t, i) => (
-                <span className="orbit-arm" key={t} style={{ '--a': `${i * (360 / STAGE_TILES.length)}deg` }}>
-                  <span className="stage-tile"><span className="tile-in"><img src={img(`tiles/${t}`)} alt="" /></span></span>
-                </span>
+                <span className="track-tile" key={t} style={{ '--i': i }}><img src={img(`tiles/${t}`)} alt="" /></span>
               ))}
             </div>
             {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src}><img src={img(src)} alt="" /></div>)}
             {[1, 2, 3, 4, 5].map(i => <span className={`stage-spark k${i}`} key={i} />)}
             <img className="stage-logo" src={img('brand/logo')} alt="" />
-            <img className="stage-kids" src={img('brand/kids-jump')} alt="" />
-            <span className="stage-badge"><Bell size={16} />Sắp ra mắt</span>
-          </div>
+            <img className="stage-kids" src={img('brand/kids-jump')} alt="" />          </div>
         </div>
       </section>
 
