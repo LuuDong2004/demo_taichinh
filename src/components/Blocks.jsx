@@ -91,7 +91,7 @@ export function CommitStrip() {
 export function EmptyState({ pic = 'kids-peek', title, children, action, as: H = 'h3' }) {
   return (
     <div className="empty-state">
-      <div className="es-art"><img src={img(`brand/${pic}`)} alt="" /></div>
+      <div className="es-art"><img className="es-logo" src={img('brand/logo')} alt="Moni Yo" /><img src={img(`brand/${pic}`)} alt="" /></div>
       <H className="es-title">{title}</H>
       {children && <p>{children}</p>}
       {action}
