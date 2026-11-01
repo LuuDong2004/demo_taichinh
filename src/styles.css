@@ -55,8 +55,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .header.scrolled { background: transparent; }
 .header.scrolled .container { box-shadow: 0 12px 32px rgba(42, 33, 23, .18); }
-.header .nav a:hover { background: var(--yellow-soft); }
-.header .nav a.active { background: var(--yellow); }
+.header .nav a:hover:not(.active) { background: var(--yellow-soft); }
+.header .nav a.active { background: transparent; }
+/* Nền trượt chất lỏng dùng chung (xem lib/useLiquid.js) */
+.liquid-ind { position: absolute; z-index: 0; pointer-events: none; border-radius: 999px; opacity: 0; }
+.nav { position: relative; }
+.nav a { z-index: 1; }
+.nav-ind {
+  background-color: var(--yellow);
+  background-image: linear-gradient(120deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 70%);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--yellow-2) 40%, transparent), inset 0 1px 0 rgba(255, 255, 255, .6);
+}
 .header .icon-btn { background: var(--yellow-soft); }
 .logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .logo-mark {
@@ -1057,7 +1066,7 @@ td .thumb-sm { width: 52px; height: 52px; }
   /* Laptop nhỏ: sản phẩm trang chủ 4 cột, menu vẫn hiện đủ (không gập vào nút ☰) */
   .grid-4:has(> .p-card) { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
   .nav {
-    position: static; flex-direction: row; align-items: center; background: none; padding: 0; gap: 2px; border-radius: 0;
+    position: relative; top: auto; left: auto; right: auto; flex-direction: row; align-items: center; background: none; padding: 0; gap: 2px; border-radius: 0;
     box-shadow: none; transform: none; opacity: 1; visibility: visible; z-index: auto;
   }
   .nav a { padding: 8px 13px; }

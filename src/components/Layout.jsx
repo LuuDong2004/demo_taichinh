@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useShop } from '../lib/ShopContext';
+import { useLiquid } from '../lib/useLiquid';
 import Assistant from './Assistant';
 import { BRAND } from '../data';
 import { CartIcon, ChatAI, Clock, Cloud, Facebook, Instagram, Mail, Menu, Phone, Pin, TikTok, YouTube } from './Icons';
@@ -28,6 +29,8 @@ function Header() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   useEffect(() => { setOpen(false); }, [pathname]);
+  // Nền vàng trượt kiểu chất lỏng giữa các mục menu khi đổi trang
+  const [navRef, navInd] = useLiquid('/' + pathname.split('/')[1], 'a.active');
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -39,7 +42,8 @@ function Header() {
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         <Logo />
-        <nav className={`nav ${open ? 'open' : ''}`}>
+        <nav className={`nav ${open ? 'open' : ''}`} ref={navRef}>
+          <span className="liquid-ind nav-ind" ref={navInd} aria-hidden="true" />
           {NAV.map(([to, label]) => <NavLink key={to} to={to} onClick={toTop}>{label}</NavLink>)}
         </nav>
         <div className="header-actions">
