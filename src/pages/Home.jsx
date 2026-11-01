@@ -15,7 +15,7 @@ const STEPS = [
 ];
 
 // Thẻ thật bay quanh hộp ở hero
-const STAGE_TILES = ['cong-tien', 'tui-mu', 'mua-sam', 'start'];
+const STAGE_TILES = ['cong-tien', 'tui-mu', 'mua-sam', 'start', 'them-luot', 'dong-bang'];
 const FLOAT_CARDS = ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'items/ong-nghe', 'cards/tui-mu/sinh-nhat-vui-ve', 'cards/tru/troi-nong-ban-mua-mot-cay-kem'];
 
 export default function Home() {
@@ -36,7 +36,7 @@ export default function Home() {
       <section className="hero" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
         <div className="container">
           <div className="reveal">
-            <span className="eyebrow launch"><i />Sắp ra mắt · Board game tài chính cho bé 5+</span>
+            <span className="eyebrow launch"><i />Sắp ra mắt</span>
             <h1>Chơi thật vui, <span className="accent">giỏi quản lý tiền</span></h1>
             <div className="tagline">Chọn nghề – Kiếm tiền – Xử lý tình huống – Mua đủ đồ vật!</div>
             <p className="lead">Moni Yo giúp bé hiểu giá trị đồng tiền, hình thành tư duy tài chính và kỹ năng giải quyết vấn đề qua những tình huống gần gũi – bên bàn cờ cùng cả nhà.</p>
@@ -52,10 +52,19 @@ export default function Home() {
           </div>
           {/* Chỉ dùng phần tử thiết kế đã có (logo, nhân vật, thẻ, icon ô bàn cờ) – chưa có ảnh sản phẩm */}
           <div className="hero-stage reveal" ref={visualRef} aria-hidden="true">
+            <span className="stage-rays" />
             <span className="stage-blob" />
             <span className="stage-ring" />
-            {STAGE_TILES.map((t, i) => <span className={`stage-tile t${i + 1}`} key={t}><img src={img(`tiles/${t}`)} alt="" /></span>)}
+            {/* Icon ô bàn cờ chạy vòng quanh theo đường nét đứt (cánh tay xoay, icon xoay ngược để luôn đứng thẳng) */}
+            <div className="stage-orbit">
+              {STAGE_TILES.map((t, i) => (
+                <span className="orbit-arm" key={t} style={{ '--a': `${i * (360 / STAGE_TILES.length)}deg` }}>
+                  <span className="stage-tile"><span className="tile-in"><img src={img(`tiles/${t}`)} alt="" /></span></span>
+                </span>
+              ))}
+            </div>
             {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src}><img src={img(src)} alt="" /></div>)}
+            {[1, 2, 3, 4, 5].map(i => <span className={`stage-spark k${i}`} key={i} />)}
             <img className="stage-logo" src={img('brand/logo')} alt="" />
             <img className="stage-kids" src={img('brand/kids-jump')} alt="" />
             <span className="stage-badge"><Bell size={16} />Sắp ra mắt</span>

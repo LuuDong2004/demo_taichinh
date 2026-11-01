@@ -3,7 +3,7 @@ import { aiReply } from '../lib/ai';
 import { money } from '../lib/utils';
 import { Chat, Jar, KidAvatar, Target, X } from './Icons';
 
-const SUGGESTIONS = ['Luật chơi thế nào?', 'Có những nghề nào?', 'Thẻ túi mù là gì?', 'Bé 4 tuổi chơi được không?', 'Nên cho con tiêu vặt bao nhiêu?', 'Phí giao hàng?'];
+const SUGGESTIONS = ['Luật chơi?', 'Có những nghề nào?', 'Thẻ túi mù?', 'Bé 4 tuổi chơi được?', 'Tiền tiêu vặt?', 'Phí giao hàng?'];
 const JARS = [['Tiêu', .5, 'var(--orange)'], ['Tiết kiệm', .4, 'var(--green)'], ['Chia sẻ', .1, 'var(--blue)']];
 const TABS = [['chat', Chat, 'Trò chuyện'], ['goal', Target, 'Mục tiêu'], ['jars', Jar, '3 hũ']];
 const Typing = () => <span className="typing"><span /><span /><span /></span>;
@@ -19,8 +19,12 @@ function ChatPane({ active }) {
   useEffect(() => { if (active) inputRef.current.focus({ preventScroll: true }); }, [active]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
+  const [asked, setAsked] = useState([]);
+  const suggestions = SUGGESTIONS.filter(s => !asked.includes(s)).slice(0, 4);
+
   const ask = text => {
     if (!text.trim()) return;
+    setAsked(a => (SUGGESTIONS.includes(text) ? [...a, text] : a));
     const id = Date.now();
     setMsgs(m => [...m, { who: 'me', body: text }, { who: 'bot', id, body: <Typing /> }]);
     timers.current.push(setTimeout(() => {
@@ -33,9 +37,12 @@ function ChatPane({ active }) {
       <div className="chat-body" ref={bodyRef}>
         {msgs.map((m, i) => <div key={i} className={`msg ${m.who}`}>{m.body}</div>)}
       </div>
-      <div className="chat-suggest">
-        {SUGGESTIONS.map(s => <button key={s} onClick={() => ask(s)}>{s}</button>)}
-      </div>
+      {/* Gợi ý xuống dòng (không cuộn ngang để khỏi bị che chữ); câu đã hỏi thì ẩn, tối đa 4 câu */}
+      {suggestions.length > 0 && (
+        <div className="chat-suggest">
+          {suggestions.map(s => <button key={s} onClick={() => ask(s)}>{s}</button>)}
+        </div>
+      )}
       <form className="chat-form" onSubmit={e => { e.preventDefault(); ask(input); setInput(''); }}>
         <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi trợ lý Moni Yo..." autoComplete="off" />
         <button className="btn btn-sm">Gửi</button>
