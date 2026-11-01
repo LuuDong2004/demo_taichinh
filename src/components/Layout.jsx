@@ -153,7 +153,7 @@ export default function Layout() {
       {!isAdmin && <Footer onAi={openAi} />}
       {!isAdmin && !aiOpen && (
         <div className="floating">
-          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-wave" /><span className="fab-wave w2" /><span className="fab-ic"><ChatAI size={28} /></span><i className="fab-badge">AI</i><span className="fab-spark s1" /><span className="fab-spark s2" /><span className="fab-spark s3" /></button>
+          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-wave" /><span className="fab-wave w2" /><span className="fab-ic"><ChatAI size={23} /></span><i className="fab-badge">AI</i><span className="fab-spark s1" /><span className="fab-spark s2" /><span className="fab-spark s3" /></button>
           <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}
