@@ -31,7 +31,10 @@ export default function Home() {
           <div className="reveal">
             <span className="eyebrow launch"><i />Sắp ra mắt</span>
             <h1>Chơi thật vui, <span className="accent">giỏi quản lý tiền</span></h1>
-            <div className="tagline">Chọn nghề – Kiếm tiền – Xử lý tình huống – Mua đủ đồ vật!</div>
+            {/* Máy tính: một dòng "A – B – C – D!"; điện thoại: 4 nhãn bước nối mũi tên, không rớt chữ lẻ */}
+            <div className="tagline">
+              {['Chọn nghề', 'Kiếm tiền', 'Xử lý tình huống', 'Mua đủ đồ vật!'].map(s => <span key={s}>{s}</span>)}
+            </div>
             <p className="lead">Moni Yo giúp bé hiểu giá trị đồng tiền, hình thành tư duy tài chính và kỹ năng giải quyết vấn đề qua những tình huống gần gũi – bên bàn cờ cùng cả nhà.</p>
             <div className="hero-ctas">
               <Link to="/san-pham/moni-yo" className="btn btn-lg"><Bell /> Nhận tin ra mắt</Link>
