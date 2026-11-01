@@ -11,6 +11,13 @@ export function JobExplorer() {
   const job = JOBS.find(j => j.id === active);
   // Nền màu trượt kiểu chất lỏng khi đổi nghề (hook dùng chung, xem lib/useLiquid.js)
   const [tabsRef, indRef] = useLiquid(active);
+  const jobCard = () => (
+    <div className="job-card" style={{ backgroundImage: `url(${img(`jobs/${job.id}-bg`)})` }}>
+      <span className="job-card-label">Thẻ nghề nghiệp<b>{job.name}</b></span>
+      <img className="job-char" src={img(`jobs/${job.id}`)} alt={job.name} />
+      <img className="job-strip" src={img(`jobs/${job.id}-items`)} alt="" />
+    </div>
+  );
 
   return (
     <div className="jobs" style={{ '--job': job.color }}>
@@ -24,16 +31,15 @@ export function JobExplorer() {
         ))}
       </div>
       <div className="job-stage" key={job.id}>
-        <div className="job-card" style={{ backgroundImage: `url(${img(`jobs/${job.id}-bg`)})` }}>
-          <span className="job-card-label">Thẻ nghề nghiệp<b>{job.name}</b></span>
-          <img className="job-char" src={img(`jobs/${job.id}`)} alt={job.name} />
-          <img className="job-strip" src={img(`jobs/${job.id}-items`)} alt="" />
-        </div>
+        {jobCard()}
         <div className="job-info">
           <h3>{job.name}</h3>
           <p>{job.about}</p>
           <p className="job-goal">Thu thập đủ <b>4 thẻ Đồ vật</b> dưới đây để chiến thắng:</p>
+          {/* Điện thoại: thẻ nghề + 4 thẻ đồ vật nằm chung một hàng vuốt ngang */}
+          <p className="job-swipe-hint">Vuốt sang để xem 4 thẻ Đồ vật cần thu thập →</p>
           <div className="job-items">
+            <figure className="job-lead" aria-hidden="true">{jobCard()}</figure>
             {job.items.map(([id, name]) => (
               <figure key={id}><img src={itemImg(id)} alt={name} loading="lazy" /></figure>
             ))}
