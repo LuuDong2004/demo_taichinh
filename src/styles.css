@@ -112,7 +112,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- Section helpers ---------- */
 .section { padding: 44px 0; position: relative; overflow: hidden; }
-.section-alt { background: var(--cream-2); }
+/* Nền kem đậm nhạt dần ở mép trên/dưới để các phần nối liền, không lộ đường cắt */
+.section-alt { background: linear-gradient(180deg, var(--cream) 0, var(--cream-2) 110px, var(--cream-2) calc(100% - 110px), var(--cream) 100%); }
 .section-head { text-align: center; max-width: 720px; margin: 0 auto 26px; position: relative; z-index: 1; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;
@@ -291,7 +292,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .inside-item p { margin: 0; font-size: 13px; color: var(--muted); }
 
 /* ---------- Stats band ---------- */
-.stats-band { background: var(--cream-2); color: var(--brown); padding: 28px 0; }
+.stats-band { background: linear-gradient(180deg, var(--cream) 0, var(--cream-2) 35%, var(--cream-2) 65%, var(--cream) 100%); color: var(--brown); padding: 28px 0; }
 .stats-band .container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
 .stats-band .container > div + div { border-left: 1px solid var(--line); }
 .stats-band b { font-family: var(--font-display); font-size: 36px; display: block; line-height: 1; }
@@ -329,7 +330,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .commit-item p { margin: 0; font-size: 13px; color: var(--muted); }
 
 /* ---------- Footer ---------- */
-.footer { background: var(--cream-2); color: var(--brown-2); padding: 40px 0 0; position: relative; overflow: hidden; }
+.footer { background: linear-gradient(180deg, var(--cream) 0, var(--cream-2) 90px); color: var(--brown-2); padding: 40px 0 0; position: relative; overflow: hidden; }
 .footer .cols { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.4fr; gap: 36px; position: relative; z-index: 1; }
 .footer h5 { color: var(--brown); margin: 0 0 14px; font-family: var(--font-display); font-size: 18px; }
 .footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 14px; }
