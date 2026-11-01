@@ -891,7 +891,7 @@ td .thumb-sm { width: 52px; height: 52px; }
 }
 .stage-badge svg { animation: fab-wiggle 3s ease-in-out infinite; transform-origin: 50% 10%; }
 @keyframes badge-swing { 0%, 100% { rotate: -3deg; } 50% { rotate: 3deg; } }
-@media (prefers-reduced-motion: reduce) { .hero-stage *, .hero-stage *::after { animation: none !important; } }
+/* Hero luôn chuyển động, kể cả khi Windows tắt "Animation effects" (trình duyệt báo prefers-reduced-motion) */
 @media (max-width: 820px) { .hero-stage { max-width: 440px; } }
 
 /* Ảnh banner sứ mệnh & mục "Trong hộp" bằng phần tử nhận diện */
