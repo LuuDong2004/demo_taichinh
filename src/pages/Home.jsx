@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogCard, CommitStrip, Counter, ProductCard, ReviewSlider, SectionHead } from '../components/Blocks';
-import { DECKS, DeckFan, JobExplorer, TileGrid } from '../components/Game';
+import { DECKS, DeckFan, JobExplorer, Lightbox, TileGrid } from '../components/Game';
 import { Arrow, Bell, Smile, Users } from '../components/Icons';
 import ProductArt from '../components/ProductArt';
 import { BLOG, BRAND, COMPONENTS, img } from '../data';
@@ -16,24 +16,20 @@ const STEPS = [
 
 // Thẻ thật bay quanh hộp ở hero
 const STAGE_TILES = ['start', 'cong-tien', 'mua-sam', 'tui-mu', 'them-luot', 'dong-bang'];
-const FLOAT_CARDS = ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'items/ong-nghe', 'cards/tui-mu/sinh-nhat-vui-ve', 'cards/tru/troi-nong-ban-mua-mot-cay-kem'];
+const FLOAT_CARDS = [
+  ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'Thẻ Cộng tiền – Bạn bán nước chanh tự pha'],
+  ['items/ong-nghe', 'Thẻ Đồ vật – Ống nghe (nghề Bác sĩ)'],
+  ['cards/tui-mu/sinh-nhat-vui-ve', 'Thẻ Túi mù – Sinh nhật vui vẻ'],
+  ['cards/tru/troi-nong-ban-mua-mot-cay-kem', 'Thẻ Trừ tiền – Trời nóng, bạn mua một cây kem'],
+];
+const CARD_ITEMS = FLOAT_CARDS.map(([src, caption]) => ({ src: img(src), caption }));
 
 export default function Home() {
   const { products } = useShop();
-  // Hộp nghiêng 3D và các thẻ trôi theo con trỏ (giá trị -1..1 truyền qua biến CSS)
-  const visualRef = useRef(null);
-  const onHeroMove = e => {
-    const r = e.currentTarget.getBoundingClientRect();
-    visualRef.current.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
-    visualRef.current.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
-  };
-  const onHeroLeave = () => {
-    visualRef.current.style.setProperty('--mx', 0);
-    visualRef.current.style.setProperty('--my', 0);
-  };
+  const [zoom, setZoom] = useState(null);
   return (
     <>
-      <section className="hero" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
+      <section className="hero">
         <div className="container">
           <div className="reveal">
             <span className="eyebrow launch"><i />Sắp ra mắt</span>
@@ -51,7 +47,7 @@ export default function Home() {
             </div>
           </div>
           {/* Chỉ dùng phần tử thiết kế đã có (logo, nhân vật, thẻ, icon ô bàn cờ) – chưa có ảnh sản phẩm */}
-          <div className="hero-stage reveal" ref={visualRef} aria-hidden="true">
+          <div className="hero-stage reveal">
             <span className="stage-rays" />
             <span className="stage-blob" />
             {/* Đường bàn cờ dưới chân nhân vật: từng ô lần lượt sáng lên, quân cờ nhảy sang ô kế tiếp */}
@@ -60,12 +56,17 @@ export default function Home() {
                 <span className="track-tile" key={t} style={{ '--i': i }}><img src={img(`tiles/${t}`)} alt="" /></span>
               ))}
             </div>
-            {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src}><img src={img(src)} alt="" /></div>)}
+            {/* Rê chuột: thẻ nổi lên, đứng thẳng; bấm: phóng to xem */}
+            {FLOAT_CARDS.map(([src, caption], i) => (
+              <button type="button" className={`fcard f${i + 1}`} key={src} onClick={() => setZoom(i)} aria-label={`Xem ${caption}`}><img src={img(src)} alt="" /></button>
+            ))}
             {[1, 2, 3, 4, 5].map(i => <span className={`stage-spark k${i}`} key={i} />)}
             <img className="stage-logo" src={img('brand/logo')} alt="" />
-            <img className="stage-kids" src={img('brand/kids-jump')} alt="" />          </div>
+            <img className="stage-kids" src={img('brand/kids-jump')} alt="" />
+          </div>
         </div>
       </section>
+      {zoom !== null && <Lightbox items={CARD_ITEMS} index={zoom} onClose={() => setZoom(null)} />}
 
       <div className="container">
         <div className="story-banner reveal">
