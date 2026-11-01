@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { NotifyForm, ProductCard, QtyInput } from '../components/Blocks';
+import ProductArt from '../components/ProductArt';
 import { Box, Briefcase, Calculator, Clock, Gift, Refresh, Shield, Smile, Stars, Target, Truck, Users } from '../components/Icons';
 import { REVIEWS, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
@@ -34,10 +35,18 @@ export default function ProductDetail() {
         <div className="crumbs" style={{ marginBottom: 24 }}><Link to="/">Trang chủ</Link> / <Link to="/san-pham">Sản phẩm</Link> / {p.name}</div>
         <div className="detail">
           <div className="gallery">
-            <div className="main"><img src={gallery[shot] || p.img} alt={p.name} /></div>
-            <div className="thumbs">
-              {gallery.map((src, i) => <button key={src} className={i === shot ? 'on' : ''} onClick={() => setShot(i)} aria-label={`Ảnh ${i + 1}`}><img src={src} alt="" loading="lazy" /></button>)}
-            </div>
+            {p.art ? (
+              <div className="main art"><ProductArt art={p.art} size="lg" /><span className="art-note">Hình ảnh sản phẩm sẽ được cập nhật khi ra mắt</span></div>
+            ) : (
+              <>
+                <div className="main"><img src={gallery[shot] || p.img} alt={p.name} /></div>
+                {gallery.length > 1 && (
+                  <div className="thumbs">
+                    {gallery.map((src, i) => <button key={src} className={i === shot ? 'on' : ''} onClick={() => setShot(i)} aria-label={`Ảnh ${i + 1}`}><img src={src} alt="" loading="lazy" /></button>)}
+                  </div>
+                )}
+              </>
+            )}
           </div>
           <div>
             {soon

@@ -1,14 +1,13 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommitStrip, PageHero, SectionHead } from '../components/Blocks';
-import { CardBrowser, JobExplorer, Lightbox, TileGrid } from '../components/Game';
-import { Arrow, Bulb, Heart, Users, Wallet } from '../components/Icons';
+import { CardBrowser, JobExplorer, TileGrid } from '../components/Game';
+import ProductArt from '../components/ProductArt';
+import { useShop } from '../lib/ShopContext';
+import { Bell, Bulb, Heart, Users, Wallet } from '../components/Icons';
 import { BRAND, COMPONENTS, ITEM_PRICE, KID_TIPS, LEARN, NOTES, PARENT_TIPS, RULES, SETUP, SHOP_STEPS, START_MONEY, TURN, WIN, img } from '../data';
 
 const LEARN_STYLE = [['var(--yellow-2)', Wallet], ['var(--orange)', Bulb], ['var(--blue)', Users], ['var(--green)', Heart]];
-const TOC = [['su-menh', 'Sứ mệnh'], ['thanh-phan', 'Thành phần'], ['cach-choi', 'Cách chơi'], ['nghe-nghiep', '8 nghề'], ['bo-the', 'Bộ thẻ'], ['phu-huynh', 'Phụ huynh'], ['sach-huong-dan', 'Sách hướng dẫn']];
-const GUIDE = ['Bìa trước', 'Mục lục · Sứ mệnh', 'Thành phần · 8 nghề', 'Chuẩn bị · Luật chơi', 'Các ô · Mua sắm', 'Chiến thắng · Thẻ nghề & đồ vật', 'Thẻ Cộng / Trừ tiền · Túi mù', 'Bí quyết · Góc phụ huynh', 'Bìa sau']
-  .map((caption, i) => ({ src: img(`guide/${String(i + 1).padStart(2, '0')}`), caption }));
+const TOC = [['su-menh', 'Sứ mệnh'], ['thanh-phan', 'Thành phần'], ['cach-choi', 'Cách chơi'], ['nghe-nghiep', '8 nghề'], ['bo-the', 'Bộ thẻ'], ['phu-huynh', 'Phụ huynh']];
 const FAQ = [
   ['Bé mấy tuổi chơi được?', 'Moni Yo dành cho bé từ 5 tuổi. Bé nhỏ hơn có thể chơi cùng bố mẹ, người lớn giúp đọc thẻ và đếm tiền.'],
   ['Một ván chơi mấy người?', 'Từ 2 đến 4 người chơi. Mỗi người chọn 1 nghề và 1 quân cờ.'],
@@ -18,7 +17,7 @@ const FAQ = [
 ];
 
 export default function About() {
-  const [guideOpen, setGuideOpen] = useState(null);
+  const mainArt = useShop().products.find(p => p.id === 'moni-yo')?.art;
   return (
     <>
       <PageHero eyebrow="Giới thiệu sản phẩm" title="Moni Yo – Bộ đồ chơi giáo dục tài chính">Giới thiệu</PageHero>
@@ -61,11 +60,11 @@ export default function About() {
               <thead><tr><th>Thành phần</th><th>Số lượng</th></tr></thead>
               <tbody>{COMPONENTS.map(([n, q]) => <tr key={n}><td>{n}</td><td>{q}</td></tr>)}</tbody>
             </table>
-            <div style={{ marginTop: 20 }}><Link to="/san-pham/moni-yo" className="btn">Đặt mua bộ Moni Yo <Arrow /></Link></div>
+            <div style={{ marginTop: 20 }}><Link to="/san-pham/moni-yo" className="btn"><Bell /> Nhận tin khi ra mắt</Link></div>
           </div>
           <div className="reveal stack-imgs">
-            <img src={img('product/box-back')} alt="Mặt sau hộp Moni Yo" loading="lazy" />
-            <img src={img('product/pawns')} alt="8 quân cờ nhân vật" loading="lazy" />
+            <div className="art-box"><ProductArt art={mainArt} size="lg" /></div>
+            <img src={img('product/money')} alt="Tiền Moni Yo mệnh giá 1, 2, 5, 10 đồng" loading="lazy" />
           </div>
         </div>
       </section>
@@ -143,19 +142,6 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section section-alt" id="sach-huong-dan">
-        <div className="container">
-          <SectionHead eyebrow="Xem trước" title="Sách hướng dẫn chơi" sub="16 trang hướng dẫn kèm trong hộp. Bấm để xem từng trang." />
-          <div className="guide-grid">
-            {GUIDE.map((g, i) => (
-              <button key={g.src} className={`guide-page reveal ${i === 0 || i === GUIDE.length - 1 ? 'single' : ''}`} onClick={() => setGuideOpen(i)}>
-                <img src={g.src} alt="" loading="lazy" /><span>{g.caption}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="section">
         <div className="container" style={{ maxWidth: 820 }}>
           <SectionHead eyebrow="Hỏi đáp" title="Câu hỏi thường gặp" />
@@ -165,7 +151,6 @@ export default function About() {
         </div>
       </section>
       <CommitStrip />
-      {guideOpen !== null && <Lightbox items={GUIDE} index={guideOpen} onClose={() => setGuideOpen(null)} />}
     </>
   );
 }

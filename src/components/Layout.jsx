@@ -46,7 +46,7 @@ function Header() {
           <Link to="/gio-hang" className="icon-btn" aria-label="Giỏ hàng">
             <CartIcon /><span className="badge">{totals.count}</span>
           </Link>
-          <Link to="/san-pham" className="btn btn-sm btn-cta">Đặt hàng ngay</Link>
+          <Link to="/san-pham/moni-yo" className="btn btn-sm btn-cta">Nhận tin ra mắt</Link>
           <button className="icon-btn menu-toggle" onClick={() => setOpen(o => !o)} aria-label="Mở menu"><Menu /></button>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function Layout() {
       {!isAdmin && <Footer onAi={openAi} />}
       {!isAdmin && !aiOpen && (
         <div className="floating">
-          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-ic"><ChatAI size={26} /><i>AI</i></span><span className="fab-label">Hỏi trợ lý<small>Moni Yo</small></span></button>
+          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-wave" /><span className="fab-wave w2" /><span className="fab-ic"><ChatAI size={28} /></span><i className="fab-badge">AI</i><span className="fab-spark s1" /><span className="fab-spark s2" /><span className="fab-spark s3" /></button>
           <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}

@@ -48,7 +48,8 @@ docs/MONI YO/           Bộ ảnh gốc (~660MB) – KHÔNG commit (.gitignore)
 Ảnh minh hoạ lớn: thu về kích thước hiển thị 2x rồi nén WebP chất lượng 82–85. Logo, icon ô bàn cờ, tiền: WebP lossless.
 
 ## Ghi chú
-- Sản phẩm có `status: 'soon'` (trong `src/data.js` hoặc chọn ở trang quản trị) hiện "Sắp ra mắt": ẩn giá, không cho vào giỏ, có form nhận tin (lưu vào mục Liên hệ của admin). Hiện chỉ "Bộ đồ chơi Moni Yo" đang bán.
+- Sản phẩm chưa ra mắt nên web **không dùng ảnh sản phẩm** (hộp, bàn cờ, chồng thẻ, quân cờ, sách hướng dẫn). Ảnh sản phẩm là component `ProductArt` ghép từ logo, nhân vật, icon ô bàn cờ (thông số `art` trong `src/data.js`). Khi có ảnh thật: thêm `img`/`gallery` và bỏ `art`.
+- Mọi sản phẩm đang `status: 'soon'` → hiện "Sắp ra mắt": ẩn giá, không cho vào giỏ, có form nhận tin (lưu vào mục Liên hệ của admin). Đổi trạng thái trong admin hoặc `src/data.js`.
 - Màn hình rộng (≥1600px, ví dụ màn 27") được phóng to toàn bộ giao diện bằng CSS `zoom` theo biến `--z` cuối `styles.css`; khi viết CSS dùng `vh`/`vw` nhớ chia cho `var(--z)`.
 - Giá bán, tồn kho, lượt bán, đánh giá, đơn hàng mẫu, địa chỉ/hotline/email là số liệu demo – cần thay bằng thông tin thật.
 - Dữ liệu (giỏ hàng, đơn hàng, sản phẩm sửa trong admin, liên hệ) lưu ở `localStorage` của trình duyệt.

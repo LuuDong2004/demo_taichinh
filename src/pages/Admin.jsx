@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Chart, Chat, Edit, LogOut, Receipt, Trash } from '../components/Icons';
+import { ProductThumb } from '../components/ProductArt';
 import { BLOG, DEFAULT_PRODUCTS, img, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money, noAccent } from '../lib/utils';
@@ -89,10 +90,10 @@ function Dashboard() {
   );
 }
 
-const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5+ tuổi', img: img('product/box'), short: '', badge: '' };
+const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5+ tuổi', img: img('brand/kids-jump'), short: '', badge: '' };
+// Chưa dùng ảnh sản phẩm thật: chỉ cho chọn hình nhận diện thương hiệu
 const IMAGE_CHOICES = [
-  ['Hộp sản phẩm', 'product/box'], ['Mặt sau hộp', 'product/box-back'], ['Bàn cờ', 'product/board'], ['Bộ thẻ & tiền', 'product/kit'],
-  ['Chồng thẻ', 'product/card-stacks'], ['Tiền Moni Yo', 'product/money'], ['Quân cờ nhân vật', 'product/pawns'], ['Nhân vật Moni Yo', 'brand/kids-jump'],
+  ['Nhân vật Moni Yo – nhảy', 'brand/kids-jump'], ['Nhân vật Moni Yo – ngồi', 'brand/kids-sit'], ['Nhân vật Moni Yo – ló đầu', 'brand/kids-peek'], ['Logo Moni Yo', 'brand/logo'],
 ];
 
 function ProductModal({ product, onClose }) {
@@ -102,6 +103,8 @@ function ProductModal({ product, onClose }) {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(e.target));
     const data = { ...d, price: +d.price, oldPrice: +d.oldPrice || undefined, stock: +d.stock };
+    // Giữ khung minh hoạ nếu không chọn ảnh khác; chọn ảnh thì bỏ khung minh hoạ
+    if (d.img === '') delete data.img; else data.art = undefined;
     if (product) setProducts(ps => ps.map(x => (x.id === product.id ? { ...x, ...data } : x)));
     else setProducts(ps => [{ ...data, id: noAccent(d.name).replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString(36), rating: 5, sold: 0, desc: d.short, includes: ['Đang cập nhật'], kind: 'addon', gallery: [d.img] }, ...ps]);
     toast('Đã lưu sản phẩm ✔');
@@ -118,7 +121,7 @@ function ProductModal({ product, onClose }) {
           <div className="field"><label>Tồn kho</label><input className="input" name="stock" type="number" defaultValue={p.stock} /></div>
           <div className="field"><label>Độ tuổi</label><input className="input" name="age" defaultValue={p.age} /></div>
           <div className="field full"><label>Ảnh sản phẩm</label>
-            <select className="input" name="img" defaultValue={p.img}>{IMAGE_CHOICES.map(([l, v]) => <option key={v} value={img(v)}>{l}</option>)}</select>
+            <select className="input" name="img" defaultValue={p.art ? '' : p.img}>{p.art && <option value="">Khung minh hoạ (hiện tại)</option>}{IMAGE_CHOICES.map(([l, v]) => <option key={v} value={img(v)}>{l}</option>)}</select>
           </div>
           <div className="field"><label>Tình trạng</label><select className="input" name="status" defaultValue={p.status || 'sale'}><option value="sale">Đang bán</option><option value="soon">Sắp ra mắt</option></select></div>
           <div className="field"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
@@ -158,7 +161,7 @@ function ProductsAdmin() {
           <tbody>
             {products.map(p => (
               <tr key={p.id}>
-                <td><img className="thumb-sm" src={p.img} alt="" /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{isSoon(p) ? <span className="status st-wait">Sắp ra mắt</span> : <span className="status st-ok">Đang bán</span>}</td>
+                <td><span className="thumb-sm"><ProductThumb p={p} size="sm" /></span></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{isSoon(p) ? <span className="status st-wait">Sắp ra mắt</span> : <span className="status st-ok">Đang bán</span>}</td>
                 <td className="row-actions">
                   <button onClick={() => setEditing(p)}><Edit size={14} />Sửa</button>
                   <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : <Trash size={14} />}</button>

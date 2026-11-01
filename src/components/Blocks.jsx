@@ -4,6 +4,7 @@ import { REVIEWS, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money } from '../lib/utils';
 import { Bell, Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
+import { ProductThumb } from './ProductArt';
 
 export function ProductCard({ p }) {
   const { addToCart } = useShop();
@@ -13,7 +14,7 @@ export function ProductCard({ p }) {
       <Link to={`/san-pham/${p.id}`} className="thumb">
         {soon ? <span className="tag soon-tag">Sắp ra mắt</span> : p.badge && <span className="tag">{p.badge}</span>}
         <span className="age">{p.age}</span>
-        <img src={p.img} alt={p.name} loading="lazy" decoding="async" />
+        <ProductThumb p={p} />
       </Link>
       <div className="body">
         <h3><Link to={`/san-pham/${p.id}`}>{p.name}</Link></h3>

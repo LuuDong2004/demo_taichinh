@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BRAND, COUPON, ITEM_PRICE, JOBS } from '../data';
+import { BRAND, ITEM_PRICE, JOBS } from '../data';
 import { noAccent } from './utils';
 
 // Trợ lý mô phỏng: khớp từ khoá (không dấu) → câu trả lời. Thay bằng API thật khi có backend.
@@ -9,7 +9,7 @@ const RULES = [
     a: q => {
       const age = parseInt((q.match(/\d+/) || [])[0]);
       if (age && age < 5) return <>Moni Yo dành cho bé từ 5 tuổi. Với bé {age} tuổi, bố mẹ có thể chơi cùng con và giúp con đếm tiền, đọc thẻ. Bố mẹ có thể bắt đầu bằng việc cho bé tập nhận biết 4 mệnh giá tiền có trong hộp 💛</>;
-      return <>Mình gợi ý <Link to="/san-pham/moni-yo">Bộ đồ chơi Moni Yo</Link> – dành cho bé từ 5 tuổi, 2–4 người chơi. Bé chọn 1 trong 8 nghề, đi làm kiếm tiền và mua đủ 4 đồ vật để chiến thắng!</>;
+      return <>Mình gợi ý <Link to="/san-pham/moni-yo">Bộ đồ chơi Moni Yo</Link> (sắp ra mắt) – dành cho bé từ 5 tuổi, 2–4 người chơi. Bé chọn 1 trong 8 nghề, đi làm kiếm tiền và mua đủ 4 đồ vật để chiến thắng!</>;
     },
   },
   { k: ['luat', 'cach choi', 'choi the nao', 'huong dan'], a: () => <>Mỗi lượt có 3 bước: <b>tung xúc xắc → di chuyển theo chiều kim đồng hồ → làm theo ô vừa dừng</b>.{'\n'}Ô xanh rút thẻ Cộng tiền, ô đỏ rút thẻ Trừ tiền, ô vàng rút thẻ Túi mù, ô Mua sắm được mua 1 thẻ Đồ vật ({ITEM_PRICE} đồng). Ai gom đủ 4 đồ vật của nghề mình trước sẽ thắng 🏆{'\n'}Xem đầy đủ ở <Link to="/gioi-thieu">trang Giới thiệu</Link>.</> },
@@ -19,7 +19,7 @@ const RULES = [
   { k: ['tieu vat', 'bao nhieu tien', 'tien tieu'], a: () => <>Quy tắc gợi ý: <b>tuổi của bé × 5.000đ mỗi tuần</b>. Ví dụ bé 6 tuổi → 30.000đ/tuần.{'\n'}Hãy kèm theo 3 hũ: 50% Tiêu – 40% Tiết kiệm – 10% Chia sẻ. Bố mẹ có thể thử tab “3 hũ” ở phía trên!</> },
   { k: ['giao hang', 'ship', 'van chuyen', 'bao lau'], a: () => <>Giao toàn quốc trong 2–4 ngày 🚚. <b>Miễn phí</b> cho đơn từ 500.000đ, đơn nhỏ hơn phí 30.000đ.</> },
   { k: ['tiet kiem', 'de danh'], a: () => <>3 mẹo giúp bé tiết kiệm:{'\n'}• Đặt mục tiêu có hình ảnh (dán ảnh món đồ lên hũ).{'\n'}• Dùng hũ trong suốt để bé “thấy” tiền lớn lên.{'\n'}• Tiết kiệm từ những điều nhỏ bé – không cần nhiều tiền mới bắt đầu.{'\n'}Đọc thêm: <Link to="/blog/bi-quyet-tai-chinh-cho-tre">4 bí quyết tài chính cho bé</Link></> },
-  { k: ['gia', 'bao nhieu', 'khuyen mai', 'giam', 'ma'], a: () => <>Bộ đồ chơi Moni Yo đang ưu đãi <b>349.000đ</b> (giá gốc 420.000đ). Nhập mã <b>{COUPON}</b> ở giỏ hàng để giảm thêm 10% 🎁</> },
+  { k: ['gia', 'bao nhieu', 'khuyen mai', 'giam', 'ma', 'mua', 'dat hang'], a: () => <>Moni Yo đang <b>sắp ra mắt</b> nên chưa mở bán. Bạn để lại thông tin ở <Link to="/san-pham/moni-yo">trang sản phẩm</Link>, Moni Yo sẽ báo giá và ưu đãi ra mắt sớm nhất 🔔</> },
   { k: ['doi tra', 'bao hanh', 'loi', 'thieu'], a: () => <>Đổi mới trong 7 ngày nếu lỗi sản xuất hoặc thiếu thành phần. Liên hệ hotline {BRAND.hotline} hoặc <Link to="/lien-he">gửi lời nhắn</Link> nhé.</> },
   { k: ['xin chao', 'chao', 'hello', 'hi'], a: () => 'Chào bạn! Mình là trợ lý Moni Yo. Bạn muốn tìm hiểu luật chơi, chọn quà cho bé, hay cần mẹo dạy con về tiền?' },
 ];

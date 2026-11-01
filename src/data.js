@@ -179,21 +179,21 @@ export const LEARN = [
 
 const FULL_SET = COMPONENTS.map(([n, q]) => `${q} ${n}`).concat('1 Sách hướng dẫn 16 trang');
 
-// status: 'soon' = sản phẩm chưa hoàn thiện thiết kế → hiện "Sắp ra mắt", không bán, cho đăng ký nhận tin
+// status: 'soon' = sản phẩm chưa ra mắt (thiết kế chưa hoàn thiện) → hiện "Sắp ra mắt", không bán, cho đăng ký nhận tin
 export const isSoon = p => p.status === 'soon';
 
 export const DEFAULT_PRODUCTS = [
   {
-    id: 'moni-yo', name: 'Bộ đồ chơi Moni Yo', price: 349000, oldPrice: 420000,
-    img: img('product/box'), gallery: ['product/box', 'product/box-back', 'product/board', 'product/kit', 'product/card-stacks', 'product/pawns'].map(img),
-    age: '5+ tuổi', badge: 'Bán chạy', stock: 120, rating: 4.9, sold: 1284, kind: 'set',
+    id: 'moni-yo', status: 'soon', name: 'Bộ đồ chơi Moni Yo', price: 349000, oldPrice: 420000,
+    img: img('brand/kids-jump'), art: { bg: ['#FFE680', '#FFC21A'], logo: true, kids: 'brand/kids-jump', icons: ['start', 'cong-tien', 'tui-mu'] },
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'set',
     short: 'Board game nhập vai 8 nghề nghiệp: đi làm kiếm tiền, xử lý tình huống, mua đủ 4 đồ vật để chiến thắng.',
     desc: 'Mỗi bé chọn một nghề trong 8 nghề, tung xúc xắc đi quanh bàn cờ, rút thẻ Cộng tiền, Trừ tiền, Túi mù và dừng ở ô Mua sắm để mua đồ vật của nghề mình. Ai thu thập đủ 4 thẻ Đồ vật trước sẽ thắng. Qua từng lượt, bé học cách kiếm tiền, cân nhắc chi tiêu, tiết kiệm và tự đưa ra lựa chọn.',
     includes: FULL_SET,
   },
   {
     id: 'bo-the-tinh-huong', status: 'soon', name: 'Bộ 65 thẻ tình huống', price: 99000,
-    img: img('product/card-stacks'), gallery: ['product/card-stacks', 'cards/cong/ban-ban-nuoc-chanh-tu-pha', 'cards/tru/troi-nong-ban-mua-mot-cay-kem', 'cards/tui-mu/sinh-nhat-vui-ve'].map(img),
+    img: img('brand/kids-jump'), art: { bg: ['#D9F5C8', '#8FD86F'], icons: ['cong-tien', 'tui-mu', 'tru-tien'] },
     age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '20 thẻ Cộng tiền, 20 thẻ Trừ tiền và 25 thẻ Túi mù – thay thế hoặc bổ sung cho bộ chính.',
     desc: 'Mỗi thẻ là một tình huống gần gũi: bán nước chanh, gom chai nhựa, mua quà sinh nhật bạn, làm mất tiền… Bố mẹ có thể dùng riêng bộ thẻ để kể chuyện và hỏi bé “nếu là con, con sẽ làm gì?”.',
@@ -201,7 +201,7 @@ export const DEFAULT_PRODUCTS = [
   },
   {
     id: 'bo-the-nghe-nghiep', status: 'soon', name: 'Bộ thẻ 8 nghề & 32 đồ vật', price: 99000,
-    img: img('items/may-bay'), gallery: ['items/may-bay', 'items/ong-nghe', 'items/mu-dau-bep', 'items/dan-ghi-ta'].map(img),
+    img: img('brand/kids-jump'), art: { bg: ['#D6E9FF', '#86B9F5'], chars: ['bac-si', 'phi-cong', 'dau-bep'] },
     age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '8 thẻ Nghề nghiệp và 32 thẻ Đồ vật minh họa sinh động, giúp bé làm quen các công việc.',
     desc: 'Phi công, Lính cứu hỏa, Kỹ sư, Giáo viên, Bác sĩ, Ca sĩ, Cảnh sát giao thông và Đầu bếp – mỗi nghề có 4 đồ vật đặc trưng. Bộ thẻ cũng dùng được cho trò ghép cặp nghề – đồ vật.',
@@ -209,7 +209,7 @@ export const DEFAULT_PRODUCTS = [
   },
   {
     id: 'tien-moni-yo', status: 'soon', name: 'Tiền Moni Yo (240 tờ)', price: 59000,
-    img: img('product/money'), gallery: ['product/money', 'product/kit'].map(img),
+    img: img('brand/kids-jump'), art: { bg: ['#FFF3C4', '#FFD45C'], icons: ['cong-tien', 'mua-sam', 'tru-tien'] },
     age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Tiền giấy 4 mệnh giá 1, 2, 5, 10 đồng – in màu dễ phân biệt, giúp bé tập đếm và đổi tiền.',
     desc: 'Mỗi mệnh giá một màu riêng: vàng 1 đồng, xanh dương 2 đồng, hồng 5 đồng, xanh lá 10 đồng. Ngoài trò chơi, bé có thể dùng để chơi bán hàng, đi chợ tại nhà.',
@@ -217,7 +217,7 @@ export const DEFAULT_PRODUCTS = [
   },
   {
     id: 'quan-co-nhan-vat', status: 'soon', name: 'Bộ 8 quân cờ nhân vật', price: 79000,
-    img: img('product/pawns'), gallery: ['product/pawns', 'jobs/bac-si', 'jobs/phi-cong'].map(img),
+    img: img('brand/kids-jump'), art: { bg: ['#EADCFF', '#B593F0'], chars: ['ky-su', 'giao-vien', 'ca-si'], icons: ['them-luot'] },
     age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Quân cờ hình 8 nhân vật nghề nghiệp, kèm 1 xúc xắc.',
     desc: 'Mỗi quân cờ là một nhân vật: bác sĩ, ca sĩ, cảnh sát giao thông, đầu bếp, giáo viên, kỹ sư, lính cứu hỏa, phi công. Bé chọn đúng nhân vật của nghề mình để nhập vai.',
@@ -225,7 +225,7 @@ export const DEFAULT_PRODUCTS = [
   },
   {
     id: 'ban-co-moni-yo', status: 'soon', name: 'Bàn cờ Moni Yo', price: 89000,
-    img: img('product/board'), gallery: ['product/board', 'brand/cover'].map(img),
+    img: img('brand/kids-jump'), art: { bg: ['#D4F1FF', '#7CCDF2'], icons: ['start', 'dong-bang', 've-start'] },
     age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Bàn cờ đồng cỏ – dòng suối với đường đi uốn lượn và 8 loại ô hành động.',
     desc: 'Đường đi gồm ô START, Cộng tiền, Trừ tiền, Túi mù, Đóng băng, Thêm lượt, Quay về START và Mua sắm. Phù hợp để thay thế khi bàn cờ cũ bị hỏng.',
@@ -234,22 +234,22 @@ export const DEFAULT_PRODUCTS = [
 ];
 
 export const BLOG = [
-  { id: 'day-con-ve-tien-tu-5-tuoi', title: 'Dạy con về tiền từ 5 tuổi: bắt đầu từ đâu?', cat: 'Kiến thức', date: '2026-10-20', img: img('brand/cover'), read: 6,
+  { id: 'day-con-ve-tien-tu-5-tuoi', title: 'Dạy con về tiền từ 5 tuổi: bắt đầu từ đâu?', cat: 'Kiến thức', date: '2026-10-20', img: img('brand/kids-steps'), read: 6,
     excerpt: 'Trẻ 5 tuổi đã có thể hiểu tiền dùng để trao đổi. Đây là 5 bước nhẹ nhàng để bắt đầu.',
     body: ['Nhiều phụ huynh nghĩ nói chuyện tiền bạc với con là quá sớm. Thực tế, từ 5 tuổi trẻ đã có khả năng nhận biết mệnh giá, so sánh nhiều – ít và hiểu rằng muốn có đồ vật cần trao đổi bằng tiền.', 'Bước 1: Cho con cầm và đếm tiền trong những lần đi chợ. Bước 2: Giải thích tiền đến từ công việc – bố mẹ đi làm mới có lương. Bước 3: Dùng 3 hũ Tiêu – Tiết kiệm – Chia sẻ. Bước 4: Để con tự quyết một khoản nhỏ. Bước 5: Chơi board game nhập vai như Moni Yo để luyện tập an toàn.', 'Điều quan trọng là kiên nhẫn và biến bài học thành trò chơi, thay vì những lời răn dạy khô khan.'] },
   { id: 'bi-quyet-tai-chinh-cho-tre', title: '4 bí quyết tài chính bé nào cũng nên biết', cat: 'Phương pháp', date: '2026-10-12', img: img('product/money'), read: 5,
     excerpt: 'Trân trọng đồng tiền, suy nghĩ trước khi mua, tiết kiệm từ điều nhỏ và tự tin lựa chọn.',
     body: ['Trân trọng đồng tiền: tiền không tự nhiên xuất hiện. Khi bé hiểu mỗi đồng đều đến từ công sức, bé sẽ dùng tiền cẩn thận hơn.', 'Suy nghĩ trước khi mua: hãy tập cho bé hai câu hỏi “Mình có thực sự cần món này không?” và “Mình có đủ tiền không?”.', 'Tiết kiệm từ những điều nhỏ bé và tự tin đưa ra lựa chọn: không cần nhiều tiền mới bắt đầu để dành, và đôi khi giữ tiền lại cho sau này là quyết định đáng giá.'] },
-  { id: 'board-game-va-tu-duy', title: 'Vì sao board game giúp trẻ phát triển tư duy tài chính?', cat: 'Nghiên cứu', date: '2026-09-30', img: img('product/board'), read: 7,
+  { id: 'board-game-va-tu-duy', title: 'Vì sao board game giúp trẻ phát triển tư duy tài chính?', cat: 'Nghiên cứu', date: '2026-09-30', img: img('brand/kids-sit'), read: 7,
     excerpt: 'Chơi là cách học tự nhiên nhất. Board game cho phép bé thử – sai mà không mất gì.',
     body: ['Trong board game, bé phải ra quyết định liên tục: mua ngay hay để dành, chấp nhận rủi ro hay an toàn. Mỗi lượt chơi là một vòng lặp hành động – kết quả – rút kinh nghiệm.', 'Trẻ ghi nhớ tốt hơn khi được trải nghiệm bằng tay và bằng cảm xúc. Board game kết hợp cả hai, lại có bố mẹ cùng tham gia.'] },
-  { id: 'nghe-nghiep-va-tien', title: 'Kể con nghe về nghề nghiệp: mỗi công việc đều đáng quý', cat: 'Nuôi dạy', date: '2026-09-18', img: img('product/pawns'), read: 4,
+  { id: 'nghe-nghiep-va-tien', title: 'Kể con nghe về nghề nghiệp: mỗi công việc đều đáng quý', cat: 'Nuôi dạy', date: '2026-09-18', img: img('jobs/bac-si'), read: 4,
     excerpt: 'Giúp con hiểu mỗi nghề đều tạo ra giá trị và thu nhập theo cách riêng.',
     body: ['Đầu bếp nấu món ngon, bác sĩ chữa bệnh, kỹ sư xây nhà, ca sĩ mang lại niềm vui… Hãy kể cho con về công việc của những người xung quanh và giá trị họ mang lại.', 'Khi hiểu rằng tiền là phần thưởng cho giá trị mình tạo ra, trẻ sẽ trân trọng tiền bạc và có động lực học hỏi.'] },
-  { id: 'cau-hoi-goi-mo-cho-phu-huynh', title: '3 câu hỏi gợi mở giúp con nghĩ về tiền', cat: 'Hỏi đáp', date: '2026-09-02', img: img('guide/08'), read: 5,
+  { id: 'cau-hoi-goi-mo-cho-phu-huynh', title: '3 câu hỏi gợi mở giúp con nghĩ về tiền', cat: 'Hỏi đáp', date: '2026-09-02', img: img('brand/kids-peek'), read: 5,
     excerpt: '“Con đang có bao nhiêu tiền?”, “Vì sao con muốn mua món này trước?”, “Nếu chưa đủ tiền, con sẽ làm gì?”',
     body: ['Thay vì đưa ra đáp án, hãy đặt câu hỏi để con tự suy nghĩ. Những câu hỏi đơn giản giúp bé dừng lại trước khi quyết định và hiểu lý do của chính mình.', 'Sau mỗi ván Moni Yo, hãy cùng con nhìn lại: lúc nào con mua đúng, lúc nào nên chờ thêm? Điều quan trọng không chỉ là thắng thua mà là điều con học được.'] },
-  { id: 'choi-cung-con-cuoi-tuan', title: '5 trò chơi tài chính cuối tuần không cần mua gì', cat: 'Hoạt động', date: '2026-08-22', img: img('product/card-stacks'), read: 4,
+  { id: 'choi-cung-con-cuoi-tuan', title: '5 trò chơi tài chính cuối tuần không cần mua gì', cat: 'Hoạt động', date: '2026-08-22', img: img('brand/kids-jump'), read: 4,
     excerpt: 'Bán hàng tại nhà, đi chợ giả, săn giá rẻ… đơn giản mà hiệu quả.',
     body: ['1. Cửa hàng tại nhà: bé bán đồ chơi cho bố mẹ bằng tiền giấy tự vẽ. 2. Đi chợ với ngân sách: cho bé 50.000đ chọn món ăn sáng cả nhà. 3. Săn giá: so sánh 2 món cùng loại. 4. Đổi việc nhà lấy tiền thưởng nhỏ. 5. Chơi Moni Yo buổi tối cùng cả nhà.'] },
 ];

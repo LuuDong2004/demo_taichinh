@@ -2,7 +2,8 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogCard, CommitStrip, Counter, ProductCard, ReviewSlider, SectionHead } from '../components/Blocks';
 import { DECKS, DeckFan, JobExplorer, TileGrid } from '../components/Game';
-import { Arrow, CartIcon, Smile, Users } from '../components/Icons';
+import { Arrow, Bell, Smile, Users } from '../components/Icons';
+import ProductArt from '../components/ProductArt';
 import { BLOG, BRAND, COMPONENTS, img } from '../data';
 import { useShop } from '../lib/ShopContext';
 
@@ -14,6 +15,7 @@ const STEPS = [
 ];
 
 // Thẻ thật bay quanh hộp ở hero
+const STAGE_TILES = ['cong-tien', 'tui-mu', 'mua-sam', 'start'];
 const FLOAT_CARDS = ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'items/ong-nghe', 'cards/tui-mu/sinh-nhat-vui-ve', 'cards/tru/troi-nong-ban-mua-mot-cay-kem'];
 
 export default function Home() {
@@ -34,12 +36,12 @@ export default function Home() {
       <section className="hero" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
         <div className="container">
           <div className="reveal">
-            <span className="eyebrow left">{BRAND.desc}</span>
+            <span className="eyebrow launch"><i />Sắp ra mắt · Board game tài chính cho bé 5+</span>
             <h1>Chơi thật vui, <span className="accent">giỏi quản lý tiền</span></h1>
             <div className="tagline">Chọn nghề – Kiếm tiền – Xử lý tình huống – Mua đủ đồ vật!</div>
             <p className="lead">Moni Yo giúp bé hiểu giá trị đồng tiền, hình thành tư duy tài chính và kỹ năng giải quyết vấn đề qua những tình huống gần gũi – bên bàn cờ cùng cả nhà.</p>
             <div className="hero-ctas">
-              <Link to="/san-pham/moni-yo" className="btn btn-lg"><CartIcon /> Đặt hàng ngay</Link>
+              <Link to="/san-pham/moni-yo" className="btn btn-lg"><Bell /> Nhận tin ra mắt</Link>
               <Link to="/gioi-thieu" className="btn btn-lg btn-light">Xem cách chơi <Arrow /></Link>
             </div>
             <div className="hero-trust">
@@ -48,12 +50,15 @@ export default function Home() {
               <span><b>8</b> nghề nghiệp</span>
             </div>
           </div>
-          <div className="hero-visual reveal" ref={visualRef}>
-            <span className="orbit" aria-hidden="true"><i>₫</i><i>₫</i><i>₫</i></span>
-            <span className="spark s1" aria-hidden="true" /><span className="spark s2" aria-hidden="true" /><span className="spark s3" aria-hidden="true" />
-            {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src} aria-hidden="true"><img src={img(src)} alt="" /></div>)}
-            <div className="box-float"><div className="box-tilt"><img src={img('product/box')} alt="Hộp đồ chơi Moni Yo" width="1600" height="1333" /></div></div>
-            <div className="sticker"><span><b>-17%</b>Mở bán</span></div>
+          {/* Chỉ dùng phần tử thiết kế đã có (logo, nhân vật, thẻ, icon ô bàn cờ) – chưa có ảnh sản phẩm */}
+          <div className="hero-stage reveal" ref={visualRef} aria-hidden="true">
+            <span className="stage-blob" />
+            <span className="stage-ring" />
+            {STAGE_TILES.map((t, i) => <span className={`stage-tile t${i + 1}`} key={t}><img src={img(`tiles/${t}`)} alt="" /></span>)}
+            {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src}><img src={img(src)} alt="" /></div>)}
+            <img className="stage-logo" src={img('brand/logo')} alt="" />
+            <img className="stage-kids" src={img('brand/kids-jump')} alt="" />
+            <span className="stage-badge"><Bell size={16} />Sắp ra mắt</span>
           </div>
         </div>
       </section>
@@ -66,7 +71,7 @@ export default function Home() {
             <p className="motto">“{BRAND.motto}”</p>
             <div><Link to="/gioi-thieu" className="btn btn-yellow btn-sm">Tìm hiểu thêm <Arrow /></Link></div>
           </div>
-          <div className="visual"><img src={img('brand/cover')} alt="Hai bạn nhỏ chơi Moni Yo bên bàn cờ" loading="lazy" /></div>
+          <div className="visual brand-visual"><img src={img('brand/kids-peek')} alt="Hai bạn nhỏ Moni Yo" loading="lazy" /></div>
         </div>
       </div>
 
@@ -120,7 +125,7 @@ export default function Home() {
         <div className="container">
           <SectionHead eyebrow="Trong hộp có gì?" title="Thành phần bộ đồ chơi" />
           <div className="inside">
-            <div className="inside-main reveal"><img src={img('product/board')} alt="Bàn cờ Moni Yo" loading="lazy" /></div>
+            <div className="inside-main art reveal"><ProductArt art={products.find(p => p.id === 'moni-yo')?.art} size="lg" /></div>
             <div className="inside-side reveal">
               <ul className="comp-list">
                 {COMPONENTS.map(([n, q]) => <li key={n}><b>{q}</b>{n}</li>)}

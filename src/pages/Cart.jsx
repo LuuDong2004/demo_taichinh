@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHero, QtyInput } from '../components/Blocks';
 import { ArrowLeft, Pig, Truck, X } from '../components/Icons';
+import { ProductThumb } from '../components/ProductArt';
 import { COUPON } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
@@ -67,7 +68,7 @@ export default function Cart() {
             )}
             {t.lines.map(l => (
               <div className="cart-row" key={l.id}>
-                <Link to={`/san-pham/${l.id}`}><img src={l.p.img} alt={l.p.name} /></Link>
+                <Link to={`/san-pham/${l.id}`} className="cart-thumb"><ProductThumb p={l.p} size="sm" /></Link>
                 <div><h4>{l.p.name}</h4><span style={{ fontSize: 13, color: 'var(--muted)' }}>{money(l.p.price)}</span></div>
                 <QtyInput value={l.qty} onChange={v => changeQty(l.id, v - l.qty)} />
                 <b className="line-total" style={{ color: 'var(--red)' }}>{money(l.p.price * l.qty)}</b>

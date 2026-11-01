@@ -57,16 +57,10 @@ await out(`${E}/mascot/1.png`, 'brand/kids-peek.webp', { width: 1200 });
 await out(`${E}/mascot/p.png`, 'brand/kids-jump.webp', { width: 1000 });
 await out(`${E}/mascot/q.png`, 'brand/kids-sit.webp', { width: 1400 });
 await out(`${E}/mascot/3.png`, 'brand/kids-steps.webp', { width: 1000 });
-await out(`${SRC}/Logo, avatar, cover/Cover (4).png`, 'brand/cover.webp', { width: 2000, quality: 82 });
 
-// ---------- Sản phẩm & thành phần ----------
-await out(`${SRC}/Bàn chơi, tiền, hộp/box 1.png`, 'product/box.webp', { width: 1600 });
-await out(`${SRC}/Bàn chơi, tiền, hộp/mặt đáy.png`, 'product/box-back.webp', { width: 1600 });
-await out(`${SRC}/Bàn chơi, tiền, hộp/visual board.png`, 'product/board.webp', { width: 1400 });
+// ---------- Thành phần đã có thiết kế ----------
+// Chưa xuất ảnh dựng sản phẩm (hộp, bàn cờ, chồng thẻ, quân cờ, ảnh bìa) và sách hướng dẫn: sản phẩm chưa ra mắt.
 await out(`${E}/Tien va cards/Tiền.png`, 'product/money.webp', { lossless: true });
-await out(`${E}/Tien va cards/card asset.png`, 'product/card-stacks.webp', { width: 1000 });
-await out(`${E}/Tien va cards/e6cbf640-ecac-4c28-8dcc-cb37fcc7754a.png`, 'product/kit.webp', { width: 1000 });
-await out(`${E}/8 nghề/cờ.png`, 'product/pawns.webp', { width: 1000 });
 
 // ---------- 8 nghề: nhân vật, dải 4 đồ vật, nền thẻ ----------
 const JOBS = [
@@ -90,12 +84,5 @@ for (const [dir, dest] of [['Token nghề nghiệp', 'items'], ['Thẻ cộng ti
 // ---------- Icon các ô trên bàn cờ ----------
 await splitRow(`${E}/Icon/Icon set.png`, ['cong-tien', 'tru-tien', 'tui-mu', 'mua-sam', 'start'], 'tiles', { top: 420 });
 await splitRow(`${E}/Icon/18c84b76-f65d-40b2-91fc-bcaa6b92a9a1.png`, ['dong-bang', 've-start', 'them-luot'], 'tiles');
-
-// ---------- Sách hướng dẫn ----------
-const GUIDE = ['Bìa trước', 'Trang 2-3', 'Trang 4-5', 'Trang 6-7', 'Trang 8-9', 'Trang 10-11', 'Trang 12-13', 'Trang 14-15', 'Bìa sau'];
-for (const [i, f] of GUIDE.entries()) {
-  const single = f.startsWith('Bìa');
-  await out(`${SRC}/Sách hướng dẫn/${f}.png`, `guide/${String(i + 1).padStart(2, '0')}.webp`, { width: single ? 1000 : 1800, quality: 82 });
-}
 
 console.log(`\nTổng: ${(total / 1024).toFixed(1)} MB`);
