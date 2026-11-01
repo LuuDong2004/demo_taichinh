@@ -942,7 +942,8 @@ td .thumb-sm { width: 52px; height: 52px; }
 }
 
 /* Hai bạn nhỏ nhún nhảy */
-.stage-kids { animation: kids-in .9s .15s cubic-bezier(.2, 1.3, .4, 1) both, kids-hop 2.2s ease-in-out 1.1s infinite; transform-origin: 50% 100%; }
+/* Hai bạn nhỏ đứng yên (chỉ hiện ra lúc tải trang); bật lại nhún nhảy: thêm ", kids-hop 2.2s ease-in-out 1.1s infinite" */
+.stage-kids { animation: kids-in .9s .15s cubic-bezier(.2, 1.3, .4, 1) both; transform-origin: 50% 100%; }
 @keyframes kids-hop {
   0%, 100% { transform: translateY(0) scale(1, 1); }
   15% { transform: translateY(0) scale(1.03, .97); }
