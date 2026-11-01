@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogCard, CommitStrip, Counter, ProductCard, ReviewSlider, SectionHead } from '../components/Blocks';
-import { DECKS, DeckFan, JobExplorer, Lightbox, TileGrid } from '../components/Game';
+import { DECKS, DeckFan, JobExplorer, TileGrid } from '../components/Game';
 import { Arrow, Bell, Smile, Users } from '../components/Icons';
 import ProductArt from '../components/ProductArt';
 import { BLOG, BRAND, COMPONENTS, img } from '../data';
@@ -22,11 +21,9 @@ const FLOAT_CARDS = [
   ['cards/tui-mu/sinh-nhat-vui-ve', 'Thẻ Túi mù – Sinh nhật vui vẻ'],
   ['cards/tru/troi-nong-ban-mua-mot-cay-kem', 'Thẻ Trừ tiền – Trời nóng, bạn mua một cây kem'],
 ];
-const CARD_ITEMS = FLOAT_CARDS.map(([src, caption]) => ({ src: img(src), caption }));
 
 export default function Home() {
   const { products } = useShop();
-  const [zoom, setZoom] = useState(null);
   return (
     <>
       <section className="hero">
@@ -56,9 +53,9 @@ export default function Home() {
                 <span className="track-tile" key={t} style={{ '--i': i }}><img src={img(`tiles/${t}`)} alt="" /></span>
               ))}
             </div>
-            {/* Rê chuột: thẻ nổi lên, đứng thẳng; bấm: phóng to xem */}
+            {/* Rê chuột: thẻ nổi lên, đứng thẳng (không bấm phóng to) */}
             {FLOAT_CARDS.map(([src, caption], i) => (
-              <button type="button" className={`fcard f${i + 1}`} key={src} onClick={() => setZoom(i)} aria-label={`Xem ${caption}`}><img src={img(src)} alt="" /></button>
+              <div className={`fcard f${i + 1}`} key={src}><img src={img(src)} alt={caption} /></div>
             ))}
             {[1, 2, 3, 4, 5].map(i => <span className={`stage-spark k${i}`} key={i} />)}
             <img className="stage-logo" src={img('brand/logo')} alt="" />
@@ -66,7 +63,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {zoom !== null && <Lightbox items={CARD_ITEMS} index={zoom} onClose={() => setZoom(null)} />}
 
       <div className="container">
         <div className="story-banner reveal">

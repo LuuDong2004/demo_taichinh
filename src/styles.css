@@ -894,8 +894,8 @@ td .thumb-sm { width: 52px; height: 52px; }
 .hero-stage .fcard.f2 { left: 3%; top: auto; bottom: 26%; width: 15%; }
 .hero-stage .fcard.f3 { right: 3%; bottom: 25%; width: 16%; }
 .hero-stage .fcard.f4 { right: 2%; top: 8%; }
-/* Rê chuột vào thẻ: dừng trôi, đứng thẳng, phóng to nổi lên; bấm để xem lớn */
-.hero-stage .fcard { padding: 0; display: block; cursor: zoom-in; transition: scale .35s cubic-bezier(.2, 1.4, .4, 1), rotate .35s, box-shadow .3s; }
+/* Rê chuột vào thẻ: dừng trôi, đứng thẳng, phóng to nổi lên */
+.hero-stage .fcard { padding: 0; display: block; transition: scale .35s cubic-bezier(.2, 1.4, .4, 1), rotate .35s, box-shadow .3s; }
 .hero-stage .fcard:hover, .hero-stage .fcard:focus-visible {
   z-index: 8; scale: 1.28; rotate: 0deg; animation-play-state: paused;
   box-shadow: 0 0 0 4px var(--yellow), 0 24px 44px rgba(42, 33, 23, .32);
