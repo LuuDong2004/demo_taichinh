@@ -134,7 +134,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* ---------- Hero ---------- */
 .hero {
   position: relative; overflow: hidden;
-  background: var(--cream-2);
+  /* Nhạt dần xuống màu nền trang để không lộ đường cắt với phần dưới */
+  background: linear-gradient(180deg, var(--cream-2) 0%, var(--cream-2) 62%, var(--cream) 100%);
   padding: 28px 0 44px;
 }
 .hero .container { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; position: relative; z-index: 1; }
@@ -353,7 +354,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- Page hero (inner pages) ---------- */
 .page-hero {
-  background: var(--cream-2); padding: 18px 0 26px; text-align: center; position: relative; overflow: hidden;
+  background: linear-gradient(180deg, var(--cream-2) 0%, var(--cream-2) 55%, var(--cream) 100%); padding: 18px 0 26px; text-align: center; position: relative; overflow: hidden;
 }
 .page-hero .title { margin: 6px 0; }
 .crumbs { font-size: 13px; color: var(--brown-2); font-weight: 600; }
