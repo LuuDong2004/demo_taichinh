@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Crop from '../components/Crop';
 import { Box, Chart, Chat, Edit, LogOut, Receipt, Trash } from '../components/Icons';
-import { BLOG, CROPS, DEFAULT_PRODUCTS } from '../data';
+import { BLOG, DEFAULT_PRODUCTS, img } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money, noAccent } from '../lib/utils';
 
@@ -90,7 +89,11 @@ function Dashboard() {
   );
 }
 
-const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5–7 tuổi', img: 'yellow', crop: 'box', short: '', badge: '' };
+const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5+ tuổi', img: img('product/box'), short: '', badge: '' };
+const IMAGE_CHOICES = [
+  ['Hộp sản phẩm', 'product/box'], ['Mặt sau hộp', 'product/box-back'], ['Bàn cờ', 'product/board'], ['Bộ thẻ & tiền', 'product/kit'],
+  ['Chồng thẻ', 'product/card-stacks'], ['Tiền Moni Yo', 'product/money'], ['Quân cờ nhân vật', 'product/pawns'], ['Nhân vật Moni Yo', 'brand/kids-jump'],
+];
 
 function ProductModal({ product, onClose }) {
   const { setProducts, toast } = useShop();
@@ -100,7 +103,7 @@ function ProductModal({ product, onClose }) {
     const d = Object.fromEntries(new FormData(e.target));
     const data = { ...d, price: +d.price, oldPrice: +d.oldPrice || undefined, stock: +d.stock };
     if (product) setProducts(ps => ps.map(x => (x.id === product.id ? { ...x, ...data } : x)));
-    else setProducts(ps => [{ ...data, id: noAccent(d.name).replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString(36), rating: 5, sold: 0, desc: d.short, includes: ['Đang cập nhật'] }, ...ps]);
+    else setProducts(ps => [{ ...data, id: noAccent(d.name).replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString(36), rating: 5, sold: 0, desc: d.short, includes: ['Đang cập nhật'], kind: 'addon', gallery: [d.img] }, ...ps]);
     toast('Đã lưu sản phẩm ✔');
     onClose();
   };
@@ -114,11 +117,8 @@ function ProductModal({ product, onClose }) {
           <div className="field"><label>Giá gốc</label><input className="input" name="oldPrice" type="number" defaultValue={p.oldPrice || ''} /></div>
           <div className="field"><label>Tồn kho</label><input className="input" name="stock" type="number" defaultValue={p.stock} /></div>
           <div className="field"><label>Độ tuổi</label><input className="input" name="age" defaultValue={p.age} /></div>
-          <div className="field"><label>Ảnh (bộ màu)</label>
-            <select className="input" name="img" defaultValue={p.img}><option value="yellow">Vàng</option><option value="teal">Xanh ngọc</option></select>
-          </div>
-          <div className="field"><label>Vùng ảnh</label>
-            <select className="input" name="crop" defaultValue={p.crop}>{Object.keys(CROPS).map(v => <option key={v}>{v}</option>)}</select>
+          <div className="field full"><label>Ảnh sản phẩm</label>
+            <select className="input" name="img" defaultValue={p.img}>{IMAGE_CHOICES.map(([l, v]) => <option key={v} value={img(v)}>{l}</option>)}</select>
           </div>
           <div className="field full"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
           <div className="field full"><label>Mô tả ngắn</label><textarea className="input" name="short" rows="2" defaultValue={p.short} /></div>
@@ -157,7 +157,7 @@ function ProductsAdmin() {
           <tbody>
             {products.map(p => (
               <tr key={p.id}>
-                <td><Crop img={p.img} area={p.crop} /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{p.age}</td>
+                <td><img className="thumb-sm" src={p.img} alt="" /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{p.age}</td>
                 <td className="row-actions">
                   <button onClick={() => setEditing(p)}><Edit size={14} />Sửa</button>
                   <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : <Trash size={14} />}</button>
@@ -211,7 +211,7 @@ export default function Admin() {
   return (
     <div className="admin">
       <aside className="admin-side">
-        <div className="logo-text">Ước Mơ Admin</div>
+        <div className="logo-text">Moni Yo Admin</div>
         {TABS.map(([k, Icon, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}><Icon size={18} />{l}</button>)}
         <button onClick={() => setIsAdmin(false)}><LogOut />Đăng xuất</button>
       </aside>

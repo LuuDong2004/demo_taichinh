@@ -64,7 +64,16 @@ export const Stars = ({ n = 5, size = 14 }) => (
   </span>
 );
 
-// Linh vật Heo Vàng – dùng cho nút trợ lý, avatar trong popup và các trạng thái trống
+// Ảnh đại diện trợ lý: khuôn mặt bé gái Moni Yo cắt từ ảnh nhân vật
+export function KidAvatar({ size = 40 }) {
+  return (
+    <span className="kid-avatar" style={{ width: size, height: size }} aria-hidden="true">
+      <img src="/img/brand/kids-peek.webp" alt="" />
+    </span>
+  );
+}
+
+// Heo đất – dùng cho các trạng thái trống (giỏ hàng, không tìm thấy trang)
 export function Pig({ size = 40 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">

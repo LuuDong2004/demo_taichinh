@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
 import { BlogCard } from '../components/Blocks';
-import Crop from '../components/Crop';
 import { Arrow } from '../components/Icons';
 import { BLOG } from '../data';
 import { fmtDate } from '../lib/utils';
@@ -18,14 +17,14 @@ export default function BlogPost() {
           <div className="crumbs" style={{ marginBottom: 16 }}><Link to="/">Trang chủ</Link> / <Link to="/blog">Blog</Link> / {b.cat}</div>
           <span className="chip">{b.cat}</span>
           <h1 className="title" style={{ fontSize: 'clamp(32px,4.5vw,48px)', textTransform: 'none' }}>{b.title}</h1>
-          <p style={{ color: 'var(--muted)', fontSize: 14, marginTop: 0 }}>{fmtDate(b.date)} · {b.read} phút đọc · Ban biên tập Ước Mơ Kids</p>
-          <div className="cover"><Crop img={b.img} area={b.crop} /></div>
+          <p style={{ color: 'var(--muted)', fontSize: 14, marginTop: 0 }}>{fmtDate(b.date)} · {b.read} phút đọc · Ban biên tập Moni Yo</p>
+          <div className="cover"><img src={b.img} alt="" /></div>
           {b.body.map((p, i) => <p key={i}>{p}</p>)}
           <div className="story-banner" style={{ margin: '32px 0 0', gridTemplateColumns: '1fr' }}>
             <div className="txt">
               <h2 style={{ fontSize: 32 }}>Biến bài học thành trò chơi</h2>
-              <p>Bộ Ước Mơ Nghề Nghiệp giúp bé thực hành mọi điều trong bài viết này.</p>
-              <div><Link to="/san-pham/uoc-mo-vang" className="btn btn-yellow btn-sm">Xem sản phẩm <Arrow /></Link></div>
+              <p>Bộ đồ chơi Moni Yo giúp bé thực hành mọi điều trong bài viết này.</p>
+              <div><Link to="/san-pham/moni-yo" className="btn btn-yellow btn-sm">Xem sản phẩm <Arrow /></Link></div>
             </div>
           </div>
         </article>

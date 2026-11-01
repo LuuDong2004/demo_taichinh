@@ -6,7 +6,7 @@ import { noAccent } from '../lib/utils';
 
 const PRICES = [['all', 'Tất cả'], ['0-100000', 'Dưới 100.000đ'], ['100000-300000', '100.000 – 300.000đ'], ['300000-9999999', 'Trên 300.000đ']];
 const SORTS = { pop: (a, b) => b.sold - a.sold, asc: (a, b) => a.price - b.price, desc: (a, b) => b.price - a.price, rate: (a, b) => b.rating - a.rating };
-const kindOf = p => (p.includes.length > 3 ? 'set' : 'addon');
+const kindOf = p => p.kind ?? (p.includes.length > 3 ? 'set' : 'addon');
 const toggle = (list, v) => (list.includes(v) ? list.filter(x => x !== v) : [...list, v]);
 
 export default function Products() {

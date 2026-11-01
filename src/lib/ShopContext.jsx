@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_PRODUCTS, DEMO_ORDERS } from '../data';
+import { COUPON, DEFAULT_PRODUCTS, DEMO_ORDERS } from '../data';
 import { storage } from './utils';
 
 const ShopContext = createContext(null);
@@ -13,10 +13,10 @@ function usePersisted(key, initial) {
 }
 
 export function ShopProvider({ children }) {
-  const [products, setProducts] = usePersisted('um_products', DEFAULT_PRODUCTS);
-  const [cart, setCart] = usePersisted('um_cart', []);
-  const [orders, setOrders] = usePersisted('um_orders', DEMO_ORDERS);
-  const [messages, setMessages] = usePersisted('um_msgs', []);
+  const [products, setProducts] = usePersisted('my_products', DEFAULT_PRODUCTS);
+  const [cart, setCart] = usePersisted('my_cart', []);
+  const [orders, setOrders] = usePersisted('my_orders', DEMO_ORDERS);
+  const [messages, setMessages] = usePersisted('my_msgs', []);
   const [coupon, setCoupon] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [toastMsg, setToastMsg] = useState({ text: '', show: false });
@@ -41,7 +41,7 @@ export function ShopProvider({ children }) {
   const totals = useMemo(() => {
     const lines = cart.map(l => ({ ...l, p: products.find(p => p.id === l.id) })).filter(l => l.p);
     const sub = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
-    const discount = coupon === 'UOCMO10' ? Math.round(sub * 0.1) : 0;
+    const discount = coupon === COUPON ? Math.round(sub * 0.1) : 0;
     const ship = sub === 0 || sub >= 500000 ? 0 : 30000;
     const count = lines.reduce((s, l) => s + l.qty, 0);
     return { lines, sub, discount, ship, count, total: sub - discount + ship };

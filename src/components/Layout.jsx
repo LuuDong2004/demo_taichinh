@@ -2,9 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useShop } from '../lib/ShopContext';
 import Assistant from './Assistant';
-import { CartIcon, Clock, Cloud, Facebook, Instagram, Mail, Menu, Phone, Pig, Pin, TikTok, YouTube } from './Icons';
+import { BRAND } from '../data';
+import { CartIcon, Clock, Cloud, Facebook, Instagram, KidAvatar, Mail, Menu, Phone, Pin, TikTok, YouTube } from './Icons';
 
-// Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Heo Vàng mở bằng nút nổi góc phải
+// Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Moni Yo mở bằng nút nổi góc phải
 const NAV = [
   ['/san-pham', 'Sản phẩm'],
   ['/gioi-thieu', 'Giới thiệu'],
@@ -17,9 +18,8 @@ const NAV = [
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 export const Logo = () => (
-  <Link to="/" className="logo" aria-label="Ước Mơ Kids – Trang chủ" onClick={toTop}>
-    <span className="logo-mark">₫</span>
-    <span className="logo-text">Ước Mơ Kids<small>Tài chính nhí</small></span>
+  <Link to="/" className="logo" aria-label="Moni Yo – Trang chủ" onClick={toTop}>
+    <img className="logo-img" src="/img/brand/logo.webp" alt="Moni Yo" width="591" height="528" />
   </Link>
 );
 
@@ -63,7 +63,7 @@ function Footer({ onAi }) {
         <div className="cols">
           <div>
             <Logo />
-            <p style={{ fontSize: 14, marginTop: 18 }}>Đồ chơi giáo dục tài chính giúp trẻ hiểu giá trị lao động, biết chi tiêu và tiết kiệm – qua những giờ chơi vui vẻ cùng gia đình.</p>
+            <p style={{ fontSize: 14, marginTop: 18 }}>{BRAND.desc}. {BRAND.tagline}</p>
             <div className="socials">
               <a href="#" aria-label="Facebook"><Facebook /></a><a href="#" aria-label="Instagram"><Instagram /></a><a href="#" aria-label="YouTube"><YouTube /></a><a href="#" aria-label="TikTok"><TikTok /></a>
             </div>
@@ -84,9 +84,9 @@ function Footer({ onAi }) {
           <div>
             <h5>Liên hệ &amp; đăng ký</h5>
             <ul className="footer-contact">
-              <li><Pin />123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội</li>
-              <li><Phone size={18} /><a href="tel:0900123456">Hotline: 0900 123 456 (Zalo)</a></li>
-              <li><Mail /><a href="mailto:xinchao@uocmokids.vn">xinchao@uocmokids.vn</a></li>
+              <li><Pin />{BRAND.address}</li>
+              <li><Phone size={18} /><a href={`tel:${BRAND.hotline.replace(/ /g, '')}`}>Hotline: {BRAND.hotline} (Zalo)</a></li>
+              <li><Mail /><a href={`mailto:${BRAND.email}`}>{BRAND.email}</a></li>
               <li><Clock />08:00 – 21:00, cả cuối tuần</li>
             </ul>
             <form className="subscribe" onSubmit={e => { e.preventDefault(); e.target.reset(); toast('Đã đăng ký nhận ưu đãi 🎉'); }}>
@@ -96,8 +96,8 @@ function Footer({ onAi }) {
           </div>
         </div>
         <div className="copyright">
-          <span>© 2026 Ước Mơ Kids. Bản demo giao diện.</span>
-          <span>Thiết kế với ♥ cho các nhà tài chính nhí</span>
+          <span>© 2026 Moni Yo. Bản demo giao diện.</span>
+          <span>{BRAND.motto}</span>
         </div>
       </div>
     </footer>
@@ -126,10 +126,15 @@ function useReveal(ref) {
 }
 
 export default function Layout() {
-  const { pathname, state } = useLocation();
+  const { pathname, hash, state } = useLocation();
   const mainRef = useRef(null);
   useReveal(mainRef);
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  // Đổi trang thì lên đầu; link có #mục (vd. /gioi-thieu#cach-choi) thì cuộn tới mục đó sau khi trang render
+  useEffect(() => {
+    const target = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    else window.scrollTo(0, 0);
+  }, [pathname, hash]);
   const isAdmin = pathname.startsWith('/admin');
 
   const [aiOpen, setAiOpen] = useState(false);
@@ -148,7 +153,7 @@ export default function Layout() {
       {!isAdmin && <Footer onAi={openAi} />}
       {!isAdmin && !aiOpen && (
         <div className="floating">
-          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý Heo Vàng"><Pig size={42} /></button>
+          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý Moni Yo"><KidAvatar size={50} /></button>
           <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}

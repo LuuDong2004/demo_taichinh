@@ -1,8 +1,9 @@
 import { CommitStrip, PageHero } from '../components/Blocks';
 import { Clock, Mail, Phone, Pin } from '../components/Icons';
+import { BRAND } from '../data';
 import { useShop } from '../lib/ShopContext';
 
-const INFO = [[<Pin size={22} />, 'Địa chỉ', '123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội'], [<Phone size={22} />, 'Hotline / Zalo', '0900 123 456'], [<Mail size={22} />, 'Email', 'xinchao@uocmokids.vn'], [<Clock size={22} />, 'Giờ làm việc', '08:00 – 21:00, cả thứ 7 & chủ nhật']];
+const INFO = [[<Pin size={22} />, 'Địa chỉ', BRAND.address], [<Phone size={22} />, 'Hotline / Zalo', BRAND.hotline], [<Mail size={22} />, 'Email', BRAND.email], [<Clock size={22} />, 'Giờ làm việc', '08:00 – 21:00, cả thứ 7 & chủ nhật']];
 
 export default function Contact() {
   const { setMessages, toast } = useShop();
@@ -26,7 +27,7 @@ export default function Contact() {
             </div>
             <div className="map">
               <span className="pin"><Pin size={46} /></span>
-              <span style={{ position: 'absolute', bottom: 12, fontWeight: 700, color: 'var(--brown)', fontSize: 13 }}>Ước Mơ Kids – Cầu Giấy</span>
+              <span style={{ position: 'absolute', bottom: 12, fontWeight: 700, color: 'var(--brown)', fontSize: 13 }}>Moni Yo – Cầu Giấy</span>
             </div>
           </div>
           <form className="panel" onSubmit={submit}>

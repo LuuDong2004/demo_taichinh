@@ -1,74 +1,162 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommitStrip, PageHero, SectionHead } from '../components/Blocks';
-import Crop from '../components/Crop';
-import { Arrow, Briefcase, Bulb, Cloud, Heart, Wallet } from '../components/Icons';
+import { CardBrowser, JobExplorer, Lightbox, TileGrid } from '../components/Game';
+import { Arrow, Bulb, Heart, Users, Wallet } from '../components/Icons';
+import { BRAND, COMPONENTS, ITEM_PRICE, KID_TIPS, LEARN, NOTES, PARENT_TIPS, RULES, SETUP, SHOP_STEPS, START_MONEY, TURN, WIN, img } from '../data';
 
-const VALUES = [
-  ['var(--orange)', <Briefcase size={30} />, 'Khám phá nghề nghiệp', '8 nghề quen thuộc giúp bé hiểu mỗi công việc đều có giá trị.'],
-  ['var(--green)', <Wallet size={30} />, 'Quản lý tiền', 'Nhận, đếm, chi tiêu và để dành xu một cách có kế hoạch.'],
-  ['var(--blue)', <Bulb size={30} />, 'Phát triển tư duy', 'Ra quyết định, so sánh, ước lượng và chấp nhận rủi ro.'],
-  ['var(--red)', <Heart size={30} />, 'Gắn kết gia đình', 'Bố mẹ và bé cùng chơi, cùng trò chuyện về tiền bạc.'],
-];
-const SPECS = [
-  'Độ tuổi: 5–7 tuổi (chơi cùng người lớn từ 4 tuổi)', 'Số người chơi: 2–4 người · Thời gian: 20–30 phút',
-  'Kích thước hộp: 30 × 30 × 6 cm · Nặng 900g', 'Chất liệu: giấy mỹ thuật 350gsm cán mờ, xu nhựa ABS',
-  'Đạt chuẩn an toàn đồ chơi QCVN 3:2019/BKHCN', 'Sản xuất tại Việt Nam',
-];
+const LEARN_STYLE = [['var(--yellow-2)', Wallet], ['var(--orange)', Bulb], ['var(--blue)', Users], ['var(--green)', Heart]];
+const TOC = [['su-menh', 'Sứ mệnh'], ['thanh-phan', 'Thành phần'], ['cach-choi', 'Cách chơi'], ['nghe-nghiep', '8 nghề'], ['bo-the', 'Bộ thẻ'], ['phu-huynh', 'Phụ huynh'], ['sach-huong-dan', 'Sách hướng dẫn']];
+const GUIDE = ['Bìa trước', 'Mục lục · Sứ mệnh', 'Thành phần · 8 nghề', 'Chuẩn bị · Luật chơi', 'Các ô · Mua sắm', 'Chiến thắng · Thẻ nghề & đồ vật', 'Thẻ Cộng / Trừ tiền · Túi mù', 'Bí quyết · Góc phụ huynh', 'Bìa sau']
+  .map((caption, i) => ({ src: img(`guide/${String(i + 1).padStart(2, '0')}`), caption }));
 const FAQ = [
-  ['Bé 4 tuổi chơi được không?', 'Được, nếu có bố mẹ chơi cùng và bỏ qua thẻ Kiến thức. Từ 5 tuổi bé có thể tự chơi.'],
-  ['Bản Vàng và Xanh Ngọc khác nhau thế nào?', 'Chỉ khác bảng màu. Luật chơi, số thẻ và phụ kiện giống hệt nhau. Ghép 2 bộ để mở chế độ 8 người chơi.'],
-  ['Có dùng tiền thật không?', 'Không. Trò chơi dùng xu nhựa an toàn, giúp bé làm quen khái niệm tiền mà không lo thất lạc tiền thật.'],
-  ['Chính sách đổi trả?', 'Đổi mới trong 7 ngày nếu lỗi sản xuất hoặc thiếu phụ kiện. Bổ sung phụ kiện thất lạc với giá gốc.'],
+  ['Bé mấy tuổi chơi được?', 'Moni Yo dành cho bé từ 5 tuổi. Bé nhỏ hơn có thể chơi cùng bố mẹ, người lớn giúp đọc thẻ và đếm tiền.'],
+  ['Một ván chơi mấy người?', 'Từ 2 đến 4 người chơi. Mỗi người chọn 1 nghề và 1 quân cờ.'],
+  ['Khi nào thì thắng?', WIN],
+  ['Có dùng tiền thật không?', 'Không. Trò chơi dùng tiền giấy Moni Yo mệnh giá 1, 2, 5 và 10 đồng, giúp bé làm quen khái niệm tiền mà không lo thất lạc tiền thật.'],
+  ['Chính sách đổi trả?', 'Đổi mới trong 7 ngày nếu lỗi sản xuất hoặc thiếu thành phần. Các thành phần bị thất lạc có bán lẻ ở trang Sản phẩm.'],
 ];
 
 export default function About() {
+  const [guideOpen, setGuideOpen] = useState(null);
   return (
     <>
-      <PageHero eyebrow="Giới thiệu sản phẩm" title="Ước Mơ Nghề Nghiệp">Giới thiệu</PageHero>
+      <PageHero eyebrow="Giới thiệu sản phẩm" title="Moni Yo – Bộ đồ chơi giáo dục tài chính">Giới thiệu</PageHero>
+      <nav className="toc" aria-label="Mục lục trang">
+        <div className="container">{TOC.map(([id, l]) => <a key={id} href={`#${id}`}>{l}</a>)}</div>
+      </nav>
 
-      <section className="section">
-        <Cloud className="deco-r" style={{ top: 40 }} />
+      <section className="section" id="su-menh">
         <div className="container split">
-          <div className="reveal"><Crop img="yellow" area="whole" /></div>
+          <div className="reveal"><img className="art" src={img('brand/kids-jump')} alt="Hai bạn nhỏ Moni Yo" loading="lazy" /></div>
           <div className="reveal">
-            <span className="eyebrow left">Câu chuyện của chúng tôi</span>
-            <h2 className="title" style={{ fontSize: 34 }}>Dạy con về tiền – bằng niềm vui</h2>
-            <p>Ước Mơ Kids ra đời từ một câu hỏi của con gái nhà sáng lập: <i>“Mẹ ơi, tiền ở đâu ra?”</i>. Chúng tôi tin rằng hiểu biết tài chính nên bắt đầu từ sớm, và cách tốt nhất để trẻ học là <b>chơi</b>.</p>
-            <p>Bộ trò chơi <b>Ước Mơ Nghề Nghiệp</b> được thiết kế cùng giáo viên mầm non và chuyên gia giáo dục tài chính, giúp trẻ 5–7 tuổi hình thành 4 thói quen: <b>làm việc – kiếm tiền – chi tiêu thông minh – theo đuổi mục tiêu</b>.</p>
-            <b style={{ color: 'var(--brown)' }}>Bảng màu vui tươi, an toàn cho mắt bé</b>
-            <div className="palette">
-              {['#FFD23F', '#FFFFD6', '#FF8A3D', '#22C55E', '#EF4444', '#FACC15'].map(c => <span key={c} style={{ background: c }} title={c} />)}
-            </div>
+            <span className="eyebrow left">Sứ mệnh Moni Yo</span>
+            <h2 className="title" style={{ fontSize: 34 }}>{BRAND.tagline}</h2>
+            <p>Mỗi đứa trẻ đều có những mong muốn và ước mơ của riêng mình. Nhưng để đạt được điều mình muốn, con cần học cách lựa chọn, kiên nhẫn và hiểu giá trị của những gì mình có.</p>
+            <p><b>Moni Yo</b> ra đời với mong muốn đưa giáo dục tài chính đến gần hơn với trẻ em, bắt đầu từ những bài học đơn giản về kiếm tiền, chi tiêu và tiết kiệm. Thay vì chỉ tiếp nhận lời dạy từ người lớn, con được tự mình khám phá, đưa ra quyết định và học hỏi từ chính những trải nghiệm ấy.</p>
+            <p>Bởi học cách quản lý tiền cũng là học cách làm chủ những lựa chọn đầu đời.</p>
+            <p className="motto">Moni Yo – {BRAND.motto}</p>
           </div>
         </div>
       </section>
 
       <section className="section section-alt">
         <div className="container">
-          <SectionHead eyebrow="Giá trị cho bé" title="Bé học được gì?" />
+          <SectionHead eyebrow="Giá trị cho bé" title="Trẻ sẽ học được gì?" />
           <div className="values">
-            {VALUES.map(([c, i, h, p]) => <div className="value reveal" key={h}><div className="ic" style={{ background: c }}>{i}</div><h4>{h}</h4><p>{p}</p></div>)}
+            {LEARN.map(([h, p], i) => {
+              const [c, Icon] = LEARN_STYLE[i];
+              return <div className="value reveal" key={h}><div className="ic" style={{ background: c }}><Icon size={30} /></div><h4>{h}</h4><p>{p}</p></div>;
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="thanh-phan">
+        <div className="container split">
+          <div className="reveal">
+            <span className="eyebrow left">Trong hộp Moni Yo có gì?</span>
+            <h2 className="title" style={{ fontSize: 34 }}>Thành phần bộ đồ chơi</h2>
+            <table className="comp-table">
+              <thead><tr><th>Thành phần</th><th>Số lượng</th></tr></thead>
+              <tbody>{COMPONENTS.map(([n, q]) => <tr key={n}><td>{n}</td><td>{q}</td></tr>)}</tbody>
+            </table>
+            <div style={{ marginTop: 20 }}><Link to="/san-pham/moni-yo" className="btn">Đặt mua bộ Moni Yo <Arrow /></Link></div>
+          </div>
+          <div className="reveal stack-imgs">
+            <img src={img('product/box-back')} alt="Mặt sau hộp Moni Yo" loading="lazy" />
+            <img src={img('product/pawns')} alt="8 quân cờ nhân vật" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-alt" id="cach-choi">
+        <div className="container">
+          <SectionHead eyebrow="Sẵn sàng bắt đầu!" title="Cách chuẩn bị chơi" />
+          <ol className="rule-steps">
+            {SETUP.map(([h, p], i) => <li className="reveal" key={h}><b>Bước {i + 1} – {h}</b><p>{p}</p></li>)}
+          </ol>
+          <div className="start-money reveal">
+            <span>Mỗi người nhận <b>20 đồng</b> khởi đầu:</span>
+            {START_MONEY.map(([v, n]) => <span className="note-chip" key={v} data-v={v}><b>{n}</b> tờ {v} đồng</span>)}
+            <small>Tiền Moni Yo có 4 mệnh giá: {NOTES.join(', ')} đồng</small>
+          </div>
+
+          <SectionHead eyebrow="Bắt đầu hành trình" title="Luật chơi" sub="Mỗi lượt chơi gồm 3 bước" style={{ marginTop: 40 }} />
+          <div className="turn">
+            {TURN.map(([h, p], i) => <div className="step reveal" key={h}><div className="num" style={{ background: ['var(--orange)', 'var(--green)', 'var(--red)'][i] }}>{i + 1}</div><h4>{h}</h4><p>{p}</p></div>)}
+          </div>
+          <div className="panel rules-box reveal">
+            <h3>Quy tắc cần nhớ</h3>
+            <ol>{RULES.map(r => <li key={r}>{r}</li>)}</ol>
+          </div>
+
+          <h3 className="sub-title">Các ô trên bàn cờ</h3>
+          <TileGrid />
+
+          <h3 className="sub-title">Mua sắm & cơ chế chiến thắng</h3>
+          <div className="shop-steps">
+            {SHOP_STEPS.map(([h, p], i) => <div className="tile reveal" key={h}><span className="tile-num">{i + 1}</span><div><h4>{h}</h4><p>{p}</p></div></div>)}
+          </div>
+          <div className="panel rules-box reveal">
+            <h3>Quy tắc mua sắm</h3>
+            <ol>
+              <li>Mỗi lần dừng ở ô Mua sắm chỉ được mua tối đa 1 thẻ Đồ vật (giá {ITEM_PRICE} đồng).</li>
+              <li>Bé chỉ được mua vật dụng thuộc nghề nghiệp của mình.</li>
+              <li>Nếu chưa đủ tiền hoặc chưa muốn mua, bé có thể bỏ qua.</li>
+            </ol>
+          </div>
+          <div className="win reveal">
+            <img src={img('jobs/bac-si-items')} alt="" loading="lazy" />
+            <p><b>Chiến thắng:</b> {WIN}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="nghe-nghiep">
+        <div className="container">
+          <SectionHead eyebrow="Thẻ nghề nghiệp & đồ vật" title="Khám phá 8 nghề nghiệp" sub="Mỗi thẻ Nghề nghiệp có tên nghề, hình nhân vật và bộ 4 vật dụng tương ứng." />
+          <JobExplorer />
+        </div>
+      </section>
+
+      <section className="section section-alt" id="bo-the">
+        <div className="container">
+          <SectionHead eyebrow="Nội dung các bộ thẻ" title="65 thẻ tình huống" sub="Bấm vào thẻ để xem lớn. Hãy đọc kỹ nội dung trên thẻ và thực hiện đúng hướng dẫn." />
+          <CardBrowser />
+        </div>
+      </section>
+
+      <section className="section" id="phu-huynh">
+        <div className="container">
+          <div className="tips-2">
+            <div>
+              <SectionHead eyebrow="Dành cho bé" title="Bí quyết tài chính cho trẻ" />
+              <div className="tips">{KID_TIPS.map(([h, p], i) => <div className="tip reveal" key={h}><span>{i + 1}</span><div><h4>{h}</h4><p>{p}</p></div></div>)}</div>
+            </div>
+            <div>
+              <SectionHead eyebrow="Dành cho bố mẹ" title="Góc dành cho phụ huynh" />
+              <div className="tips">{PARENT_TIPS.map(([h, p], i) => <div className="tip reveal" key={h}><span>{i + 1}</span><div><h4>{h}</h4><p>{p}</p></div></div>)}</div>
+            </div>
+          </div>
+          <p className="motto center">“Điều quan trọng không chỉ là con đạt được mục tiêu, mà còn là cách con học hỏi và trưởng thành qua từng lựa chọn.”</p>
+        </div>
+      </section>
+
+      <section className="section section-alt" id="sach-huong-dan">
+        <div className="container">
+          <SectionHead eyebrow="Xem trước" title="Sách hướng dẫn chơi" sub="16 trang hướng dẫn kèm trong hộp. Bấm để xem từng trang." />
+          <div className="guide-grid">
+            {GUIDE.map((g, i) => (
+              <button key={g.src} className={`guide-page reveal ${i === 0 || i === GUIDE.length - 1 ? 'single' : ''}`} onClick={() => setGuideOpen(i)}>
+                <img src={g.src} alt="" loading="lazy" /><span>{g.caption}</span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="section">
-        <Cloud className="deco-l" style={{ top: 40 }} />
-        <div className="container split">
-          <div className="reveal">
-            <span className="eyebrow left">Thông số</span>
-            <h2 className="title" style={{ fontSize: 34 }}>Chi tiết bộ trò chơi</h2>
-            <ul className="includes" style={{ gridTemplateColumns: '1fr' }}>{SPECS.map(s => <li key={s}>{s}</li>)}</ul>
-            <div style={{ marginTop: 24 }}><Link to="/san-pham" className="btn">Chọn phiên bản <Arrow /></Link></div>
-          </div>
-          <div className="reveal" style={{ display: 'grid', gap: 16 }}>
-            <Crop img="teal" area="board" />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}><Crop img="teal" area="events" /><Crop img="teal" area="mission" /></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-alt">
         <div className="container" style={{ maxWidth: 820 }}>
           <SectionHead eyebrow="Hỏi đáp" title="Câu hỏi thường gặp" />
           <div className="faq">
@@ -77,6 +165,7 @@ export default function About() {
         </div>
       </section>
       <CommitStrip />
+      {guideOpen !== null && <Lightbox items={GUIDE} index={guideOpen} onClose={() => setGuideOpen(null)} />}
     </>
   );
 }

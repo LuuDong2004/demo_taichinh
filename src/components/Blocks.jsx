@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { REVIEWS } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money } from '../lib/utils';
-import Crop from './Crop';
 import { Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
 
 export function ProductCard({ p }) {
@@ -13,7 +12,7 @@ export function ProductCard({ p }) {
       <Link to={`/san-pham/${p.id}`} className="thumb">
         {p.badge && <span className="tag">{p.badge}</span>}
         <span className="age">{p.age}</span>
-        <Crop img={p.img} area={p.crop} />
+        <img src={p.img} alt={p.name} loading="lazy" decoding="async" />
       </Link>
       <div className="body">
         <h3><Link to={`/san-pham/${p.id}`}>{p.name}</Link></h3>
@@ -30,7 +29,7 @@ export function ProductCard({ p }) {
 export function BlogCard({ b }) {
   return (
     <article className="card b-card reveal">
-      <Link to={`/blog/${b.id}`} className="thumb"><Crop img={b.img} area={b.crop} /><span className="cat">{b.cat}</span></Link>
+      <Link to={`/blog/${b.id}`} className="thumb"><img src={b.img} alt="" loading="lazy" decoding="async" /><span className="cat">{b.cat}</span></Link>
       <div className="body">
         <span className="date">{fmtDate(b.date)} · {b.read} phút đọc</span>
         <h3><Link to={`/blog/${b.id}`}>{b.title}</Link></h3>
@@ -42,7 +41,7 @@ export function BlogCard({ b }) {
 
 const COMMITS = [
   [Truck, 'Giao hàng toàn quốc', 'Miễn phí vận chuyển cho đơn từ 500.000đ, nhận hàng 2–4 ngày.'],
-  [Shield, 'An toàn cho bé', 'Giấy mỹ thuật, mực in gốc nước, đạt chuẩn QCVN 3:2019/BKHCN.'],
+  [Shield, 'Thiết kế cho trẻ', 'Nhân vật dễ thương, chữ to rõ, tình huống gần gũi với cuộc sống của bé.'],
   [Card, 'Thanh toán đa dạng', 'COD, chuyển khoản, quét mã QR hoặc ví điện tử.'],
   [Chat, 'Hỗ trợ 24/7', 'Đội ngũ tư vấn và trợ lý AI luôn sẵn sàng giải đáp.'],
 ];

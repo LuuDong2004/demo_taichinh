@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ProductCard, QtyInput } from '../components/Blocks';
-import Crop from '../components/Crop';
 import { Box, Briefcase, Calculator, Clock, Gift, Refresh, Shield, Smile, Stars, Target, Truck, Users } from '../components/Icons';
 import { REVIEWS } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 import NotFound from './NotFound';
 
-const BENEFITS = [[<Briefcase size={30} />, 'Giá trị lao động', 'Bé hiểu muốn có tiền phải làm việc.'], [<Calculator size={30} />, 'Tập tính toán', 'Cộng trừ xu, so sánh giá món đồ.'], [<Target size={30} />, 'Đặt mục tiêu', 'Lên kế hoạch mua đủ đồ nghề.']];
+const BENEFITS = [[<Briefcase size={30} />, 'Giá trị lao động', 'Bé hiểu muốn có tiền phải làm việc.'], [<Calculator size={30} />, 'Tập tính toán', 'Cộng trừ tiền, so sánh giá và đếm tiền thối.'], [<Target size={30} />, 'Đặt mục tiêu', 'Lên kế hoạch mua đủ 4 đồ vật của nghề mình.']];
 const TABS = [['desc', 'Mô tả'], ['inc', 'Trong hộp có gì'], ['rev', 'Đánh giá']];
 
 export default function ProductDetail() {
@@ -23,7 +22,8 @@ export default function ProductDetail() {
   useEffect(() => { setQty(1); setShot(0); setTab('desc'); }, [id]);
   if (!p) return <NotFound />;
 
-  const gallery = [p.crop, 'board', 'jobs', 'events'];
+  // Ảnh đại diện luôn đứng đầu (admin có thể đổi ảnh chính mà không sửa thư viện ảnh)
+  const gallery = [p.img, ...(p.gallery || []).filter(g => g !== p.img)];
   const related = products.filter(x => x.id !== p.id).slice(0, 4);
 
   return (
@@ -32,9 +32,9 @@ export default function ProductDetail() {
         <div className="crumbs" style={{ marginBottom: 24 }}><Link to="/">Trang chủ</Link> / <Link to="/san-pham">Sản phẩm</Link> / {p.name}</div>
         <div className="detail">
           <div className="gallery">
-            <div className="main"><Crop img={p.img} area={gallery[shot]} /></div>
+            <div className="main"><img src={gallery[shot] || p.img} alt={p.name} /></div>
             <div className="thumbs">
-              {gallery.map((c, i) => <button key={c + i} className={i === shot ? 'on' : ''} onClick={() => setShot(i)}><Crop img={p.img} area={c} /></button>)}
+              {gallery.map((src, i) => <button key={src} className={i === shot ? 'on' : ''} onClick={() => setShot(i)} aria-label={`Ảnh ${i + 1}`}><img src={src} alt="" loading="lazy" /></button>)}
             </div>
           </div>
           <div>
@@ -43,7 +43,7 @@ export default function ProductDetail() {
             <div className="meta" style={{ fontSize: 14 }}><Stars n={p.rating} size={16} /> {p.rating} ({Math.round(p.sold / 7)} đánh giá) · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
             <div className="price" style={{ margin: '18px 0' }}>{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
             <p style={{ fontSize: 16 }}>{p.short}</p>
-            <div className="chips"><span className="chip"><Smile size={15} />{p.age}</span><span className="chip"><Users size={15} />2–4 người chơi</span><span className="chip"><Clock size={15} />20–30 phút</span><span className="chip"><Box size={15} />Còn {p.stock} sản phẩm</span></div>
+            <div className="chips"><span className="chip"><Smile size={15} />{p.age}</span><span className="chip"><Users size={15} />2–4 người chơi</span><span className="chip"><Clock size={15} />Bé tự chơi sau 1–2 ván</span><span className="chip"><Box size={15} />Còn {p.stock} sản phẩm</span></div>
             <div className="buy-row">
               <QtyInput value={qty} onChange={v => setQty(Math.max(1, v))} />
               <button className="btn btn-yellow" onClick={() => addToCart(p.id, qty)}>Thêm vào giỏ</button>
@@ -51,7 +51,7 @@ export default function ProductDetail() {
             </div>
             <div className="perks">
               <div className="perk"><Truck size={20} />Miễn phí ship đơn từ 500k</div><div className="perk"><Refresh />Đổi trả trong 7 ngày</div>
-              <div className="perk"><Gift />Gói quà miễn phí</div><div className="perk"><Shield size={20} />Đạt chuẩn an toàn đồ chơi</div>
+              <div className="perk"><Gift />Gói quà miễn phí</div><div className="perk"><Shield size={20} />Kèm sách hướng dẫn 16 trang</div>
             </div>
           </div>
         </div>

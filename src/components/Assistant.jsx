@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { aiReply } from '../lib/ai';
 import { money } from '../lib/utils';
-import { Chat, Jar, Pig, Target, X } from './Icons';
+import { Chat, Jar, KidAvatar, Target, X } from './Icons';
 
-const SUGGESTIONS = ['Bé 6 tuổi nên chơi gì?', 'Nên cho con tiêu vặt bao nhiêu?', 'Luật chơi thế nào?', 'Phí giao hàng?', 'Cách dạy con tiết kiệm'];
+const SUGGESTIONS = ['Luật chơi thế nào?', 'Có những nghề nào?', 'Thẻ túi mù là gì?', 'Bé 4 tuổi chơi được không?', 'Nên cho con tiêu vặt bao nhiêu?', 'Phí giao hàng?'];
 const JARS = [['Tiêu', .5, 'var(--orange)'], ['Tiết kiệm', .4, 'var(--green)'], ['Chia sẻ', .1, 'var(--blue)']];
 const TABS = [['chat', Chat, 'Trò chuyện'], ['goal', Target, 'Mục tiêu'], ['jars', Jar, '3 hũ']];
 const Typing = () => <span className="typing"><span /><span /><span /></span>;
 
 function ChatPane({ active }) {
-  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! Mình là <b>Heo Vàng</b> – trợ lý giúp bố mẹ dạy con về tiền và chọn đồ chơi phù hợp. Bạn cần mình giúp gì?</> }]);
+  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! Mình là <b>trợ lý Moni Yo</b> – giải đáp luật chơi, giúp bố mẹ chọn quà và dạy con về tiền. Bạn cần mình giúp gì?</> }]);
   const [input, setInput] = useState('');
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
@@ -37,7 +37,7 @@ function ChatPane({ active }) {
         {SUGGESTIONS.map(s => <button key={s} onClick={() => ask(s)}>{s}</button>)}
       </div>
       <form className="chat-form" onSubmit={e => { e.preventDefault(); ask(input); setInput(''); }}>
-        <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi Heo Vàng bất cứ điều gì..." autoComplete="off" />
+        <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi trợ lý Moni Yo..." autoComplete="off" />
         <button className="btn btn-sm">Gửi</button>
       </form>
     </>
@@ -91,10 +91,10 @@ export default function Assistant({ open, onClose }) {
   }, [open, onClose]);
 
   return (
-    <div className={`ai-pop ${open ? 'open' : ''}`} role="dialog" aria-label="Trợ lý Heo Vàng" aria-hidden={!open}>
+    <div className={`ai-pop ${open ? 'open' : ''}`} role="dialog" aria-label="Trợ lý Moni Yo" aria-hidden={!open}>
       <div className="chat-head">
-        <span className="avatar"><Pig size={38} /></span>
-        <div><b>Heo Vàng – Trợ lý tài chính nhí</b><small>● Đang trực tuyến · trả lời tức thì</small></div>
+        <KidAvatar size={42} />
+        <div><b>Trợ lý Moni Yo</b><small>● Đang trực tuyến · trả lời tức thì</small></div>
         <button className="ai-close" onClick={onClose} aria-label="Đóng trợ lý"><X /></button>
       </div>
       <div className="ai-tabs">

@@ -1,26 +1,20 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogCard, CommitStrip, Counter, ProductCard, ReviewSlider, SectionHead } from '../components/Blocks';
-import Crop from '../components/Crop';
-import { Arrow, CartIcon, Cloud, Coin, Star, Stars } from '../components/Icons';
-import { BLOG } from '../data';
+import { DECKS, DeckFan, JobExplorer, TileGrid } from '../components/Game';
+import { Arrow, CartIcon, Smile, Users } from '../components/Icons';
+import { BLOG, BRAND, COMPONENTS, img } from '../data';
 import { useShop } from '../lib/ShopContext';
 
 const STEPS = [
-  ['var(--orange)', 'Chọn nghề', 'Rút thẻ nghề nghiệp: đầu bếp, bác sĩ, lính cứu hỏa, giáo viên…'],
-  ['var(--green)', 'Đi làm', <>Tung xúc xắc, đi quanh bàn cờ. Ô <b style={{ color: 'var(--green)' }}>+</b> nhận xu, ô <b style={{ color: 'var(--red)' }}>−</b> mất xu.</>],
-  ['var(--blue)', 'Mua đồ', 'Dùng xu mua món đồ nghề. So sánh giá, cân nhắc: mua ngay hay để dành?'],
-  ['var(--red)', 'Hoàn thành', 'Ai sưu tầm đủ 4 món đồ của nghề mình trước sẽ “Hoàn thành ước mơ!”'],
+  ['var(--orange)', 'Chọn nghề', 'Bốc 1 trong 8 thẻ Nghề nghiệp và ghi nhớ 4 đồ vật cần thu thập.'],
+  ['var(--green)', 'Tung xúc xắc', 'Di chuyển theo chiều kim đồng hồ quanh đồng cỏ Moni Yo.'],
+  ['var(--blue)', 'Xử lý tình huống', 'Rút thẻ Cộng tiền, Trừ tiền hoặc Túi mù và làm theo thẻ.'],
+  ['var(--red)', 'Mua sắm & thắng', 'Dừng ở ô Mua sắm để mua đồ vật. Đủ 4 đồ vật trước là thắng!'],
 ];
 
-const INSIDE = [
-  ['board', 'Bàn cờ thành phố', 'Ô cộng tiền, trừ tiền, dấu hỏi và ngôi sao may mắn.'],
-  ['events', 'Thẻ sự kiện', 'Cơ hội – Thử thách – Kiến thức: +3, −2, +1 xu và câu hỏi vui.'],
-  ['mission', 'Thẻ nhiệm vụ', 'Mục tiêu rõ ràng: mua đủ 4 món đồ để hoàn thành nghề.'],
-  ['kit', 'Xu game & quân cờ', 'Xu mệnh giá 1–5, xúc xắc và 4 quân cờ nhiều màu.'],
-];
-
-const FLOAT_CARDS = ['cardChef', 'cardFire', 'cardChance', 'cardArtist'];
+// Thẻ thật bay quanh hộp ở hero
+const FLOAT_CARDS = ['cards/cong/ban-ban-nuoc-chanh-tu-pha', 'items/ong-nghe', 'cards/tui-mu/sinh-nhat-vui-ve', 'cards/tru/troi-nong-ban-mua-mot-cay-kem'];
 
 export default function Home() {
   const { products } = useShop();
@@ -38,58 +32,62 @@ export default function Home() {
   return (
     <>
       <section className="hero" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
-        <Coin style={{ left: '1%', bottom: '18%', width: 44 }} />
-        <Coin style={{ left: '47%', top: '8%', width: 44, animationDelay: '1s' }} />
         <div className="container">
           <div className="reveal">
-            <span className="eyebrow left">Đồ chơi giáo dục tài chính · 5–7 tuổi</span>
-            <h1>Ước Mơ <span className="accent">Nghề Nghiệp</span></h1>
-            <div className="tagline">Làm việc – Kiếm tiền – Mua đồ – Hoàn thành ước mơ!</div>
-            <p className="lead">Board game nhập vai giúp bé hiểu tiền đến từ lao động, biết so sánh giá, lên kế hoạch chi tiêu và tiết kiệm – qua những giờ chơi rộn rã tiếng cười cùng gia đình.</p>
+            <span className="eyebrow left">{BRAND.desc}</span>
+            <h1>Chơi thật vui, <span className="accent">giỏi quản lý tiền</span></h1>
+            <div className="tagline">Chọn nghề – Kiếm tiền – Xử lý tình huống – Mua đủ đồ vật!</div>
+            <p className="lead">Moni Yo giúp bé hiểu giá trị đồng tiền, hình thành tư duy tài chính và kỹ năng giải quyết vấn đề qua những tình huống gần gũi – bên bàn cờ cùng cả nhà.</p>
             <div className="hero-ctas">
-              <Link to="/san-pham/uoc-mo-vang" className="btn btn-lg"><CartIcon /> Đặt hàng ngay</Link>
-              <Link to="/gioi-thieu" className="btn btn-lg btn-light">Khám phá trò chơi <Arrow /></Link>
+              <Link to="/san-pham/moni-yo" className="btn btn-lg"><CartIcon /> Đặt hàng ngay</Link>
+              <Link to="/gioi-thieu" className="btn btn-lg btn-light">Xem cách chơi <Arrow /></Link>
             </div>
             <div className="hero-trust">
-              <Stars size={17} /><b>4.9/5</b><i /><span>Hơn <b>12.000</b> gia đình đã chơi</span>
+              <span className="with-ic"><Users size={18} /><b>2–4</b> người chơi</span><i />
+              <span className="with-ic"><Smile size={18} />Từ <b>5 tuổi</b></span><i />
+              <span><b>8</b> nghề nghiệp</span>
             </div>
           </div>
           <div className="hero-visual reveal" ref={visualRef}>
             <span className="orbit" aria-hidden="true"><i>₫</i><i>₫</i><i>₫</i></span>
             <span className="spark s1" aria-hidden="true" /><span className="spark s2" aria-hidden="true" /><span className="spark s3" aria-hidden="true" />
-            {FLOAT_CARDS.map((area, i) => <div className={`fcard f${i + 1}`} key={area} aria-hidden="true"><Crop img="yellow" area={area} /></div>)}
-            <div className="box-float"><div className="box-tilt"><Crop img="yellow" area="box" /></div></div>
+            {FLOAT_CARDS.map((src, i) => <div className={`fcard f${i + 1}`} key={src} aria-hidden="true"><img src={img(src)} alt="" /></div>)}
+            <div className="box-float"><div className="box-tilt"><img src={img('product/box')} alt="Hộp đồ chơi Moni Yo" width="1600" height="1333" /></div></div>
             <div className="sticker"><span><b>-17%</b>Mở bán</span></div>
           </div>
         </div>
-        <svg className="wave" viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 40 C 240 80 480 0 720 30 S 1200 70 1440 20 V70 H0z" fill="#FFFDF0" /></svg>
       </section>
 
       <div className="container">
         <div className="story-banner reveal">
           <div className="txt">
-            <h2>Khám phá câu chuyện Ước Mơ Kids</h2>
-            <p>Mỗi ván chơi là một hành trình: bé chọn nghề, đi làm nhận xu, gặp cơ hội và thử thách, rồi tự tay mua đủ đồ nghề để chạm tới ước mơ.</p>
+            <h2>Sứ mệnh Moni Yo</h2>
+            <p>Mỗi đứa trẻ đều có mong muốn và ước mơ riêng. Để đạt được điều mình muốn, con cần học cách lựa chọn, kiên nhẫn và hiểu giá trị của những gì mình có. Moni Yo đưa giáo dục tài chính đến gần hơn với trẻ, bắt đầu từ những bài học đơn giản về kiếm tiền, chi tiêu và tiết kiệm.</p>
+            <p className="motto">“{BRAND.motto}”</p>
             <div><Link to="/gioi-thieu" className="btn btn-yellow btn-sm">Tìm hiểu thêm <Arrow /></Link></div>
           </div>
-          <div className="visual"><Crop img="yellow" area="board" /></div>
+          <div className="visual"><img src={img('brand/cover')} alt="Hai bạn nhỏ chơi Moni Yo bên bàn cờ" loading="lazy" /></div>
         </div>
       </div>
 
       <section className="section">
-        <Cloud className="deco-l" style={{ top: 40 }} />
-        <Cloud className="deco-r" style={{ bottom: 40 }} />
         <div className="container">
-          <SectionHead eyebrow="Sản phẩm nổi bật" title="Bé học – Bé chơi – Bé lớn" sub="Những món đồ chơi được hàng nghìn phụ huynh tin chọn để bắt đầu hành trình tài chính của con." />
+          <SectionHead eyebrow="Sản phẩm" title="Bộ đồ chơi & phụ kiện Moni Yo" sub="Bộ đầy đủ để bắt đầu, cùng các phụ kiện thay thế và bổ sung." />
           <div className="grid grid-4">{products.slice(0, 4).map(p => <ProductCard key={p.id} p={p} />)}</div>
           <div style={{ textAlign: 'center', marginTop: 24 }}><Link to="/san-pham" className="btn btn-yellow">Xem tất cả sản phẩm <Arrow /></Link></div>
         </div>
       </section>
 
       <section className="section section-alt">
-        <Cloud className="deco-r" style={{ top: 30 }} />
         <div className="container">
-          <SectionHead eyebrow="Cách chơi" title="4 bước chạm tới ước mơ" sub="Luật chơi đơn giản, bé tự chơi được chỉ sau 2 ván." />
+          <SectionHead eyebrow="Nhập vai" title="Khám phá 8 nghề nghiệp" sub="Mỗi nghề có một bộ 4 thẻ Đồ vật. Bé chọn nghề và thu thập các vật dụng cần thiết trong quá trình chơi." />
+          <JobExplorer />
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <SectionHead eyebrow="Cách chơi" title="Cách chơi đơn giản" sub="Mỗi lượt chỉ gồm 3 bước: tung xúc xắc, di chuyển quân cờ và thực hiện hành động của ô." />
           <div className="steps-wrap">
             <div className="steps">
               {STEPS.map(([c, h, p], i) => (
@@ -97,26 +95,37 @@ export default function Home() {
               ))}
             </div>
           </div>
+          <h3 className="sub-title">Các ô trên bàn cờ</h3>
+          <TileGrid compact />
+          <div style={{ textAlign: 'center', marginTop: 24 }}><Link to="/gioi-thieu#cach-choi" className="btn btn-light">Xem luật chơi đầy đủ <Arrow /></Link></div>
+        </div>
+      </section>
+
+      <section className="section section-alt">
+        <div className="container">
+          <SectionHead eyebrow="65 thẻ tình huống" title="Mỗi lá bài là một bài học" sub="Những tình huống gần gũi giúp bé hiểu tiền đến từ đâu, đi về đâu và cách xử lý khi có điều bất ngờ." />
+          <div className="decks">
+            {DECKS.map(d => (
+              <Link to="/gioi-thieu#bo-the" className="deck reveal" key={d.id} style={{ '--deck': d.color }}>
+                <DeckFan deck={d} picks={d.id === 'tui-mu' ? [0, 7, 21] : [2, 0, 13]} />
+                <h3>{d.name}<small>{d.cards.length} thẻ</small></h3>
+                <p>{d.desc}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="section">
-        <Cloud className="deco-l" style={{ top: 60 }} />
         <div className="container">
-          <SectionHead eyebrow="Trong hộp có gì?" title="Hàng trăm điều thú vị" />
+          <SectionHead eyebrow="Trong hộp có gì?" title="Thành phần bộ đồ chơi" />
           <div className="inside">
-            <div className="inside-main reveal">
-              <Crop img="yellow" area="jobs" />
-              <div style={{ padding: '16px 8px 4px' }}>
-                <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', color: 'var(--brown)', fontSize: 24 }}>8 thẻ nghề nghiệp</h3>
-                <p style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Mỗi nghề đi kèm 4 món đồ cần sưu tầm và một thẻ nhiệm vụ riêng.</p>
-              </div>
-              <div style={{ marginTop: 14 }}><Crop img="yellow" area="items" /></div>
-            </div>
-            <div className="inside-list">
-              {INSIDE.map(([k, h, p]) => (
-                <div className="inside-item reveal" key={k}><Crop img="yellow" area={k} /><div><h4>{h}</h4><p>{p}</p></div></div>
-              ))}
+            <div className="inside-main reveal"><img src={img('product/board')} alt="Bàn cờ Moni Yo" loading="lazy" /></div>
+            <div className="inside-side reveal">
+              <ul className="comp-list">
+                {COMPONENTS.map(([n, q]) => <li key={n}><b>{q}</b>{n}</li>)}
+              </ul>
+              <img src={img('product/money')} alt="Tiền Moni Yo mệnh giá 1, 2, 5, 10 đồng" loading="lazy" />
             </div>
           </div>
         </div>
@@ -124,24 +133,21 @@ export default function Home() {
 
       <section className="stats-band">
         <div className="container">
-          <div><Counter to={12000} suffix="+" /><span>gia đình đã chơi</span></div>
           <div><Counter to={8} /><span>nghề nghiệp</span></div>
-          <div><Counter to={120} suffix="+" /><span>thẻ bài</span></div>
-          <div><b>4.9<Star size={24} /></b><span>đánh giá trung bình</span></div>
+          <div><Counter to={65} /><span>thẻ tình huống</span></div>
+          <div><Counter to={32} /><span>thẻ đồ vật</span></div>
+          <div><Counter to={240} /><span>tờ tiền Moni Yo</span></div>
         </div>
       </section>
 
       <section className="section">
-        <Cloud className="deco-l" style={{ top: 40 }} />
-        <Cloud className="deco-r" style={{ bottom: 30 }} />
         <div className="container">
-          <SectionHead eyebrow="Phụ huynh nói gì" title="Đánh giá của khách hàng" sub="Những gia đình đã trải nghiệm Ước Mơ Kids nói gì về sản phẩm" />
+          <SectionHead eyebrow="Phụ huynh nói gì" title="Đánh giá của khách hàng" sub="Những gia đình đã chơi Moni Yo nói gì về sản phẩm" />
           <ReviewSlider />
         </div>
       </section>
 
       <section className="section section-alt">
-        <Cloud className="deco-r" style={{ top: 40 }} />
         <div className="container">
           <SectionHead eyebrow="Góc phụ huynh" title="Tin tức & bài viết" />
           <div className="grid grid-3">{BLOG.slice(0, 3).map(b => <BlogCard key={b.id} b={b} />)}</div>
