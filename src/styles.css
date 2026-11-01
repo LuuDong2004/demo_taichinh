@@ -328,7 +328,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .commit-item p { margin: 0; font-size: 13px; color: var(--muted); }
 
 /* ---------- Footer ---------- */
-.footer { background: linear-gradient(180deg, var(--cream) 0, var(--cream-2) 90px); color: var(--brown-2); padding: 40px 0 0; position: relative; overflow: hidden; }
+/* Footer là một khối riêng: nền vàng nhạt đậm hơn, bo góc trên, viền + bóng ở mép trên */
+.footer {
+  background: #FFEDB8; color: var(--brown-2); padding: 52px 0 0; margin-top: 56px; position: relative; overflow: hidden;
+  border-radius: 44px 44px 0 0; border-top: 1px solid color-mix(in srgb, var(--yellow-2) 45%, transparent);
+  box-shadow: 0 -12px 34px rgba(42, 33, 23, .07);
+}
+.footer .cols { border-bottom-color: rgba(42, 33, 23, .12); }
 .footer .cols { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.4fr; gap: 36px; position: relative; z-index: 1; }
 .footer h5 { color: var(--brown); margin: 0 0 14px; font-family: var(--font-display); font-size: 18px; }
 .footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 14px; }
