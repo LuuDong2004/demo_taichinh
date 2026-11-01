@@ -875,7 +875,7 @@ td .thumb-sm { width: 52px; height: 52px; }
   50% { border-radius: 56% 44% 46% 54% / 40% 56% 44% 60%; rotate: 8deg; }
 }
 .stage-logo {
-  position: absolute; z-index: 4; width: 40%; left: 30%; top: -5%;
+  position: absolute; z-index: 4; width: 40%; left: 30%; top: 1%;
   filter: drop-shadow(0 10px 14px rgba(42, 33, 23, .2));
   translate: calc(var(--mx) * -8px) calc(var(--my) * -8px); transition: translate .3s ease-out;
   animation: logo-pop .8s cubic-bezier(.2, 1.6, .4, 1) both, logo-bob 4s ease-in-out .8s infinite;
