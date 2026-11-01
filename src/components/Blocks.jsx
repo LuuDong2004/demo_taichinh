@@ -1,28 +1,56 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { REVIEWS } from '../data';
+import { REVIEWS, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money } from '../lib/utils';
-import { Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
+import { Bell, Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
 
 export function ProductCard({ p }) {
   const { addToCart } = useShop();
+  const soon = isSoon(p);
   return (
-    <article className="card p-card reveal">
+    <article className={`card p-card reveal ${soon ? 'soon' : ''}`}>
       <Link to={`/san-pham/${p.id}`} className="thumb">
-        {p.badge && <span className="tag">{p.badge}</span>}
+        {soon ? <span className="tag soon-tag">Sắp ra mắt</span> : p.badge && <span className="tag">{p.badge}</span>}
         <span className="age">{p.age}</span>
         <img src={p.img} alt={p.name} loading="lazy" decoding="async" />
       </Link>
       <div className="body">
         <h3><Link to={`/san-pham/${p.id}`}>{p.name}</Link></h3>
-        <div className="meta"><Stars n={p.rating} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
+        {soon
+          ? <div className="meta">Đang hoàn thiện thiết kế</div>
+          : <div className="meta"><Stars n={p.rating} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>}
         <div className="price-row">
-          <div className="price">{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
-          <button className="add-btn" onClick={() => addToCart(p.id)} aria-label="Thêm vào giỏ"><Plus /></button>
+          {soon
+            ? <><div className="price soon-price">Sắp ra mắt</div><Link to={`/san-pham/${p.id}`} className="add-btn" aria-label={`Nhận tin khi ${p.name} ra mắt`}><Bell /></Link></>
+            : <><div className="price">{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
+              <button className="add-btn" onClick={() => addToCart(p.id)} aria-label="Thêm vào giỏ"><Plus /></button></>}
         </div>
       </div>
     </article>
+  );
+}
+
+// Form đăng ký nhận tin khi sản phẩm ra mắt – lưu vào danh sách liên hệ (xem ở trang quản trị)
+export function NotifyForm({ product }) {
+  const { setMessages, toast } = useShop();
+  const submit = e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.target));
+    setMessages(m => [{ name: d.name, phone: d.contact, topic: 'Nhận tin sản phẩm', msg: `Báo khi ra mắt: ${product.name}`, date: new Date().toISOString().slice(0, 10) }, ...m]);
+    e.target.reset();
+    toast('Đã đăng ký! Chúng tôi sẽ báo ngay khi sản phẩm ra mắt 🔔');
+  };
+  return (
+    <form className="notify" onSubmit={submit}>
+      <b><Bell size={18} />Sản phẩm đang hoàn thiện thiết kế</b>
+      <p>Để lại thông tin, Moni Yo sẽ báo bạn ngay khi mở bán.</p>
+      <div className="notify-row">
+        <input className="input" name="name" placeholder="Tên của bạn" required />
+        <input className="input" name="contact" placeholder="Số điện thoại hoặc email" required />
+        <button className="btn">Nhận tin</button>
+      </div>
+    </form>
   );
 }
 

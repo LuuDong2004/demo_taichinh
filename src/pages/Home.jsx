@@ -72,7 +72,7 @@ export default function Home() {
 
       <section className="section">
         <div className="container">
-          <SectionHead eyebrow="Sản phẩm" title="Bộ đồ chơi & phụ kiện Moni Yo" sub="Bộ đầy đủ để bắt đầu, cùng các phụ kiện thay thế và bổ sung." />
+          <SectionHead eyebrow="Sản phẩm" title="Bộ đồ chơi & phụ kiện Moni Yo" sub="Bộ đồ chơi Moni Yo đã sẵn sàng. Các phụ kiện lẻ đang hoàn thiện thiết kế và sắp ra mắt." />
           <div className="grid grid-4">{products.slice(0, 4).map(p => <ProductCard key={p.id} p={p} />)}</div>
           <div style={{ textAlign: 'center', marginTop: 24 }}><Link to="/san-pham" className="btn btn-yellow">Xem tất cả sản phẩm <Arrow /></Link></div>
         </div>

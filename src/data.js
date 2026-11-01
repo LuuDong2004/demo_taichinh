@@ -179,6 +179,9 @@ export const LEARN = [
 
 const FULL_SET = COMPONENTS.map(([n, q]) => `${q} ${n}`).concat('1 Sách hướng dẫn 16 trang');
 
+// status: 'soon' = sản phẩm chưa hoàn thiện thiết kế → hiện "Sắp ra mắt", không bán, cho đăng ký nhận tin
+export const isSoon = p => p.status === 'soon';
+
 export const DEFAULT_PRODUCTS = [
   {
     id: 'moni-yo', name: 'Bộ đồ chơi Moni Yo', price: 349000, oldPrice: 420000,
@@ -189,41 +192,41 @@ export const DEFAULT_PRODUCTS = [
     includes: FULL_SET,
   },
   {
-    id: 'bo-the-tinh-huong', name: 'Bộ 65 thẻ tình huống', price: 99000,
+    id: 'bo-the-tinh-huong', status: 'soon', name: 'Bộ 65 thẻ tình huống', price: 99000,
     img: img('product/card-stacks'), gallery: ['product/card-stacks', 'cards/cong/ban-ban-nuoc-chanh-tu-pha', 'cards/tru/troi-nong-ban-mua-mot-cay-kem', 'cards/tui-mu/sinh-nhat-vui-ve'].map(img),
-    age: '5+ tuổi', badge: 'Mới', stock: 200, rating: 4.8, sold: 412, kind: 'addon',
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '20 thẻ Cộng tiền, 20 thẻ Trừ tiền và 25 thẻ Túi mù – thay thế hoặc bổ sung cho bộ chính.',
     desc: 'Mỗi thẻ là một tình huống gần gũi: bán nước chanh, gom chai nhựa, mua quà sinh nhật bạn, làm mất tiền… Bố mẹ có thể dùng riêng bộ thẻ để kể chuyện và hỏi bé “nếu là con, con sẽ làm gì?”.',
     includes: ['20 thẻ Cộng tiền', '20 thẻ Trừ tiền', '25 thẻ Túi mù'],
   },
   {
-    id: 'bo-the-nghe-nghiep', name: 'Bộ thẻ 8 nghề & 32 đồ vật', price: 99000,
+    id: 'bo-the-nghe-nghiep', status: 'soon', name: 'Bộ thẻ 8 nghề & 32 đồ vật', price: 99000,
     img: img('items/may-bay'), gallery: ['items/may-bay', 'items/ong-nghe', 'items/mu-dau-bep', 'items/dan-ghi-ta'].map(img),
-    age: '5+ tuổi', stock: 150, rating: 4.7, sold: 268, kind: 'addon',
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '8 thẻ Nghề nghiệp và 32 thẻ Đồ vật minh họa sinh động, giúp bé làm quen các công việc.',
     desc: 'Phi công, Lính cứu hỏa, Kỹ sư, Giáo viên, Bác sĩ, Ca sĩ, Cảnh sát giao thông và Đầu bếp – mỗi nghề có 4 đồ vật đặc trưng. Bộ thẻ cũng dùng được cho trò ghép cặp nghề – đồ vật.',
     includes: ['8 thẻ Nghề nghiệp', '32 thẻ Đồ vật'],
   },
   {
-    id: 'tien-moni-yo', name: 'Tiền Moni Yo (240 tờ)', price: 59000,
+    id: 'tien-moni-yo', status: 'soon', name: 'Tiền Moni Yo (240 tờ)', price: 59000,
     img: img('product/money'), gallery: ['product/money', 'product/kit'].map(img),
-    age: '5+ tuổi', stock: 300, rating: 4.8, sold: 530, kind: 'addon',
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Tiền giấy 4 mệnh giá 1, 2, 5, 10 đồng – in màu dễ phân biệt, giúp bé tập đếm và đổi tiền.',
     desc: 'Mỗi mệnh giá một màu riêng: vàng 1 đồng, xanh dương 2 đồng, hồng 5 đồng, xanh lá 10 đồng. Ngoài trò chơi, bé có thể dùng để chơi bán hàng, đi chợ tại nhà.',
     includes: ['240 tờ tiền Moni Yo', '4 mệnh giá: 1, 2, 5, 10 đồng'],
   },
   {
-    id: 'quan-co-nhan-vat', name: 'Bộ 8 quân cờ nhân vật', price: 79000,
+    id: 'quan-co-nhan-vat', status: 'soon', name: 'Bộ 8 quân cờ nhân vật', price: 79000,
     img: img('product/pawns'), gallery: ['product/pawns', 'jobs/bac-si', 'jobs/phi-cong'].map(img),
-    age: '5+ tuổi', badge: 'Hot', stock: 90, rating: 4.9, sold: 344, kind: 'addon',
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Quân cờ hình 8 nhân vật nghề nghiệp, kèm 1 xúc xắc.',
     desc: 'Mỗi quân cờ là một nhân vật: bác sĩ, ca sĩ, cảnh sát giao thông, đầu bếp, giáo viên, kỹ sư, lính cứu hỏa, phi công. Bé chọn đúng nhân vật của nghề mình để nhập vai.',
     includes: ['8 quân cờ nhân vật', '1 xúc xắc'],
   },
   {
-    id: 'ban-co-moni-yo', name: 'Bàn cờ Moni Yo', price: 89000,
+    id: 'ban-co-moni-yo', status: 'soon', name: 'Bàn cờ Moni Yo', price: 89000,
     img: img('product/board'), gallery: ['product/board', 'brand/cover'].map(img),
-    age: '5+ tuổi', stock: 60, rating: 4.7, sold: 187, kind: 'addon',
+    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Bàn cờ đồng cỏ – dòng suối với đường đi uốn lượn và 8 loại ô hành động.',
     desc: 'Đường đi gồm ô START, Cộng tiền, Trừ tiền, Túi mù, Đóng băng, Thêm lượt, Quay về START và Mua sắm. Phù hợp để thay thế khi bàn cờ cũ bị hỏng.',
     includes: ['1 bàn cờ Moni Yo'],

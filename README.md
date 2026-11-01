@@ -48,6 +48,8 @@ docs/MONI YO/           Bộ ảnh gốc (~660MB) – KHÔNG commit (.gitignore)
 Ảnh minh hoạ lớn: thu về kích thước hiển thị 2x rồi nén WebP chất lượng 82–85. Logo, icon ô bàn cờ, tiền: WebP lossless.
 
 ## Ghi chú
+- Sản phẩm có `status: 'soon'` (trong `src/data.js` hoặc chọn ở trang quản trị) hiện "Sắp ra mắt": ẩn giá, không cho vào giỏ, có form nhận tin (lưu vào mục Liên hệ của admin). Hiện chỉ "Bộ đồ chơi Moni Yo" đang bán.
+- Màn hình rộng (≥1600px, ví dụ màn 27") được phóng to toàn bộ giao diện bằng CSS `zoom` theo biến `--z` cuối `styles.css`; khi viết CSS dùng `vh`/`vw` nhớ chia cho `var(--z)`.
 - Giá bán, tồn kho, lượt bán, đánh giá, đơn hàng mẫu, địa chỉ/hotline/email là số liệu demo – cần thay bằng thông tin thật.
 - Dữ liệu (giỏ hàng, đơn hàng, sản phẩm sửa trong admin, liên hệ) lưu ở `localStorage` của trình duyệt.
 - Trợ lý AI là bản mô phỏng theo từ khoá. Muốn dùng AI thật cần backend gọi Claude API (không để API key ở phía trình duyệt).

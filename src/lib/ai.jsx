@@ -8,7 +8,7 @@ const RULES = [
     k: ['tuoi', 'be ', 'con toi', 'nen choi', 'phu hop', 'goi y', 'qua'],
     a: q => {
       const age = parseInt((q.match(/\d+/) || [])[0]);
-      if (age && age < 5) return <>Moni Yo dành cho bé từ 5 tuổi. Với bé {age} tuổi, bố mẹ có thể chơi cùng con và giúp con đếm tiền, đọc thẻ. Bắt đầu với bộ <Link to="/san-pham/tien-moni-yo">Tiền Moni Yo</Link> để tập nhận biết mệnh giá cũng rất hợp 💛</>;
+      if (age && age < 5) return <>Moni Yo dành cho bé từ 5 tuổi. Với bé {age} tuổi, bố mẹ có thể chơi cùng con và giúp con đếm tiền, đọc thẻ. Bố mẹ có thể bắt đầu bằng việc cho bé tập nhận biết 4 mệnh giá tiền có trong hộp 💛</>;
       return <>Mình gợi ý <Link to="/san-pham/moni-yo">Bộ đồ chơi Moni Yo</Link> – dành cho bé từ 5 tuổi, 2–4 người chơi. Bé chọn 1 trong 8 nghề, đi làm kiếm tiền và mua đủ 4 đồ vật để chiến thắng!</>;
     },
   },

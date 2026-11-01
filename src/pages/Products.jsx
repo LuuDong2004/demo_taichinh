@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { CommitStrip, PageHero, ProductCard } from '../components/Blocks';
 import { Search } from '../components/Icons';
+import { isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { noAccent } from '../lib/utils';
 
@@ -12,22 +13,22 @@ const toggle = (list, v) => (list.includes(v) ? list.filter(x => x !== v) : [...
 export default function Products() {
   const { products } = useShop();
   const [q, setQ] = useState('');
-  const [ages, setAges] = useState([]);
+  const [statuses, setStatuses] = useState([]);
   const [price, setPrice] = useState('all');
   const [kinds, setKinds] = useState([]);
   const [sort, setSort] = useState('pop');
 
-  const allAges = [...new Set(products.map(p => p.age))];
   const list = useMemo(() => {
     const nq = noAccent(q.trim());
     const [lo, hi] = price.split('-').map(Number);
     return products
       .filter(p => (!nq || noAccent(p.name + ' ' + p.short).includes(nq))
-        && (!ages.length || ages.includes(p.age))
-        && (price === 'all' || (p.price >= lo && p.price <= hi))
+        && (!statuses.length || statuses.includes(isSoon(p) ? 'soon' : 'sale'))
+        // Sản phẩm sắp ra mắt chưa có giá nên không lọt vào bộ lọc giá
+        && (price === 'all' || (!isSoon(p) && p.price >= lo && p.price <= hi))
         && (!kinds.length || kinds.includes(kindOf(p))))
-      .sort(SORTS[sort]);
-  }, [products, q, ages, price, kinds, sort]);
+      .sort((a, b) => isSoon(a) - isSoon(b) || SORTS[sort](a, b));
+  }, [products, q, statuses, price, kinds, sort]);
 
   return (
     <>
@@ -36,8 +37,9 @@ export default function Products() {
         <div className="container shop">
           <aside className="filter">
             <div className="group">
-              <h4>Độ tuổi</h4>
-              {allAges.map(a => <label key={a}><input type="checkbox" checked={ages.includes(a)} onChange={() => setAges(toggle(ages, a))} /> {a}</label>)}
+              <h4>Tình trạng</h4>
+              <label><input type="checkbox" checked={statuses.includes('sale')} onChange={() => setStatuses(toggle(statuses, 'sale'))} /> Đang bán</label>
+              <label><input type="checkbox" checked={statuses.includes('soon')} onChange={() => setStatuses(toggle(statuses, 'soon'))} /> Sắp ra mắt</label>
             </div>
             <div className="group">
               <h4>Mức giá</h4>

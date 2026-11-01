@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { COUPON, DEFAULT_PRODUCTS, DEMO_ORDERS } from '../data';
+import { COUPON, DEFAULT_PRODUCTS, DEMO_ORDERS, isSoon } from '../data';
 import { storage } from './utils';
 
 const ShopContext = createContext(null);
@@ -13,8 +13,8 @@ function usePersisted(key, initial) {
 }
 
 export function ShopProvider({ children }) {
-  const [products, setProducts] = usePersisted('my_products', DEFAULT_PRODUCTS);
-  const [cart, setCart] = usePersisted('my_cart', []);
+  const [products, setProducts] = usePersisted('my_products_v2', DEFAULT_PRODUCTS);
+  const [cart, setCart] = usePersisted('my_cart_v2', []);
   const [orders, setOrders] = usePersisted('my_orders', DEMO_ORDERS);
   const [messages, setMessages] = usePersisted('my_msgs', []);
   const [coupon, setCoupon] = useState('');
@@ -31,15 +31,18 @@ export function ShopProvider({ children }) {
   const findProduct = useCallback(id => products.find(p => p.id === id), [products]);
 
   const addToCart = useCallback((id, qty = 1, silent = false) => {
+    const p = products.find(x => x.id === id);
+    if (!p || isSoon(p)) { toast('Sản phẩm sắp ra mắt, chưa thể đặt mua'); return false; }
     setCart(c => c.some(l => l.id === id) ? c.map(l => l.id === id ? { ...l, qty: l.qty + qty } : l) : [...c, { id, qty }]);
     if (!silent) toast('Đã thêm vào giỏ hàng 🛒');
-  }, [setCart, toast]);
+    return true;
+  }, [products, setCart, toast]);
 
   const changeQty = (id, delta) => setCart(c => c.map(l => l.id === id ? { ...l, qty: l.qty + delta } : l).filter(l => l.qty > 0));
   const removeFromCart = id => setCart(c => c.filter(l => l.id !== id));
 
   const totals = useMemo(() => {
-    const lines = cart.map(l => ({ ...l, p: products.find(p => p.id === l.id) })).filter(l => l.p);
+    const lines = cart.map(l => ({ ...l, p: products.find(p => p.id === l.id) })).filter(l => l.p && !isSoon(l.p));
     const sub = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
     const discount = coupon === COUPON ? Math.round(sub * 0.1) : 0;
     const ship = sub === 0 || sub >= 500000 ? 0 : 30000;

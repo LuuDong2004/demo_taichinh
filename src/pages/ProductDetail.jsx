@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ProductCard, QtyInput } from '../components/Blocks';
+import { NotifyForm, ProductCard, QtyInput } from '../components/Blocks';
 import { Box, Briefcase, Calculator, Clock, Gift, Refresh, Shield, Smile, Stars, Target, Truck, Users } from '../components/Icons';
-import { REVIEWS } from '../data';
+import { REVIEWS, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 import NotFound from './NotFound';
@@ -21,10 +21,12 @@ export default function ProductDetail() {
   // Chuyển sang sản phẩm khác (từ mục liên quan) thì reset lựa chọn
   useEffect(() => { setQty(1); setShot(0); setTab('desc'); }, [id]);
   if (!p) return <NotFound />;
+  const soon = isSoon(p);
 
   // Ảnh đại diện luôn đứng đầu (admin có thể đổi ảnh chính mà không sửa thư viện ảnh)
   const gallery = [p.img, ...(p.gallery || []).filter(g => g !== p.img)];
-  const related = products.filter(x => x.id !== p.id).slice(0, 4);
+  // Ưu tiên gợi ý sản phẩm đang bán
+  const related = products.filter(x => x.id !== p.id).sort((a, b) => isSoon(a) - isSoon(b)).slice(0, 4);
 
   return (
     <section className="section" style={{ paddingTop: 24 }}>
@@ -38,26 +40,36 @@ export default function ProductDetail() {
             </div>
           </div>
           <div>
-            {p.badge && <span className="chip" style={{ background: 'var(--red)', color: '#fff', borderColor: 'var(--red)' }}>{p.badge}</span>}
+            {soon
+              ? <span className="chip soon-chip">Sắp ra mắt</span>
+              : p.badge && <span className="chip" style={{ background: 'var(--red)', color: '#fff', borderColor: 'var(--red)' }}>{p.badge}</span>}
             <h1>{p.name}</h1>
-            <div className="meta" style={{ fontSize: 14 }}><Stars n={p.rating} size={16} /> {p.rating} ({Math.round(p.sold / 7)} đánh giá) · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
-            <div className="price" style={{ margin: '18px 0' }}>{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
+            {!soon && <div className="meta" style={{ fontSize: 14 }}><Stars n={p.rating} size={16} /> {p.rating} ({Math.round(p.sold / 7)} đánh giá) · Đã bán {p.sold.toLocaleString('vi-VN')}</div>}
+            {!soon && <div className="price" style={{ margin: '18px 0' }}>{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>}
             <p style={{ fontSize: 16 }}>{p.short}</p>
-            <div className="chips"><span className="chip"><Smile size={15} />{p.age}</span><span className="chip"><Users size={15} />2–4 người chơi</span><span className="chip"><Clock size={15} />Bé tự chơi sau 1–2 ván</span><span className="chip"><Box size={15} />Còn {p.stock} sản phẩm</span></div>
-            <div className="buy-row">
-              <QtyInput value={qty} onChange={v => setQty(Math.max(1, v))} />
-              <button className="btn btn-yellow" onClick={() => addToCart(p.id, qty)}>Thêm vào giỏ</button>
-              <button className="btn" onClick={() => { addToCart(p.id, qty, true); navigate('/gio-hang'); }}>Mua ngay</button>
+            <div className="chips">
+              <span className="chip"><Smile size={15} />{p.age}</span>
+              {p.kind === 'set' && <><span className="chip"><Users size={15} />2–4 người chơi</span><span className="chip"><Clock size={15} />Bé tự chơi sau 1–2 ván</span></>}
+              {!soon && <span className="chip"><Box size={15} />Còn {p.stock} sản phẩm</span>}
             </div>
-            <div className="perks">
-              <div className="perk"><Truck size={20} />Miễn phí ship đơn từ 500k</div><div className="perk"><Refresh />Đổi trả trong 7 ngày</div>
-              <div className="perk"><Gift />Gói quà miễn phí</div><div className="perk"><Shield size={20} />Kèm sách hướng dẫn 16 trang</div>
-            </div>
+            {soon ? <NotifyForm product={p} /> : (
+              <>
+                <div className="buy-row">
+                  <QtyInput value={qty} onChange={v => setQty(Math.max(1, v))} />
+                  <button className="btn btn-yellow" onClick={() => addToCart(p.id, qty)}>Thêm vào giỏ</button>
+                  <button className="btn" onClick={() => { if (addToCart(p.id, qty, true)) navigate('/gio-hang'); }}>Mua ngay</button>
+                </div>
+                <div className="perks">
+                  <div className="perk"><Truck size={20} />Miễn phí ship đơn từ 500k</div><div className="perk"><Refresh />Đổi trả trong 7 ngày</div>
+                  <div className="perk"><Gift />Gói quà miễn phí</div><div className="perk"><Shield size={20} />Kèm sách hướng dẫn 16 trang</div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         <div className="tabs">
-          {TABS.map(([k, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
+          {TABS.filter(([k]) => !(soon && k === 'rev')).map(([k, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
         </div>
         {tab === 'desc' && (
           <div>

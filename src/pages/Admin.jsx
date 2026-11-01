@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Chart, Chat, Edit, LogOut, Receipt, Trash } from '../components/Icons';
-import { BLOG, DEFAULT_PRODUCTS, img } from '../data';
+import { BLOG, DEFAULT_PRODUCTS, img, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money, noAccent } from '../lib/utils';
 
@@ -120,7 +120,8 @@ function ProductModal({ product, onClose }) {
           <div className="field full"><label>Ảnh sản phẩm</label>
             <select className="input" name="img" defaultValue={p.img}>{IMAGE_CHOICES.map(([l, v]) => <option key={v} value={img(v)}>{l}</option>)}</select>
           </div>
-          <div className="field full"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
+          <div className="field"><label>Tình trạng</label><select className="input" name="status" defaultValue={p.status || 'sale'}><option value="sale">Đang bán</option><option value="soon">Sắp ra mắt</option></select></div>
+          <div className="field"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
           <div className="field full"><label>Mô tả ngắn</label><textarea className="input" name="short" rows="2" defaultValue={p.short} /></div>
         </div>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 18 }}>
@@ -153,11 +154,11 @@ function ProductsAdmin() {
       </div>
       <div className="panel table-wrap">
         <table>
-          <thead><tr><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Tuổi</th><th /></tr></thead>
+          <thead><tr><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Tình trạng</th><th /></tr></thead>
           <tbody>
             {products.map(p => (
               <tr key={p.id}>
-                <td><img className="thumb-sm" src={p.img} alt="" /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{p.age}</td>
+                <td><img className="thumb-sm" src={p.img} alt="" /></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{isSoon(p) ? <span className="status st-wait">Sắp ra mắt</span> : <span className="status st-ok">Đang bán</span>}</td>
                 <td className="row-actions">
                   <button onClick={() => setEditing(p)}><Edit size={14} />Sửa</button>
                   <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : <Trash size={14} />}</button>
