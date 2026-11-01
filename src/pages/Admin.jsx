@@ -90,7 +90,7 @@ function Dashboard() {
   );
 }
 
-const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5+ tuổi', img: img('brand/kids-jump'), short: '', badge: '' };
+const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5–15 tuổi', img: img('brand/kids-jump'), short: '', badge: '' };
 // Chưa dùng ảnh sản phẩm thật: chỉ cho chọn hình nhận diện thương hiệu
 const IMAGE_CHOICES = [
   ['Nhân vật Moni Yo – nhảy', 'brand/kids-jump'], ['Nhân vật Moni Yo – ngồi', 'brand/kids-sit'], ['Nhân vật Moni Yo – ló đầu', 'brand/kids-peek'], ['Logo Moni Yo', 'brand/logo'],

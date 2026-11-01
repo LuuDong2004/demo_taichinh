@@ -8,8 +8,8 @@ const RULES = [
     k: ['tuoi', 'be ', 'con toi', 'nen choi', 'phu hop', 'goi y', 'qua'],
     a: q => {
       const age = parseInt((q.match(/\d+/) || [])[0]);
-      if (age && age < 5) return <>Moni Yo dành cho bé từ 5 tuổi. Với bé {age} tuổi, bố mẹ có thể chơi cùng con và giúp con đếm tiền, đọc thẻ. Bố mẹ có thể bắt đầu bằng việc cho bé tập nhận biết 4 mệnh giá tiền có trong hộp 💛</>;
-      return <>Mình gợi ý <Link to="/san-pham/moni-yo">Bộ đồ chơi Moni Yo</Link> (sắp ra mắt) – dành cho bé từ 5 tuổi, 2–4 người chơi. Bé chọn 1 trong 8 nghề, đi làm kiếm tiền và mua đủ 4 đồ vật để chiến thắng!</>;
+      if (age && age < 5) return <>Moni Yo dành cho trẻ từ 5–15 tuổi. Với bé {age} tuổi, bố mẹ có thể chơi cùng con và giúp con đếm tiền, đọc thẻ. Bố mẹ có thể bắt đầu bằng việc cho bé tập nhận biết 4 mệnh giá tiền có trong hộp 💛</>;
+      return <>Mình gợi ý <Link to="/san-pham/moni-yo">Bộ đồ chơi Moni Yo</Link> (sắp ra mắt) – dành cho trẻ từ 5–15 tuổi, 2–4 người chơi. Bé chọn 1 trong 8 nghề, đi làm kiếm tiền và mua đủ 4 đồ vật để chiến thắng!</>;
     },
   },
   { k: ['luat', 'cach choi', 'choi the nao', 'huong dan'], a: () => <>Mỗi lượt có 3 bước: <b>tung xúc xắc → di chuyển theo chiều kim đồng hồ → làm theo ô vừa dừng</b>.{'\n'}Ô xanh rút thẻ Cộng tiền, ô đỏ rút thẻ Trừ tiền, ô vàng rút thẻ Túi mù, ô Mua sắm được mua 1 thẻ Đồ vật ({ITEM_PRICE} đồng). Ai gom đủ 4 đồ vật của nghề mình trước sẽ thắng 🏆{'\n'}Xem đầy đủ ở <Link to="/gioi-thieu">trang Giới thiệu</Link>.</> },

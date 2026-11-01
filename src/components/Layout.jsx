@@ -4,7 +4,7 @@ import { useShop } from '../lib/ShopContext';
 import { useLiquid } from '../lib/useLiquid';
 import Assistant from './Assistant';
 import { BRAND } from '../data';
-import { CartIcon, ChatAI, Clock, Cloud, Facebook, Instagram, Mail, Menu, Phone, Pin, TikTok, YouTube } from './Icons';
+import { CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone } from './Icons';
 
 // Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Moni Yo mở bằng nút nổi góc phải
 const NAV = [
@@ -69,7 +69,7 @@ function Footer({ onAi }) {
             <Logo />
             <p style={{ fontSize: 14, marginTop: 18 }}>{BRAND.desc}. {BRAND.tagline}</p>
             <div className="socials">
-              <a href="#" aria-label="Facebook"><Facebook /></a><a href="#" aria-label="Instagram"><Instagram /></a><a href="#" aria-label="YouTube"><YouTube /></a><a href="#" aria-label="TikTok"><TikTok /></a>
+              <a href={BRAND.fanpage} target="_blank" rel="noopener noreferrer" aria-label="Fanpage Facebook Moni Yo"><Facebook /></a><a href={`mailto:${BRAND.email}`} aria-label="Gửi email cho Moni Yo"><Mail /></a>
             </div>
           </div>
           <div>
@@ -88,10 +88,11 @@ function Footer({ onAi }) {
           <div>
             <h5>Liên hệ &amp; đăng ký</h5>
             <ul className="footer-contact">
-              <li><Pin />{BRAND.address}</li>
-              <li><Phone size={18} /><a href={`tel:${BRAND.hotline.replace(/ /g, '')}`}>Hotline: {BRAND.hotline} (Zalo)</a></li>
+              <li><Facebook /><a href={BRAND.fanpage} target="_blank" rel="noopener noreferrer">Fanpage Moni Yo</a></li>
               <li><Mail /><a href={`mailto:${BRAND.email}`}>{BRAND.email}</a></li>
-              <li><Clock />08:00 – 21:00, cả cuối tuần</li>
+              {BRAND.contacts.map(([role, name, phone]) => (
+                <li key={name}><Phone size={18} /><span>{role}: {name} – <a href={`tel:${phone.replace(/ /g, '')}`}>{phone}</a></span></li>
+              ))}
             </ul>
             <form className="subscribe" onSubmit={e => { e.preventDefault(); e.target.reset(); toast('Đã đăng ký nhận ưu đãi 🎉'); }}>
               <input type="email" required placeholder="Email của bạn..." />
@@ -158,7 +159,7 @@ export default function Layout() {
       {!isAdmin && !aiOpen && (
         <div className="floating">
           <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-wave" /><span className="fab-wave w2" /><span className="fab-ic"><ChatAI size={23} /></span><i className="fab-badge">AI</i><span className="fab-spark s1" /><span className="fab-spark s2" /><span className="fab-spark s3" /></button>
-          <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
+          <a href={`tel:${BRAND.hotline.replace(/ /g, '')}`} className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}
       <Assistant open={aiOpen} onClose={closeAi} />      <Toast />

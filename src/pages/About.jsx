@@ -8,7 +8,7 @@ import { BRAND, COMPONENTS, ITEM_PRICE, KID_TIPS, LEARN, NOTES, PARENT_TIPS, RUL
 const LEARN_STYLE = [['var(--yellow-2)', Wallet], ['var(--orange)', Bulb], ['var(--blue)', Users], ['var(--green)', Heart]];
 const TOC = [['su-menh', 'Sứ mệnh'], ['thanh-phan', 'Thành phần'], ['cach-choi', 'Cách chơi'], ['nghe-nghiep', '8 nghề'], ['bo-the', 'Bộ thẻ'], ['phu-huynh', 'Phụ huynh']];
 const FAQ = [
-  ['Bé mấy tuổi chơi được?', 'Moni Yo dành cho bé từ 5 tuổi. Bé nhỏ hơn có thể chơi cùng bố mẹ, người lớn giúp đọc thẻ và đếm tiền.'],
+  ['Bé mấy tuổi chơi được?', 'Moni Yo dành cho trẻ từ 5–15 tuổi. Tuỳ độ tuổi, bé khám phá cách kiếm tiền, chi tiêu, tiết kiệm hay thử sức với những lựa chọn tài chính phức tạp hơn. Bé nhỏ hơn có thể chơi cùng bố mẹ, người lớn giúp đọc thẻ và đếm tiền.'],
   ['Một ván chơi mấy người?', 'Từ 2 đến 4 người chơi. Mỗi người chọn 1 nghề và 1 quân cờ.'],
   ['Khi nào thì thắng?', WIN],
   ['Có dùng tiền thật không?', 'Không. Trò chơi dùng tiền giấy Moni Yo mệnh giá 1, 2, 5 và 10 đồng, giúp bé làm quen khái niệm tiền mà không lo thất lạc tiền thật.'],
@@ -29,9 +29,9 @@ export default function About() {
           <div className="reveal">
             <span className="eyebrow left">Sứ mệnh Moni Yo</span>
             <h2 className="title" style={{ fontSize: 34 }}>{BRAND.tagline}</h2>
-            <p>Mỗi đứa trẻ đều có những mong muốn và ước mơ của riêng mình. Nhưng để đạt được điều mình muốn, con cần học cách lựa chọn, kiên nhẫn và hiểu giá trị của những gì mình có.</p>
-            <p><b>Moni Yo</b> ra đời với mong muốn đưa giáo dục tài chính đến gần hơn với trẻ em, bắt đầu từ những bài học đơn giản về kiếm tiền, chi tiêu và tiết kiệm. Thay vì chỉ tiếp nhận lời dạy từ người lớn, con được tự mình khám phá, đưa ra quyết định và học hỏi từ chính những trải nghiệm ấy.</p>
-            <p>Bởi học cách quản lý tiền cũng là học cách làm chủ những lựa chọn đầu đời.</p>
+            <p>Bố mẹ luôn mong con biết quý trọng đồng tiền và cân nhắc trước mỗi lần chi tiêu – nhưng làm thế nào để con thực sự hiểu, thay vì chỉ nghe những lời nhắc nhở? Từ trăn trở ấy, <b>Moni Yo</b> ra đời với mong muốn đưa giáo dục tài chính đến gần hơn với trẻ em thông qua những trải nghiệm vui chơi gần gũi.</p>
+            <p><b>Moni Yo</b> là bộ đồ chơi giáo dục tài chính dành cho trẻ từ 5–15 tuổi, nơi các bạn nhỏ được nhập vai, thực hiện nhiệm vụ và đưa ra quyết định qua những tình huống mô phỏng. Tuỳ theo độ tuổi, trẻ sẽ khám phá cách kiếm tiền, chi tiêu, tiết kiệm hay thử sức với những lựa chọn tài chính phức tạp hơn.</p>
+            <p>Qua mỗi cuộc chơi, con hiểu hơn về giá trị đồng tiền, học cách cân nhắc giữa các lựa chọn và nhận ra kết quả từ quyết định của mình. Còn với bố mẹ, đây là dịp để cùng con vui chơi, trò chuyện và đồng hành trong hành trình khám phá những bài học tài chính đầu tiên.</p>
             <p className="motto">Moni Yo – {BRAND.motto}</p>
           </div>
         </div>

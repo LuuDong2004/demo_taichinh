@@ -402,6 +402,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .es-title { font-family: var(--font-display); color: var(--brown); font-size: 26px; margin: 0 0 6px; }
 .empty-state p { color: var(--muted); margin: 0 0 20px; }
 .es-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+/* Trang Liên hệ: thẻ mời theo dõi fanpage (thay bản đồ) */
+.fb-card {
+  margin-top: 20px; display: flex; align-items: center; gap: 14px; padding: 14px 18px 14px 14px; border-radius: 18px;
+  background: linear-gradient(120deg, #FFF0A0, var(--yellow)); color: var(--brown); transition: transform .2s, box-shadow .2s;
+}
+.fb-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.fb-card img { width: 86px; height: 86px; object-fit: cover; object-position: 50% 20%; border-radius: 50%; background: #fff; flex-shrink: 0; }
+.fb-card span { flex: 1; font-size: 13.5px; line-height: 1.45; }
+.fb-card b { display: block; font-family: var(--font-display); font-size: 18px; margin-bottom: 2px; }
+.info-item a { color: var(--brown); font-weight: 600; }
+.info-item a:hover { color: var(--orange); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-grid .full { grid-column: 1 / -1; }
 .field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--brown); }

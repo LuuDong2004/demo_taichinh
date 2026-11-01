@@ -1,9 +1,14 @@
 import { CommitStrip, PageHero } from '../components/Blocks';
-import { Clock, Mail, Phone, Pin } from '../components/Icons';
-import { BRAND } from '../data';
+import { Arrow, Facebook, Mail, Phone } from '../components/Icons';
+import { BRAND, img } from '../data';
 import { useShop } from '../lib/ShopContext';
 
-const INFO = [[<Pin size={22} />, 'Địa chỉ', BRAND.address], [<Phone size={22} />, 'Hotline / Zalo', BRAND.hotline], [<Mail size={22} />, 'Email', BRAND.email], [<Clock size={22} />, 'Giờ làm việc', '08:00 – 21:00, cả thứ 7 & chủ nhật']];
+// Thông tin liên hệ theo fanpage Moni Yo
+const INFO = [
+  [<Facebook size={22} />, 'Fanpage', <a href={BRAND.fanpage} target="_blank" rel="noopener noreferrer">Moni Yo trên Facebook</a>],
+  [<Mail size={22} />, 'Email', <a href={`mailto:${BRAND.email}`}>{BRAND.email}</a>],
+  ...BRAND.contacts.map(([role, name, phone]) => [<Phone size={22} />, role, <>{name} – <a href={`tel:${phone.replace(/ /g, '')}`}>{phone}</a></>]),
+];
 
 export default function Contact() {
   const { setMessages, toast } = useShop();
@@ -25,10 +30,12 @@ export default function Contact() {
             <div className="info-list">
               {INFO.map(([i, h, t]) => <div className="info-item" key={h}><span className="ic">{i}</span><div><b>{h}</b><div style={{ color: 'var(--muted)' }}>{t}</div></div></div>)}
             </div>
-            <div className="map">
-              <span className="pin"><Pin size={46} /></span>
-              <span style={{ position: 'absolute', bottom: 12, fontWeight: 700, color: 'var(--brown)', fontSize: 13 }}>Moni Yo – Cầu Giấy</span>
-            </div>
+            {/* Chưa có địa chỉ cửa hàng → thay bản đồ bằng lời mời theo dõi fanpage */}
+            <a className="fb-card" href={BRAND.fanpage} target="_blank" rel="noopener noreferrer">
+              <img src={img('brand/kids-peek')} alt="" />
+              <span><b>Theo dõi fanpage Moni Yo</b>Cập nhật bộ trò chơi và những bài học tài chính thú vị cho bé</span>
+              <Arrow />
+            </a>
           </div>
           <form className="panel" onSubmit={submit}>
             <h3>Gửi lời nhắn</h3>

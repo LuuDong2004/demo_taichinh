@@ -6,10 +6,16 @@ export const BRAND = {
   name: 'Moni Yo',
   tagline: 'Học cách làm chủ đồng tiền, tự tin làm chủ tương lai.',
   motto: 'Khởi đầu từ niềm vui, trưởng thành cùng lựa chọn.',
-  desc: 'Bộ đồ chơi giáo dục tài chính dành cho trẻ em',
-  email: 'xinchao@moniyo.vn',
-  hotline: '0900 123 456',
-  address: '123 Đường Hạnh Phúc, Q. Cầu Giấy, Hà Nội',
+  desc: 'Bộ đồ chơi giáo dục tài chính dành cho trẻ từ 5–15 tuổi',
+  ages: '5–15 tuổi',
+  email: 'moniyoforchildren@gmail.com',
+  fanpage: 'https://www.facebook.com/profile.php?id=61594764340414',
+  hotline: '0382 087 738',
+  // Người liên hệ (theo thông tin trên fanpage)
+  contacts: [
+    ['Đại diện dự án', 'Vũ Bích Huệ', '0382 087 738'],
+    ['Đại diện truyền thông', 'Nguyễn Thị Thanh Lâm', '0392 735 829'],
+  ],
 };
 
 // Mỗi người chơi nhận 20 đồng khởi đầu; mỗi thẻ Đồ vật giá 20 đồng
@@ -186,7 +192,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'moni-yo', status: 'soon', name: 'Bộ đồ chơi Moni Yo', price: 349000, oldPrice: 420000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'set',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'set',
     short: 'Board game nhập vai 8 nghề nghiệp: đi làm kiếm tiền, xử lý tình huống, mua đủ 4 đồ vật để chiến thắng.',
     desc: 'Mỗi bé chọn một nghề trong 8 nghề, tung xúc xắc đi quanh bàn cờ, rút thẻ Cộng tiền, Trừ tiền, Túi mù và dừng ở ô Mua sắm để mua đồ vật của nghề mình. Ai thu thập đủ 4 thẻ Đồ vật trước sẽ thắng. Qua từng lượt, bé học cách kiếm tiền, cân nhắc chi tiêu, tiết kiệm và tự đưa ra lựa chọn.',
     includes: FULL_SET,
@@ -194,7 +200,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'bo-the-tinh-huong', status: 'soon', name: 'Bộ 65 thẻ tình huống', price: 99000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '20 thẻ Cộng tiền, 20 thẻ Trừ tiền và 25 thẻ Túi mù – thay thế hoặc bổ sung cho bộ chính.',
     desc: 'Mỗi thẻ là một tình huống gần gũi: bán nước chanh, gom chai nhựa, mua quà sinh nhật bạn, làm mất tiền… Bố mẹ có thể dùng riêng bộ thẻ để kể chuyện và hỏi bé “nếu là con, con sẽ làm gì?”.',
     includes: ['20 thẻ Cộng tiền', '20 thẻ Trừ tiền', '25 thẻ Túi mù'],
@@ -202,7 +208,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'bo-the-nghe-nghiep', status: 'soon', name: 'Bộ thẻ 8 nghề & 32 đồ vật', price: 99000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: '8 thẻ Nghề nghiệp và 32 thẻ Đồ vật minh họa sinh động, giúp bé làm quen các công việc.',
     desc: 'Phi công, Lính cứu hỏa, Kỹ sư, Giáo viên, Bác sĩ, Ca sĩ, Cảnh sát giao thông và Đầu bếp – mỗi nghề có 4 đồ vật đặc trưng. Bộ thẻ cũng dùng được cho trò ghép cặp nghề – đồ vật.',
     includes: ['8 thẻ Nghề nghiệp', '32 thẻ Đồ vật'],
@@ -210,7 +216,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'tien-moni-yo', status: 'soon', name: 'Tiền Moni Yo (240 tờ)', price: 59000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Tiền giấy 4 mệnh giá 1, 2, 5, 10 đồng – in màu dễ phân biệt, giúp bé tập đếm và đổi tiền.',
     desc: 'Mỗi mệnh giá một màu riêng: vàng 1 đồng, xanh dương 2 đồng, hồng 5 đồng, xanh lá 10 đồng. Ngoài trò chơi, bé có thể dùng để chơi bán hàng, đi chợ tại nhà.',
     includes: ['240 tờ tiền Moni Yo', '4 mệnh giá: 1, 2, 5, 10 đồng'],
@@ -218,7 +224,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'quan-co-nhan-vat', status: 'soon', name: 'Bộ 8 quân cờ nhân vật', price: 79000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Quân cờ hình 8 nhân vật nghề nghiệp, kèm 1 xúc xắc.',
     desc: 'Mỗi quân cờ là một nhân vật: bác sĩ, ca sĩ, cảnh sát giao thông, đầu bếp, giáo viên, kỹ sư, lính cứu hỏa, phi công. Bé chọn đúng nhân vật của nghề mình để nhập vai.',
     includes: ['8 quân cờ nhân vật', '1 xúc xắc'],
@@ -226,7 +232,7 @@ export const DEFAULT_PRODUCTS = [
   {
     id: 'ban-co-moni-yo', status: 'soon', name: 'Bàn cờ Moni Yo', price: 89000,
     img: img('brand/kids-jump'), art: true,
-    age: '5+ tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
+    age: '5–15 tuổi', stock: 0, rating: 0, sold: 0, kind: 'addon',
     short: 'Bàn cờ đồng cỏ – dòng suối với đường đi uốn lượn và 8 loại ô hành động.',
     desc: 'Đường đi gồm ô START, Cộng tiền, Trừ tiền, Túi mù, Đóng băng, Thêm lượt, Quay về START và Mua sắm. Phù hợp để thay thế khi bàn cờ cũ bị hỏng.',
     includes: ['1 bàn cờ Moni Yo'],

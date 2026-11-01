@@ -42,7 +42,7 @@ export default function Home() {
             </div>
             <div className="hero-trust">
               <span className="with-ic"><Users size={18} /><b>2–4</b> người chơi</span><i />
-              <span className="with-ic"><Smile size={18} />Từ <b>5 tuổi</b></span><i />
+              <span className="with-ic"><Smile size={18} /><b>5–15</b> tuổi</span><i />
               <span><b>8</b> nghề nghiệp</span>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="story-banner reveal">
           <div className="txt">
             <h2>Sứ mệnh Moni Yo</h2>
-            <p>Mỗi đứa trẻ đều có mong muốn và ước mơ riêng. Để đạt được điều mình muốn, con cần học cách lựa chọn, kiên nhẫn và hiểu giá trị của những gì mình có. Moni Yo đưa giáo dục tài chính đến gần hơn với trẻ, bắt đầu từ những bài học đơn giản về kiếm tiền, chi tiêu và tiết kiệm.</p>
+            <p>Bố mẹ luôn mong con biết quý trọng đồng tiền và cân nhắc trước mỗi lần chi tiêu – nhưng làm thế nào để con thực sự hiểu, thay vì chỉ nghe những lời nhắc nhở? Từ trăn trở ấy, Moni Yo ra đời với mong muốn đưa giáo dục tài chính đến gần hơn với trẻ em thông qua những trải nghiệm vui chơi gần gũi.</p>
             <p className="motto">“{BRAND.motto}”</p>
             <div><Link to="/gioi-thieu" className="btn btn-yellow btn-sm">Tìm hiểu thêm <Arrow /></Link></div>
           </div>
