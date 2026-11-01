@@ -80,9 +80,11 @@ export function CardBrowser() {
   const [deckId, setDeckId] = useState(DECKS[0].id);
   const deck = DECKS.find(d => d.id === deckId);
   const [open, setOpen] = useState(null);
+  const [catsRef, catsInd] = useLiquid(deckId, '.on');
   return (
     <>
-      <div className="blog-cats">
+      <div className="blog-cats" ref={catsRef}>
+        <span className="liquid-ind cats-ind" ref={catsInd} aria-hidden="true" />
         {DECKS.map(d => <button key={d.id} className={d.id === deckId ? 'on' : ''} onClick={() => setDeckId(d.id)}>{d.name} ({d.cards.length})</button>)}
       </div>
       <p className="subtitle" style={{ textAlign: 'center', marginBottom: 22 }}>{deck.desc}</p>

@@ -5,6 +5,7 @@ import ProductArt from '../components/ProductArt';
 import { Box, Briefcase, Calculator, Clock, Gift, Refresh, Shield, Smile, Stars, Target, Truck, Users } from '../components/Icons';
 import { REVIEWS, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
+import { useLiquid } from '../lib/useLiquid';
 import { money } from '../lib/utils';
 import NotFound from './NotFound';
 
@@ -19,6 +20,7 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [shot, setShot] = useState(0);
   const [tab, setTab] = useState('desc');
+  const [tabsRef, tabsInd] = useLiquid(tab, '.on');
   // Chuyển sang sản phẩm khác (từ mục liên quan) thì reset lựa chọn
   useEffect(() => { setQty(1); setShot(0); setTab('desc'); }, [id]);
   if (!p) return <NotFound />;
@@ -77,7 +79,8 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <div className="tabs">
+        <div className="tabs" ref={tabsRef}>
+          <span className="liquid-ind tabs-ind" ref={tabsInd} aria-hidden="true" />
           {TABS.filter(([k]) => !(soon && k === 'rev')).map(([k, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{l}</button>)}
         </div>
         {tab === 'desc' && (
