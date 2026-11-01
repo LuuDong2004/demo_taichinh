@@ -13,7 +13,7 @@ function usePersisted(key, initial) {
 }
 
 export function ShopProvider({ children }) {
-  const [products, setProducts] = usePersisted('my_products_v4', DEFAULT_PRODUCTS);
+  const [products, setProducts] = usePersisted('my_products_v5', DEFAULT_PRODUCTS);
   const [cart, setCart] = usePersisted('my_cart_v2', []);
   const [orders, setOrders] = usePersisted('my_orders', DEMO_ORDERS);
   const [messages, setMessages] = usePersisted('my_msgs', []);

@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { CommitStrip, PageHero, SectionHead } from '../components/Blocks';
 import { CardBrowser, JobExplorer, TileGrid } from '../components/Game';
 import ProductArt from '../components/ProductArt';
-import { useShop } from '../lib/ShopContext';
 import { Bell, Bulb, Heart, Users, Wallet } from '../components/Icons';
 import { BRAND, COMPONENTS, ITEM_PRICE, KID_TIPS, LEARN, NOTES, PARENT_TIPS, RULES, SETUP, SHOP_STEPS, START_MONEY, TURN, WIN, img } from '../data';
 
@@ -17,7 +16,6 @@ const FAQ = [
 ];
 
 export default function About() {
-  const mainArt = useShop().products.find(p => p.id === 'moni-yo')?.art;
   return (
     <>
       <PageHero eyebrow="Giới thiệu sản phẩm" title="Moni Yo – Bộ đồ chơi giáo dục tài chính">Giới thiệu</PageHero>
@@ -63,7 +61,7 @@ export default function About() {
             <div style={{ marginTop: 20 }}><Link to="/san-pham/moni-yo" className="btn"><Bell /> Nhận tin khi ra mắt</Link></div>
           </div>
           <div className="reveal stack-imgs">
-            <div className="art-box"><ProductArt art={mainArt} size="lg" /></div>
+            <div className="art-box"><ProductArt size="lg" /></div>
             <img src={img('product/money')} alt="Tiền Moni Yo mệnh giá 1, 2, 5, 10 đồng" loading="lazy" />
           </div>
         </div>

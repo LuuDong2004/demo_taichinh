@@ -36,7 +36,7 @@ export default function ProductDetail() {
         <div className="detail">
           <div className="gallery">
             {p.art ? (
-              <div className="main art"><ProductArt art={p.art} size="lg" /><span className="art-note">Hình ảnh sản phẩm sẽ được cập nhật khi ra mắt</span></div>
+              <div className="main art"><ProductArt size="lg" /></div>
             ) : (
               <>
                 <div className="main"><img src={gallery[shot] || p.img} alt={p.name} /></div>

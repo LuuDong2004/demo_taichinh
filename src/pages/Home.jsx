@@ -125,7 +125,7 @@ export default function Home() {
         <div className="container">
           <SectionHead eyebrow="Trong hộp có gì?" title="Thành phần bộ đồ chơi" />
           <div className="inside">
-            <div className="inside-main art reveal"><ProductArt art={products.find(p => p.id === 'moni-yo')?.art} size="lg" /></div>
+            <div className="inside-main art reveal"><ProductArt size="lg" /></div>
             <div className="inside-side reveal">
               <ul className="comp-list">
                 {COMPONENTS.map(([n, q]) => <li key={n}><b>{q}</b>{n}</li>)}

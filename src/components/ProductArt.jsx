@@ -1,28 +1,17 @@
 import { img } from '../data';
 
-// Ảnh đại diện sản phẩm khi CHƯA được dùng ảnh sản phẩm thật: ghép từ các yếu tố nhận diện
-// (nền màu, nhân vật, icon ô bàn cờ, logo) + chuyển động nhẹ.
-// art = { bg: [màu1, màu2], logo?, kids?: ảnh nhân vật lớn, chars?: [id nghề], icons?: [id icon ô bàn cờ] }
-export default function ProductArt({ art, size = 'md' }) {
-  const { bg = ['#FFE27A', '#FFC928'], logo, kids, chars = [], icons = [] } = art || {};
-  const layout = kids ? 'kids' : chars.length ? 'chars' : 'icons';
+// Sản phẩm chưa ra mắt → chưa có ảnh: dùng chung MỘT khung "Hình ảnh sản phẩm" cho mọi sản phẩm.
+// Khi có ảnh thật: thêm img/gallery cho sản phẩm và bỏ cờ `art` trong src/data.js.
+export default function ProductArt({ size = 'md' }) {
   return (
-    <div className={`p-art ${size} ${layout}`} style={{ '--a': bg[0], '--b': bg[1] }} aria-hidden="true">
-      <span className="p-art-sun" />
-      <span className="p-art-dots" />
-      {logo && <img className="p-art-logo" src={img('brand/logo')} alt="" />}
-      {kids && <img className="p-art-kids" src={img(kids)} alt="" />}
-      {chars.length > 0 && (
-        <div className="p-art-chars">{chars.map(c => <img key={c} src={img(`jobs/${c}`)} alt="" loading="lazy" />)}</div>
-      )}
-      <div className="p-art-icons">
-        {icons.map((ic, i) => <span key={ic} style={{ '--i': i }}><img src={img(`tiles/${ic}`)} alt="" loading="lazy" /></span>)}
-      </div>
+    <div className={`p-ph ${size}`} role="img" aria-label="Hình ảnh sản phẩm đang cập nhật">
+      <img src={img('brand/logo')} alt="" />
+      {size !== 'sm' && <><b>Hình ảnh sản phẩm</b><span>Đang cập nhật</span></>}
     </div>
   );
 }
 
-// Thumbnail dùng chung: có art thì vẽ khung minh hoạ, không thì dùng ảnh (sản phẩm do admin thêm)
+// Thumbnail dùng chung: sản phẩm chưa có ảnh (art) thì hiện khung chung, ngược lại dùng ảnh (sản phẩm do admin thêm)
 export function ProductThumb({ p, size }) {
-  return p.art ? <ProductArt art={p.art} size={size} /> : <img src={p.img} alt={p.name} loading="lazy" decoding="async" />;
+  return p.art ? <ProductArt size={size} /> : <img src={p.img} alt={p.name} loading="lazy" decoding="async" />;
 }
