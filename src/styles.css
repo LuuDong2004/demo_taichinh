@@ -158,18 +158,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero-trust .stars { font-size: 16px; color: var(--orange); }
 .hero-trust b { color: var(--brown); font-weight: 800; }
 .hero-trust i { width: 4px; height: 4px; border-radius: 50%; background: var(--brown-2); opacity: .5; }
-.hero-visual { position: relative; width: 100%; max-width: 470px; justify-self: center; padding: 6% 13%; }
-.hero-visual::before { content: ''; position: absolute; left: 50%; top: 50%; width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--yellow); transform: translate(-50%, -50%); }
-.hero-visual::before { animation: breathe 5s ease-in-out infinite; }
-.hero-visual::after { content: ''; position: absolute; left: 50%; bottom: 3%; width: 58%; height: 22px; border-radius: 50%; background: rgba(20, 30, 40, .28); filter: blur(12px); translate: -50% 0; animation: shadow-pulse 5s ease-in-out infinite; }
-.hero-visual { --mx: 0; --my: 0; perspective: 900px; }
-.box-float { position: relative; z-index: 1; animation: box-float 5s ease-in-out infinite; }
-/* Hộp nghiêng 3D theo con trỏ + vệt sáng quét qua mặt hộp */
-.box-tilt { position: relative; border-radius: 22px; overflow: hidden; box-shadow: var(--shadow-lg); transform: rotateY(calc(var(--mx) * 10deg)) rotateX(calc(var(--my) * -8deg)); transition: transform .3s ease-out; }
-.box-tilt img { width: 100%; height: auto; }
 .fcard img { width: 100%; height: auto; }
-.box-tilt::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, .55) 50%, transparent 58%) no-repeat; background-size: 300% 100%; animation: shine 4.500s ease-in-out infinite; pointer-events: none; }
-@keyframes shine { 0%, 55% { background-position: 150% 0; } 100% { background-position: -50% 0; } }
 /* Thẻ bài bật ra quanh hộp, trôi theo con trỏ ở các độ sâu khác nhau */
 .fcard {
   position: absolute; width: 22%; border-radius: 12px; overflow: hidden; border: 4px solid #fff; background: #fff;
@@ -184,35 +173,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .fcard.f4 { right: -8%; top: 27%; --r: 13deg; --d: -16px; --t: .7s; width: 19%; transform-origin: -40% 50%; }
 @keyframes card-pop { from { scale: 0; opacity: 0; } }
 @keyframes card-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-.hero-visual .sticker { z-index: 2; animation: wobble 3.200s ease-in-out infinite; }
-/* Vòng quỹ đạo nét đứt quay chậm, 3 đồng xu chạy quanh hộp */
-.orbit { position: absolute; left: 50%; top: 50%; width: 114%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; border: 2px dashed color-mix(in srgb, var(--yellow-2) 65%, transparent); animation: spin 26s linear infinite; }
-.orbit i {
-  position: absolute; width: 36px; height: 36px; margin: -18px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--yellow); box-shadow: inset 0 -3px 0 var(--yellow-2), 0 4px 10px rgba(20, 30, 40, .16);
-  font: 800 17px/1 var(--font-display); font-style: normal; color: var(--brown); animation: spin 26s linear infinite reverse;
-}
-.orbit i:nth-child(1) { left: 50%; top: 0; }
-.orbit i:nth-child(2) { left: 6.700%; top: 75%; width: 28px; height: 28px; margin: -14px; font-size: 13px; }
-.orbit i:nth-child(3) { left: 93.300%; top: 75%; }
-.spark { position: absolute; z-index: 2; width: 22px; height: 22px; background: var(--orange); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twinkle 2.400s ease-in-out infinite; }
-.spark.s1 { left: 4%; top: 16%; }
-.spark.s2 { right: 0; top: 46%; width: 16px; height: 16px; background: #fff; animation-delay: .8s; }
-.spark.s3 { left: 12%; bottom: 10%; width: 14px; height: 14px; background: var(--brown); animation-delay: 1.600s; }
-@keyframes box-float { 0%, 100% { transform: translateY(6px) rotate(-3.500deg); } 50% { transform: translateY(-12px) rotate(1.500deg); } }
-@keyframes shadow-pulse { 0%, 100% { scale: 1 1; opacity: .9; } 50% { scale: .78 1; opacity: .5; } }
 @keyframes breathe { 0%, 100% { scale: 1; } 50% { scale: 1.035; } }
 @keyframes spin { to { rotate: 360deg; } }
-@keyframes wobble { 0%, 100% { rotate: -4deg; scale: 1; } 50% { rotate: 5deg; scale: 1.070; } }
 @keyframes twinkle { 0%, 100% { scale: .3; opacity: 0; rotate: 0deg; } 50% { scale: 1; opacity: 1; rotate: 45deg; } }
-@media (prefers-reduced-motion: reduce) { .hero-visual *, .hero-visual::before, .hero-visual::after { animation: none !important; } }
-.hero-visual .sticker {
-  position: absolute; background: var(--brown); color: var(--on-ink); font-family: var(--font-display); font-weight: 700;
-  width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center; text-align: center; line-height: 1;
-  font-size: 12px; top: 4%; right: 4%; transform: rotate(10deg); box-shadow: var(--shadow);
-}
-.hero-visual .sticker b { font-size: 22px; display: block; color: var(--yellow); }
-.wave { display: none; }
 
 /* ---------- Story banner (như “Khám phá câu chuyện”) ---------- */
 .story-banner {
