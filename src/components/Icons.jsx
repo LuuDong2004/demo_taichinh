@@ -75,26 +75,6 @@ export function KidAvatar({ size = 40 }) {
   );
 }
 
-// Heo đất – dùng cho các trạng thái trống (giỏ hàng, không tìm thấy trang)
-export function Pig({ size = 40 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-      <g stroke="#6B3E00" strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round">
-        <path d="M9 19 7 7l11 5z" fill="#F5B800" />
-        <path d="m39 19 2-12-11 5z" fill="#F5B800" />
-        <circle cx="24" cy="26" r="17" fill="#FFD23F" />
-        <ellipse cx="24" cy="31" rx="8.5" ry="6.2" fill="#FFB020" />
-      </g>
-      <circle cx="12.5" cy="29" r="2.6" fill="#FF8A3D" opacity=".45" />
-      <circle cx="35.5" cy="29" r="2.6" fill="#FF8A3D" opacity=".45" />
-      <g fill="#6B3E00">
-        <circle cx="16.5" cy="21.5" r="2.2" /><circle cx="31.5" cy="21.5" r="2.2" />
-        <ellipse cx="21" cy="31" rx="1.5" ry="2.2" /><ellipse cx="27" cy="31" rx="1.5" ry="2.2" />
-      </g>
-      <circle cx="17.2" cy="20.8" r=".7" fill="#fff" /><circle cx="32.2" cy="20.8" r=".7" fill="#fff" />
-    </svg>
-  );
-}
 
 export function Cloud({ className = '', style }) {
   return (

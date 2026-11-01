@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { REVIEWS, isSoon } from '../data';
+import { REVIEWS, img, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money } from '../lib/utils';
 import { Bell, Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
@@ -84,6 +84,18 @@ export function CommitStrip() {
         ))}
       </div>
     </section>
+  );
+}
+
+// Trạng thái trống (giỏ hàng trống, không tìm thấy trang…): nhân vật Moni Yo trên nền vàng tròn
+export function EmptyState({ pic = 'kids-peek', title, children, action, as: H = 'h3' }) {
+  return (
+    <div className="empty-state">
+      <div className="es-art"><img src={img(`brand/${pic}`)} alt="" /></div>
+      <H className="es-title">{title}</H>
+      {children && <p>{children}</p>}
+      {action}
+    </div>
   );
 }
 

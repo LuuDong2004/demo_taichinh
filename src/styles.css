@@ -391,6 +391,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .sum-line.total span:last-child { color: var(--red); font-family: var(--font-display); font-size: 26px; }
 .empty { text-align: center; padding: 60px 20px; }
 .empty .big { font-size: 64px; display: grid; place-items: center; }
+/* Trạng thái trống: nhân vật Moni Yo trên nền vàng tròn */
+.empty-state { text-align: center; padding: 40px 20px 48px; max-width: 520px; margin: 0 auto; }
+.es-art {
+  width: min(240px, 70%); aspect-ratio: 1; margin: 0 auto 18px; border-radius: 50%; overflow: hidden; display: grid; place-items: end center;
+  background: radial-gradient(circle at 50% 35%, #FFF0A0, var(--yellow) 70%); box-shadow: 0 16px 36px color-mix(in srgb, var(--yellow-2) 35%, transparent);
+}
+.es-art img { width: 92%; height: auto; }
+.es-title { font-family: var(--font-display); color: var(--brown); font-size: 26px; margin: 0 0 6px; }
+.empty-state p { color: var(--muted); margin: 0 0 20px; }
+.es-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-grid .full { grid-column: 1 / -1; }
 .field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--brown); }

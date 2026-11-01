@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PageHero, QtyInput } from '../components/Blocks';
-import { ArrowLeft, Pig, Truck, X } from '../components/Icons';
+import { EmptyState, PageHero, QtyInput } from '../components/Blocks';
+import { ArrowLeft, Truck, X } from '../components/Icons';
 import { ProductThumb } from '../components/ProductArt';
 import { COUPON } from '../data';
 import { useShop } from '../lib/ShopContext';
@@ -42,11 +42,10 @@ export default function Cart() {
     <>
       {hero}
       <section className="section">
-        <div className="container panel empty">
-          <div className="big"><Pig size={96} /></div>
-          <h3>Giỏ hàng đang trống</h3>
-          <p>Heo đất đang chờ bé bỏ đồ chơi vào nè!</p>
-          <Link to="/san-pham" className="btn">Mua sắm ngay</Link>
+        <div className="container panel">
+          <EmptyState pic="kids-sit" title="Giỏ hàng đang trống" action={<Link to="/san-pham" className="btn">Xem sản phẩm</Link>}>
+            Bộ đồ chơi Moni Yo đang hoàn thiện và sắp ra mắt. Đăng ký nhận tin để được báo ngay khi mở bán nhé!
+          </EmptyState>
         </div>
       </section>
     </>
