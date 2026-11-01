@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CARDS, JOBS, TILES, img } from '../data';
 import { ArrowLeft, Arrow, X } from './Icons';
 
@@ -8,9 +8,51 @@ const itemImg = id => img(`items/${id}`);
 export function JobExplorer() {
   const [active, setActive] = useState(JOBS[0].id);
   const job = JOBS.find(j => j.id === active);
+  const tabsRef = useRef(null);
+  const indRef = useRef(null);
+  const last = useRef(null);
+
+  // Nền màu trượt kiểu "chất lỏng": mép phía trước chạy nhanh, mép sau đuổi theo chậm hơn → khối nền dãn ra rồi co lại
+  const place = animate => {
+    const box = tabsRef.current, ind = indRef.current;
+    const btn = box?.querySelector('[aria-selected="true"]');
+    if (!btn) return;
+    const l = btn.offsetLeft, t = btn.offsetTop, w = btn.offsetWidth, h = btn.offsetHeight;
+    const prev = last.current;
+    const dir = !prev ? 0 : Math.sign(l - prev.l) || Math.sign(t - prev.t);
+    const fast = '.34s cubic-bezier(.3, 1.35, .5, 1)', slow = '.56s cubic-bezier(.6, 0, .2, 1)';
+    const lead = dir > 0 ? 'right' : 'left', tail = dir > 0 ? 'left' : 'right';
+    ind.style.transition = animate && dir
+      ? `${lead} ${fast}, ${tail} ${slow}, top .45s cubic-bezier(.5, 0, .2, 1), bottom .45s cubic-bezier(.5, 0, .2, 1), background-color .45s`
+      : 'none';
+    Object.assign(ind.style, {
+      left: `${l}px`, right: `${box.clientWidth - l - w}px`,
+      top: `${t}px`, bottom: `${box.clientHeight - t - h}px`,
+    });
+    if (animate && dir) {
+      // Bóp dẹt nhẹ khi đang chạy cho cảm giác mềm như chất lỏng
+      ind.animate([{ scale: '1 1' }, { scale: '1 .78' }, { scale: '1 1.04' }, { scale: '1 1' }], { duration: 560, easing: 'ease-out' });
+      // Điện thoại: thanh tab cuộn ngang → đưa nút đang chọn vào giữa
+      if (box.scrollWidth > box.clientWidth) box.scrollTo({ left: l - (box.clientWidth - w) / 2, behavior: 'smooth' });
+    }
+    last.current = { l, t };
+  };
+  const placeRef = useRef(place);
+  placeRef.current = place;
+
+  useLayoutEffect(() => { placeRef.current(true); }, [active]);
+  // Ảnh mặt tải xong / đổi cỡ màn → đặt lại vị trí ngay, không chạy hiệu ứng
+  useEffect(() => {
+    const ro = new ResizeObserver(() => placeRef.current(false));
+    ro.observe(tabsRef.current);
+    tabsRef.current.querySelectorAll('img').forEach(i => ro.observe(i));
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div className="jobs" style={{ '--job': job.color }}>
-      <div className="job-tabs" role="tablist" aria-label="8 nghề nghiệp">
+      <div className="job-tabs" role="tablist" aria-label="8 nghề nghiệp" ref={tabsRef}>
+        <span className="job-ind" ref={indRef} aria-hidden="true" />
         {JOBS.map(j => (
           <button key={j.id} role="tab" aria-selected={j.id === active} className={j.id === active ? 'on' : ''} style={{ '--job': j.color }} onClick={() => setActive(j.id)}>
             <span className="job-face"><img src={img(`jobs/${j.id}`)} alt="" loading="lazy" /></span>
