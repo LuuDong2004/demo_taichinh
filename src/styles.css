@@ -593,7 +593,6 @@ td .thumb-sm { width: 52px; height: 52px; object-fit: cover; border-radius: 8px;
 .sub-title { font-family: var(--font-display); color: var(--brown); font-size: 24px; text-align: center; margin: 40px 0 18px; }
 .kid-avatar { display: block; border-radius: 50%; overflow: hidden; background: var(--yellow-soft); flex-shrink: 0; box-shadow: inset 0 0 0 2px #fff; }
 .kid-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 26% 34%; transform: scale(2.1); transform-origin: 26% 46%; }
-.fab-ai { background: var(--yellow); }
 
 /* 8 nghề */
 .jobs { --job: var(--brown); }
@@ -787,3 +786,31 @@ html { zoom: var(--z); }
 @media (min-width: 2240px) { :root { --z: 1.4; } }
 @media (min-width: 2800px) { :root { --z: 1.65; } }
 @media (min-width: 3400px) { :root { --z: 2; } }
+
+/* ================= Nút trợ lý AI ================= */
+.floating .fab-ai {
+  width: auto; height: 56px; padding: 0 20px 0 7px; border-radius: 999px; gap: 10px;
+  display: flex; align-items: center; background: var(--brown); color: #fff; border: 0;
+  box-shadow: 0 10px 26px rgba(42, 33, 23, .28); animation: ai-ring 2.6s ease-out infinite;
+  transition: transform .2s;
+}
+.floating .fab-ai:hover { transform: translateY(-3px); }
+.fab-ic { position: relative; width: 42px; height: 42px; border-radius: 50%; background: var(--yellow); color: var(--brown); display: grid; place-items: center; }
+.fab-ic i {
+  position: absolute; top: -5px; right: -7px; background: var(--green); color: #fff; font: 800 10px/1 var(--font-body); font-style: normal;
+  padding: 3px 5px; border-radius: 6px; box-shadow: 0 0 0 2px var(--brown);
+}
+.fab-ai .fab-ic svg { transition: transform .25s; }
+.fab-ai:hover .fab-ic svg { transform: rotate(-10deg) scale(1.1); }
+.fab-label { display: grid; text-align: left; font-weight: 700; font-size: 14px; line-height: 1.15; }
+.fab-label small { font-weight: 500; font-size: 11.5px; color: var(--yellow); }
+.floating { justify-items: end; }
+@keyframes ai-ring {
+  0% { box-shadow: 0 10px 26px rgba(42, 33, 23, .28), 0 0 0 0 color-mix(in srgb, var(--yellow) 70%, transparent); }
+  70%, 100% { box-shadow: 0 10px 26px rgba(42, 33, 23, .28), 0 0 0 14px color-mix(in srgb, var(--yellow) 0%, transparent); }
+}
+@media (max-width: 520px) {
+  .floating .fab-ai { width: 56px; padding: 0; justify-content: center; }
+  .fab-label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .floating .fab-ai { animation: none; } }

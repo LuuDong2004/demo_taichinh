@@ -9,6 +9,7 @@ export const Truck = icon(<><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z" /><circle c
 export const Shield = icon(<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></>, 24);
 export const Card = icon(<><rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" /></>, 24);
 export const Chat = icon(<><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M8 10h.01M12 10h.01M16 10h.01" /></>, 24);
+export const ChatAI = icon(<><path d="M20 13.5a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h7" /><path d="M18 2.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="currentColor" stroke="none" /><path d="M8.5 10h.01M12 10h.01" strokeWidth="3" /></>, 24, 2.2);
 export const Plus = icon(<path d="M12 5v14M5 12h14" />, 20, 3);
 export const Arrow = icon(<path d="M5 12h14M13 5l7 7-7 7" />, 16, 2.6);
 export const ArrowLeft = icon(<path d="M19 12H5M11 5l-7 7 7 7" />, 16, 2.6);

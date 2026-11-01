@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useShop } from '../lib/ShopContext';
 import Assistant from './Assistant';
 import { BRAND } from '../data';
-import { CartIcon, Clock, Cloud, Facebook, Instagram, KidAvatar, Mail, Menu, Phone, Pin, TikTok, YouTube } from './Icons';
+import { CartIcon, ChatAI, Clock, Cloud, Facebook, Instagram, Mail, Menu, Phone, Pin, TikTok, YouTube } from './Icons';
 
 // Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Moni Yo mở bằng nút nổi góc phải
 const NAV = [
@@ -153,7 +153,7 @@ export default function Layout() {
       {!isAdmin && <Footer onAi={openAi} />}
       {!isAdmin && !aiOpen && (
         <div className="floating">
-          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý Moni Yo"><KidAvatar size={50} /></button>
+          <button className="fab-ai" onClick={openAi} aria-label="Hỏi trợ lý AI Moni Yo"><span className="fab-ic"><ChatAI size={26} /><i>AI</i></span><span className="fab-label">Hỏi trợ lý<small>Moni Yo</small></span></button>
           <a href="tel:0900123456" className="fab-phone" aria-label="Gọi hotline"><Phone /></a>
         </div>
       )}
