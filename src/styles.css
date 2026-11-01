@@ -1070,6 +1070,17 @@ td .thumb-sm { width: 52px; height: 52px; }
 .sort-menu [aria-selected="true"] button { background: var(--yellow-soft); font-weight: 700; }
 .sort-menu svg { color: var(--green-2); }
 
+/* Phân trang sản phẩm (6 sản phẩm / trang) */
+.pager { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.pager button {
+  min-width: 42px; height: 42px; padding: 0 12px; border-radius: 14px; border: 1px solid var(--line); background: #fff;
+  font-weight: 700; font-size: 15px; color: var(--brown); cursor: pointer; display: inline-grid; place-items: center;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.pager button:hover:not(:disabled):not(.on) { border-color: var(--brown); transform: translateY(-2px); }
+.pager button.on { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 6px 14px color-mix(in srgb, var(--yellow-2) 45%, transparent); }
+.pager button:disabled { opacity: .4; cursor: not-allowed; }
+.pg-info { width: 100%; text-align: center; font-size: 13px; color: var(--muted); }
 .active-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: -6px 0 18px; }
 .active-chips > button:not(.link-btn) {
   display: inline-flex; align-items: center; gap: 6px; border: 0; padding: 6px 10px 6px 12px; border-radius: 999px;

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CommitStrip, PageHero, ProductCard } from '../components/Blocks';
-import { Check, Search, X } from '../components/Icons';
+import { Arrow, ArrowLeft, Check, Search, X } from '../components/Icons';
 import { isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { noAccent } from '../lib/utils';
@@ -23,6 +23,7 @@ const GROUPS = [
   ['price', 'Mức giá', 'single', [['lt100', 'Dưới 100.000đ'], ['100-300', '100.000 – 300.000đ'], ['gt300', 'Trên 300.000đ']], priceOf],
 ];
 const EMPTY = { status: [], kind: [], price: [] };
+const PER_PAGE = 6; // số sản phẩm mỗi trang
 
 function SortMenu({ value, onChange }) {
   const [open, setOpen] = useState(false);
@@ -63,6 +64,10 @@ export default function Products() {
   const [sel, setSel] = useState(EMPTY);
   const [sort, setSort] = useState('pop');
   const [panelOpen, setPanelOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const gridRef = useRef(null);
+  // Đổi tìm kiếm / bộ lọc / sắp xếp thì quay về trang 1
+  useEffect(() => { setPage(1); }, [q, sel, sort]);
 
   const pick = (key, mode, v) => setSel(s => ({
     ...s,
@@ -78,6 +83,15 @@ export default function Products() {
         && GROUPS.every(([key, , , , get]) => !sel[key].length || sel[key].includes(get(p))))
       .sort((a, b) => isSoon(a) - isSoon(b) || cmp(a, b));
   }, [products, q, sel, sort]);
+
+  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  const cur = Math.min(page, pages);
+  const shown = list.slice((cur - 1) * PER_PAGE, cur * PER_PAGE);
+  const goPage = n => {
+    setPage(n);
+    const top = gridRef.current.getBoundingClientRect().top + window.scrollY - 120;
+    window.scrollTo({ top, behavior: 'smooth' });
+  };
 
   const chips = GROUPS.flatMap(([key, , mode, opts]) => sel[key].map(v => [key, mode, v, opts.find(o => o[0] === v)[1]]));
 
@@ -116,7 +130,7 @@ export default function Products() {
                 <button type="button" className="filter-toggle" onClick={() => setPanelOpen(o => !o)} aria-expanded={panelOpen}>
                   <FilterIcon />Bộ lọc{activeCount > 0 && <span className="count-dot">{activeCount}</span>}
                 </button>
-                <span className="result-count"><b>{list.length}</b> sản phẩm</span>
+                <span className="result-count">{list.length ? <>Hiển thị <b>{(cur - 1) * PER_PAGE + 1}–{(cur - 1) * PER_PAGE + shown.length}</b> / {list.length} sản phẩm</> : <><b>0</b> sản phẩm</>}</span>
                 <SortMenu value={sort} onChange={setSort} />
               </div>
             </div>
@@ -128,8 +142,8 @@ export default function Products() {
                 <button type="button" className="link-btn" onClick={() => setSel(EMPTY)}>Xóa tất cả</button>
               </div>
             )}
-            <div className="grid grid-3">
-              {list.length ? list.map(p => <ProductCard key={p.id} p={p} />)
+            <div className="grid grid-3" ref={gridRef}>
+              {list.length ? shown.map(p => <ProductCard key={p.id} p={p} />)
                 : (
                   <div className="empty" style={{ gridColumn: '1/-1' }}>
                     <p>Không tìm thấy sản phẩm phù hợp</p>
@@ -137,6 +151,16 @@ export default function Products() {
                   </div>
                 )}
             </div>
+            {list.length > 0 && (
+              <nav className="pager" aria-label="Phân trang sản phẩm">
+                <button type="button" className="pg-arrow" onClick={() => goPage(cur - 1)} disabled={cur === 1} aria-label="Trang trước"><ArrowLeft size={18} /></button>
+                {Array.from({ length: pages }, (_, i) => i + 1).map(n => (
+                  <button type="button" key={n} className={n === cur ? 'on' : ''} onClick={() => goPage(n)} aria-current={n === cur ? 'page' : undefined}>{n}</button>
+                ))}
+                <button type="button" className="pg-arrow" onClick={() => goPage(cur + 1)} disabled={cur === pages} aria-label="Trang sau"><Arrow size={18} /></button>
+                <span className="pg-info">Trang {cur} / {pages}</span>
+              </nav>
+            )}
           </div>
         </div>
       </section>
