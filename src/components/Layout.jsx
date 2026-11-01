@@ -4,15 +4,14 @@ import { useShop } from '../lib/ShopContext';
 import { useLiquid } from '../lib/useLiquid';
 import Assistant from './Assistant';
 import { BRAND } from '../data';
-import { Bell, Box, Bulb, CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone, Smile, X } from './Icons';
+import { CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone, X } from './Icons';
 
 // Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Moni Yo mở bằng nút nổi góc phải
-// [đường dẫn, tên, icon + màu (chỉ hiện trong menu điện thoại)]
 const NAV = [
-  ['/san-pham', 'Sản phẩm', Box, 'var(--orange)'],
-  ['/gioi-thieu', 'Giới thiệu', Smile, 'var(--green)'],
-  ['/blog', 'Blog', Bulb, 'var(--blue)'],
-  ['/lien-he', 'Liên hệ', Phone, 'var(--red)'],
+  ['/san-pham', 'Sản phẩm'],
+  ['/gioi-thieu', 'Giới thiệu'],
+  ['/blog', 'Blog'],
+  ['/lien-he', 'Liên hệ'],
   // ['/admin', 'Quản trị'], // tạm ẩn nút; trang /admin vẫn truy cập trực tiếp được
 ];
 
@@ -54,15 +53,7 @@ function Header() {
         <Logo />
         <nav className={`nav ${open ? 'open' : ''}`} ref={navRef}>
           <span className="liquid-ind nav-ind" ref={navInd} aria-hidden="true" />
-          <span className="nav-head">Khám phá Moni Yo</span>
-          {NAV.map(([to, label, Icon, color]) => (
-            <NavLink key={to} to={to} onClick={toTop}>
-              <span className="nav-ic" style={{ '--c': color }}><Icon size={18} /></span>
-              <span className="nav-tx">{label}</span>
-              <span className="nav-go" aria-hidden="true">›</span>
-            </NavLink>
-          ))}
-          <Link to="/san-pham/moni-yo" className="btn nav-cta"><Bell size={18} /> Nhận tin ra mắt</Link>
+          {NAV.map(([to, label]) => <NavLink key={to} to={to} onClick={toTop}>{label}</NavLink>)}
         </nav>
         <div className="header-actions">
           <Link to="/gio-hang" className="icon-btn" aria-label="Giỏ hàng">
