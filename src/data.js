@@ -261,10 +261,12 @@ export const BLOG = [
 ];
 
 export const REVIEWS = [
-  { name: 'Chị Thu Hà', city: 'Hà Nội', text: 'Con mình 6 tuổi giờ đi siêu thị biết hỏi “cái này bao nhiêu tiền, mẹ có đủ không”. Cả nhà tối nào cũng đòi chơi một ván!', stars: 5 },
-  { name: 'Anh Minh Quân', city: 'TP.HCM', text: 'Thẻ in đẹp, nhân vật dễ thương. Bé thích nhất thẻ Túi mù vì không biết sẽ được thưởng hay bị trừ tiền.', stars: 5 },
-  { name: 'Cô Lan – GV mầm non', city: 'Đà Nẵng', text: 'Mình dùng Moni Yo cho lớp lá, các bé rất hào hứng với phần chọn nghề và đếm tiền khi mua đồ vật.', stars: 5 },
-  { name: 'Chị Ngọc Anh', city: 'Hải Phòng', text: 'Luật chơi đơn giản, 2 bé nhà mình chơi chung với ông bà cũng vui. Giao hàng nhanh, đóng gói kỹ.', stars: 4 },
+  { name: 'Chị Thu Hà', city: 'Thanh Xuân, Hà Nội', text: 'Con mình 6 tuổi giờ đi siêu thị biết hỏi “cái này bao nhiêu tiền, mẹ có đủ không”. Cả nhà tối nào cũng đòi chơi một ván!', stars: 5 },
+  { name: 'Anh Minh Quân', city: 'Cầu Giấy, Hà Nội', text: 'Thẻ in đẹp, nhân vật dễ thương. Bé thích nhất thẻ Túi mù vì không biết sẽ được thưởng hay bị trừ tiền.', stars: 5 },
+  { name: 'Cô Lan – GV mầm non', city: 'Đống Đa, Hà Nội', text: 'Mình dùng Moni Yo cho lớp lá, các bé rất hào hứng với phần chọn nghề và đếm tiền khi mua đồ vật.', stars: 5 },
+  { name: 'Chị Ngọc Anh', city: 'Hai Bà Trưng, Hà Nội', text: 'Luật chơi đơn giản, 2 bé nhà mình chơi chung với ông bà cũng vui. Ván nào cũng có tiếng cười.', stars: 4 },
+  { name: 'Anh Hoàng Long', city: 'Long Biên, Hà Nội', text: 'Bé nhà mình 9 tuổi, chơi xong tự lập sổ ghi tiền tiêu vặt. Bố mẹ không cần nhắc nhiều nữa.', stars: 5 },
+  { name: 'Chị Phương Thảo', city: 'Hoàng Mai, Hà Nội', text: 'Thích nhất là bé được chọn nghề mình mơ ước rồi tự tính toán mua đủ đồ vật. Vừa chơi vừa học rất tự nhiên.', stars: 5 },
 ];
 
 export const DEMO_ORDERS = [

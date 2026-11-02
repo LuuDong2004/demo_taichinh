@@ -274,7 +274,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; font-weight: 800; color: var(--brown); border: 0; }
 .dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
 .dots button { width: 10px; height: 10px; border-radius: 5px; border: 0; background: var(--line); cursor: pointer; transition: width .3s; padding: 0; }
-.dots button.on { width: 32px; background: var(--brown); }
+.dots button.on { position: relative; overflow: hidden; width: 32px; background: color-mix(in srgb, var(--brown) 25%, var(--line)); }
+/* Chấm đang xem tự đầy dần → báo trước lúc chuyển sang đánh giá kế tiếp */
+.dots button.on::after { content: ''; position: absolute; inset: 0; background: var(--brown); border-radius: inherit; transform-origin: left; animation: dot-fill var(--slide-ms, 3.5s) linear both; }
+.slider.paused .dots button.on::after { animation: none; }
+@keyframes dot-fill { from { transform: scaleX(0); } }
 
 /* ---------- Blog ---------- */
 .b-card .thumb { aspect-ratio: 16/10; overflow: hidden; position: relative; }

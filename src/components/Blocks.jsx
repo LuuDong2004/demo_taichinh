@@ -125,6 +125,8 @@ export function SectionHead({ eyebrow, title, sub, style }) {
   );
 }
 
+const SLIDE_MS = 3500;
+
 export function ReviewSlider() {
   const [perView, setPerView] = useState(() => (window.innerWidth <= 820 ? 1 : 2));
   const [i, setI] = useState(0);
@@ -135,14 +137,18 @@ export function ReviewSlider() {
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+  // Tự chuyển mỗi 3,5 giây; rê chuột / chạm vào thì tạm dừng để đọc
+  const [paused, setPaused] = useState(false);
   useEffect(() => {
-    const t = setInterval(() => setI(k => (k + 1) % pages), 4500);
-    return () => clearInterval(t);
-  }, [pages, i]);
+    if (paused) return;
+    const t = setTimeout(() => setI(k => (k + 1) % pages), SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [pages, i, paused]);
 
   const cur = i % pages;
   return (
-    <div className="slider">
+    <div className={`slider ${paused ? 'paused' : ''}`} style={{ '--slide-ms': `${SLIDE_MS}ms` }}
+      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onTouchStart={() => setPaused(true)} onTouchEnd={() => setPaused(false)}>
       <div className="slides" style={{ transform: `translateX(-${cur * (100 / perView)}%)` }}>
         {REVIEWS.map(r => (
           <div className="slide" key={r.name}>
@@ -159,7 +165,7 @@ export function ReviewSlider() {
       </div>
       <div className="dots">
         {Array.from({ length: pages }, (_, j) => (
-          <button key={j} className={j === cur ? 'on' : ''} onClick={() => setI(j)} aria-label={`Trang ${j + 1}`} />
+          <button key={j === cur ? `on${i}${paused}` : j} className={j === cur ? 'on' : ''} onClick={() => setI(j)} aria-label={`Trang ${j + 1}`} />
         ))}
       </div>
     </div>
