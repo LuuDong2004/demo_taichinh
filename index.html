@@ -9,9 +9,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Sriracha&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Vòng quay loading lúc tải trang lần đầu: nằm sẵn trong #root, React gắn giao diện vào là tự mất.
+       Hiện mờ dần sau 0,3s để mạng nhanh thì không bị nháy. */
+    .boot { position: fixed; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px;
+      background: #FFFCF3; font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: #76664F;
+      opacity: 0; animation: boot-in .4s ease .3s forwards; }
+    .boot-ring { position: relative; isolation: isolate; width: 112px; height: 112px; display: grid; place-items: center; }
+    .boot-ring::before { content: ""; position: absolute; inset: 0; border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(255, 122, 26, 0), #FF7A1A 30%, #F2B705 62%, #3DAE2B 92%, rgba(61, 174, 43, 0) 100%);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+      animation: boot-spin .9s linear infinite; }
+    .boot-ring::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 6px solid #FFF1B8; z-index: -1; }
+    .boot-ring img { width: 66px; height: auto; animation: boot-bob 1.2s ease-in-out infinite; }
+    .boot span { font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+    .boot span::after { content: ""; display: inline-block; width: 1.2em; text-align: left; animation: boot-dots 1.2s steps(4) infinite; }
+    @keyframes boot-in { to { opacity: 1; } }
+    @keyframes boot-spin { to { transform: rotate(1turn); } }
+    @keyframes boot-bob { 50% { transform: translateY(-4px) scale(1.04); } }
+    @keyframes boot-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div class="boot" role="status" aria-label="Đang tải">
+      <div class="boot-ring"><img src="/img/brand/logo.webp" alt="" width="591" height="528"></div>
+      <span>Đang tải</span>
+    </div>
+  </div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
