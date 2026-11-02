@@ -26,7 +26,7 @@ function Success({ order, info }) {
           </div>
         )}
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
-          <Link to="/" className="btn">Về trang chủ</Link>
+          <Link to="/trang-chu" className="btn">Về trang chủ</Link>
           <Link to="/blog" className="btn btn-yellow">Đọc góc phụ huynh</Link>
         </div>
       </div>

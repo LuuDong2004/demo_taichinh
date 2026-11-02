@@ -27,9 +27,9 @@ export function useLiquid(key, selector = '[aria-selected="true"]') {
     const [lead, tail] = horiz ? (dir > 0 ? ['right', 'left'] : ['left', 'right']) : (dir > 0 ? ['bottom', 'top'] : ['top', 'bottom']);
     const [o1, o2] = horiz ? ['top', 'bottom'] : ['left', 'right'];
     const soft = '.45s cubic-bezier(.5, 0, .2, 1)';
-    ind.style.transition = moving
-      ? `${lead} ${fast}, ${tail} ${slow}, ${o1} ${soft}, ${o2} ${soft}, background-color .45s, opacity .2s`
-      : 'opacity .2s';
+    // Đặt lại do đổi cỡ (animate = false) thì giữ nguyên transition: nếu nền đang trượt dở thì vẫn trượt tiếp tới đích mới
+    if (moving) ind.style.transition = `${lead} ${fast}, ${tail} ${slow}, ${o1} ${soft}, ${o2} ${soft}, background-color .45s, opacity .2s`;
+    else if (animate) ind.style.transition = 'opacity .2s';
     Object.assign(ind.style, {
       opacity: '1',
       left: `${l}px`, right: `${box.clientWidth - l - w}px`,

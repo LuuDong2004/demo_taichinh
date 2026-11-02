@@ -16,14 +16,15 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Navigate to="/trang-chu" replace />} />
+        <Route path="trang-chu" element={<Home />} />
         <Route path="san-pham" element={<Products />} />
         <Route path="san-pham/:id" element={<ProductDetail />} />
         <Route path="gio-hang" element={<Cart />} />
         <Route path="thanh-toan" element={<Checkout />} />
         <Route path="gioi-thieu" element={<About />} />
         <Route path="lien-he" element={<Contact />} />
-        <Route path="ai" element={<Navigate to="/" replace state={{ ai: true }} />} />
+        <Route path="ai" element={<Navigate to="/trang-chu" replace state={{ ai: true }} />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<BlogPost />} />
         <Route path="admin" element={<Admin />} />

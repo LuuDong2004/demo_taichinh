@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useShop } from '../lib/ShopContext';
 import { useLiquid } from '../lib/useLiquid';
 import Assistant from './Assistant';
+import Hello from './Hello';
 import { BRAND } from '../data';
 import { CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone, X } from './Icons';
 
@@ -19,7 +20,7 @@ const NAV = [
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 export const Logo = () => (
-  <Link to="/" className="logo" aria-label="Moni Yo – Trang chủ" onClick={toTop}>
+  <Link to="/trang-chu" className="logo" aria-label="Moni Yo – Trang chủ" onClick={toTop}>
     <img className="logo-img" src="/img/brand/logo.webp" alt="Moni Yo" width="591" height="528" />
   </Link>
 );
@@ -84,7 +85,7 @@ function Footer({ onAi }) {
           <div>
             <h5>Liên kết nhanh</h5>
             <ul>
-              <li><Link to="/">Trang chủ</Link></li><li><Link to="/san-pham">Sản phẩm</Link></li><li><Link to="/gioi-thieu">Giới thiệu sản phẩm</Link></li>
+              <li><Link to="/trang-chu">Trang chủ</Link></li><li><Link to="/san-pham">Sản phẩm</Link></li><li><Link to="/gioi-thieu">Giới thiệu sản phẩm</Link></li>
               <li><Link to="/blog">Góc phụ huynh</Link></li><li><a href="/ai" onClick={e => { e.preventDefault(); onAi(); }}>Trợ lý AI</a></li><li><Link to="/lien-he">Liên hệ</Link></li>
             </ul>
           </div>
@@ -150,6 +151,8 @@ export default function Layout() {
     else window.scrollTo(0, 0);
   }, [pathname, hash]);
   const isAdmin = pathname.startsWith('/admin');
+  // Màn chào chỉ hiện khi mở đúng địa chỉ gốc "/"; trang "/" tự chuyển sang /trang-chu phía dưới màn chào
+  const [hello] = useState(() => pathname === '/');
 
   const [aiOpen, setAiOpen] = useState(false);
   const openAi = useCallback(() => setAiOpen(true), []);
@@ -162,6 +165,7 @@ export default function Layout() {
 
   return (
     <>
+      {hello && <Hello />}
       <Header />
       <main ref={mainRef}><Outlet /></main>
       {!isAdmin && <Footer onAi={openAi} />}

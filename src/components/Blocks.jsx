@@ -109,7 +109,7 @@ export function PageHero({ eyebrow, title, children }) {
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <span className="eyebrow" style={{ color: 'var(--brown-2)' }}>{eyebrow}</span>
         <h1 className="title">{title}</h1>
-        <div className="crumbs"><Link to="/">Trang chủ</Link> / {children}</div>
+        <div className="crumbs"><Link to="/trang-chu">Trang chủ</Link> / {children}</div>
       </div>
     </section>
   );

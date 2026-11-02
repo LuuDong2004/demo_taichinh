@@ -14,7 +14,7 @@ export default function BlogPost() {
     <section className="section" style={{ paddingTop: 24 }}>
       <div className="container">
         <article className="article">
-          <div className="crumbs" style={{ marginBottom: 16 }}><Link to="/">Trang chủ</Link> / <Link to="/blog">Blog</Link> / {b.cat}</div>
+          <div className="crumbs" style={{ marginBottom: 16 }}><Link to="/trang-chu">Trang chủ</Link> / <Link to="/blog">Blog</Link> / {b.cat}</div>
           <span className="chip">{b.cat}</span>
           <h1 className="title" style={{ fontSize: 'clamp(32px,4.5vw,48px)', textTransform: 'none' }}>{b.title}</h1>
           <p style={{ color: 'var(--muted)', fontSize: 14, marginTop: 0 }}>{fmtDate(b.date)} · {b.read} phút đọc · Ban biên tập Moni Yo</p>

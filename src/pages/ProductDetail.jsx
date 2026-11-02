@@ -34,7 +34,7 @@ export default function ProductDetail() {
   return (
     <section className="section" style={{ paddingTop: 24 }}>
       <div className="container">
-        <div className="crumbs" style={{ marginBottom: 24 }}><Link to="/">Trang chủ</Link> / <Link to="/san-pham">Sản phẩm</Link> / {p.name}</div>
+        <div className="crumbs" style={{ marginBottom: 24 }}><Link to="/trang-chu">Trang chủ</Link> / <Link to="/san-pham">Sản phẩm</Link> / {p.name}</div>
         <div className="detail">
           <div className="gallery">
             {p.art ? (
