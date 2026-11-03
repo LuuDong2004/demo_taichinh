@@ -11,10 +11,13 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import ProductDetail from './pages/ProductDetail';
 import Products from './pages/Products';
+import QrPage from './pages/QrPage';
 
 export default function App() {
   return (
     <Routes>
+      {/* Trang truyền thông (màn QR thay standee) đứng riêng, không header/footer */}
+      <Route path="truyen-thong" element={<QrPage />} />
       <Route element={<Layout />}>
         <Route index element={<Navigate to="/trang-chu" replace />} />
         <Route path="trang-chu" element={<Home />} />

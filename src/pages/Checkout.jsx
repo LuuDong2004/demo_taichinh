@@ -5,6 +5,7 @@ import { Bank, Cash, Check, Mobile } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 import { OrderSummary } from './Cart';
+import Select from '../components/Select';
 
 const PAYS = [
   ['COD', <Cash />, 'Thanh toán khi nhận hàng (COD)', 'Kiểm tra hàng rồi mới thanh toán'],
@@ -50,7 +51,7 @@ export default function Checkout() {
 
   return (
     <>
-      <PageHero eyebrow="Thanh toán" title="Thanh toán"><Link to="/gio-hang">Giỏ hàng</Link> / Thanh toán</PageHero>
+      <PageHero title="Thanh toán"><Link to="/gio-hang">Giỏ hàng</Link> / Thanh toán</PageHero>
       <section className="section">
         <form className="container cart-layout" onSubmit={submit}>
           <div style={{ display: 'grid', gap: 24 }}>
@@ -61,9 +62,8 @@ export default function Checkout() {
                 <div className="field"><label>Số điện thoại *</label><input className="input" name="phone" required pattern="[0-9 ]{9,12}" /></div>
                 <div className="field full"><label>Email</label><input className="input" type="email" name="email" /></div>
                 <div className="field"><label>Tỉnh / Thành phố *</label>
-                  <select className="input" name="city" required defaultValue="">
-                    <option value="">Chọn...</option><option>Hà Nội</option><option>TP. Hồ Chí Minh</option><option>Đà Nẵng</option><option>Hải Phòng</option><option>Cần Thơ</option><option>Khác</option>
-                  </select>
+                  <Select name="city" required placeholder="Chọn tỉnh / thành phố..." ariaLabel="Tỉnh / Thành phố"
+                    options={['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ', 'Khác']} />
                 </div>
                 <div className="field"><label>Quận / Huyện *</label><input className="input" name="district" required /></div>
                 <div className="field full"><label>Địa chỉ chi tiết *</label><input className="input" name="address" required /></div>

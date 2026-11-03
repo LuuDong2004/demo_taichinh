@@ -36,7 +36,7 @@ export function OrderSummary({ withCoupon }) {
 
 export default function Cart() {
   const { totals: t, changeQty, removeFromCart } = useShop();
-  const hero = <PageHero eyebrow="Giỏ hàng" title="Giỏ hàng của bạn">Giỏ hàng</PageHero>;
+  const hero = <PageHero title="Giỏ hàng của bạn">Giỏ hàng</PageHero>;
 
   if (!t.lines.length) return (
     <>

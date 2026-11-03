@@ -2,6 +2,7 @@ import { CommitStrip, PageHero } from '../components/Blocks';
 import { Arrow, Facebook, Mail, Phone } from '../components/Icons';
 import { BRAND, img } from '../data';
 import { useShop } from '../lib/ShopContext';
+import Select from '../components/Select';
 
 // Thông tin liên hệ theo fanpage Moni Yo
 const INFO = [
@@ -22,7 +23,7 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero eyebrow="Liên hệ" title="Kết nối với chúng tôi">Liên hệ</PageHero>
+      <PageHero title="Kết nối với chúng tôi">Liên hệ</PageHero>
       <section className="section">
         <div className="container contact">
           <div className="panel">
@@ -45,7 +46,7 @@ export default function Contact() {
               <div className="field"><label>Số điện thoại *</label><input className="input" name="phone" required /></div>
               <div className="field full"><label>Email</label><input className="input" name="email" type="email" /></div>
               <div className="field full"><label>Chủ đề</label>
-                <select className="input" name="topic"><option>Tư vấn sản phẩm</option><option>Đăng ký đại lý</option><option>Đơn hàng trường học</option><option>Góp ý</option></select>
+                <Select name="topic" ariaLabel="Chủ đề" options={['Tư vấn sản phẩm', 'Đăng ký đại lý', 'Đơn hàng trường học', 'Góp ý']} />
               </div>
               <div className="field full"><label>Nội dung *</label><textarea className="input" name="msg" rows="5" required /></div>
             </div>

@@ -97,7 +97,7 @@ export default function Products() {
 
   return (
     <>
-      <PageHero eyebrow="Cửa hàng" title="Tất cả sản phẩm">Sản phẩm</PageHero>
+      <PageHero title="Tất cả sản phẩm">Sản phẩm</PageHero>
       <section className="section">
         <div className="container shop">
           <aside className={`filter ${panelOpen ? 'open' : ''}`} aria-label="Bộ lọc sản phẩm">

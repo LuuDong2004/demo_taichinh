@@ -5,7 +5,7 @@ import { useLiquid } from '../lib/useLiquid';
 import Assistant from './Assistant';
 import Hello from './Hello';
 import { BRAND } from '../data';
-import { CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone, X } from './Icons';
+import { CartIcon, ChatAI, Cloud, Facebook, Mail, Menu, Phone, QrIcon, TikTok, X } from './Icons';
 
 // Giữ menu gọn: logo đã dẫn về trang chủ, trợ lý Moni Yo mở bằng nút nổi góc phải
 const NAV = [
@@ -79,7 +79,11 @@ function Footer({ onAi }) {
             <Logo />
             <p style={{ fontSize: 14, marginTop: 18 }}>{BRAND.desc}. {BRAND.tagline}</p>
             <div className="socials">
-              <a href={BRAND.fanpage} target="_blank" rel="noopener noreferrer" aria-label="Fanpage Facebook Moni Yo"><Facebook /></a><a href={`mailto:${BRAND.email}`} aria-label="Gửi email cho Moni Yo"><Mail /></a>
+              <a href={BRAND.fanpage} target="_blank" rel="noopener noreferrer" aria-label="Fanpage Facebook Moni Yo" data-tip="Fanpage Facebook"><Facebook /></a><a href={`mailto:${BRAND.email}`} aria-label="Gửi email cho Moni Yo" data-tip="Gửi email"><Mail /></a>
+              {/* TikTok: chưa có kênh, tạm để # */}
+              <a href="#" onClick={e => e.preventDefault()} aria-label="TikTok Moni Yo" data-tip="TikTok"><TikTok /></a>
+              {/* Mở màn truyền thông (mã QR moniyo.vn) để chia sẻ / chiếu ở sự kiện */}
+              <Link to="/truyen-thong" className="soc-qr" aria-label="Mã QR moniyo.vn" data-tip="Mã QR moniyo.vn"><QrIcon size={18} /></Link>
             </div>
           </div>
           <div>

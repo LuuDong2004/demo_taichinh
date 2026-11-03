@@ -12,7 +12,7 @@ export default function Blog() {
   const list = cat === 'Tất cả' ? BLOG : BLOG.filter(b => b.cat === cat);
   return (
     <>
-      <PageHero eyebrow="Góc phụ huynh" title="Tin tức & bài viết">Blog</PageHero>
+      <PageHero title="Tin tức & bài viết">Blog</PageHero>
       <section className="section">
         <Cloud className="deco-l" style={{ top: 40 }} />
         <div className="container">

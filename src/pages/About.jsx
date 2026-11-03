@@ -18,7 +18,7 @@ const FAQ = [
 export default function About() {
   return (
     <>
-      <PageHero eyebrow="Giới thiệu sản phẩm" title="Moni Yo – Bộ đồ chơi giáo dục tài chính">Giới thiệu</PageHero>
+      <PageHero title="Moni Yo – Bộ đồ chơi giáo dục tài chính">Giới thiệu</PageHero>
       <nav className="toc" aria-label="Mục lục trang">
         <div className="container">{TOC.map(([id, l]) => <a key={id} href={`#${id}`}>{l}</a>)}</div>
       </nav>

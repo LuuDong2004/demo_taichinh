@@ -99,7 +99,8 @@ export function EmptyState({ pic = 'kids-peek', title, children, action, as: H =
   );
 }
 
-export function PageHero({ eyebrow, title, children }) {
+// Đầu trang con: chỉ tiêu đề + đường dẫn (đã bỏ nhãn nhỏ phía trên tiêu đề)
+export function PageHero({ title, children }) {
   return (
     <section className="page-hero">
       <Cloud className="deco-l" style={{ top: 10, opacity: .7 }} />
@@ -107,7 +108,6 @@ export function PageHero({ eyebrow, title, children }) {
       <Coin style={{ left: '12%', bottom: 24 }} />
       <Coin style={{ right: '14%', top: 30, width: 40 }} />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <span className="eyebrow" style={{ color: 'var(--brown-2)' }}>{eyebrow}</span>
         <h1 className="title">{title}</h1>
         <div className="crumbs"><Link to="/trang-chu">Trang chủ</Link> / {children}</div>
       </div>

@@ -5,6 +5,7 @@ import { ProductThumb } from '../components/ProductArt';
 import { BLOG, DEFAULT_PRODUCTS, img, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money, noAccent } from '../lib/utils';
+import Select from '../components/Select';
 
 const TABS = [['dash', Chart, 'Tổng quan'], ['products', Box, 'Sản phẩm'], ['orders', Receipt, 'Đơn hàng'], ['msgs', Chat, 'Liên hệ'], ['posts', Edit, 'Bài viết']];
 const STATUSES = ['Chờ xác nhận', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
@@ -51,7 +52,7 @@ function OrdersTable({ list, editable }) {
               <td><b>{o.id}</b></td><td>{o.name}</td><td>{o.phone}</td><td>{o.items}</td><td>{money(o.total)}</td><td>{fmtDate(o.date)}</td>
               <td>
                 {editable
-                  ? <select className="input" style={{ padding: '6px 10px', width: 'auto' }} value={o.status} onChange={e => setStatus(o.id, e.target.value)}>{STATUSES.map(s => <option key={s}>{s}</option>)}</select>
+                  ? <Select size="sm" ariaLabel={`Trạng thái đơn ${o.id}`} value={o.status} onChange={v => setStatus(o.id, v)} options={STATUSES} />
                   : <span className={`status ${STATUS_CLS[o.status] || 'st-wait'}`}>{o.status}</span>}
               </td>
             </tr>
@@ -121,9 +122,10 @@ function ProductModal({ product, onClose }) {
           <div className="field"><label>Tồn kho</label><input className="input" name="stock" type="number" defaultValue={p.stock} /></div>
           <div className="field"><label>Độ tuổi</label><input className="input" name="age" defaultValue={p.age} /></div>
           <div className="field full"><label>Ảnh sản phẩm</label>
-            <select className="input" name="img" defaultValue={p.art ? '' : p.img}>{p.art && <option value="">Khung minh hoạ (hiện tại)</option>}{IMAGE_CHOICES.map(([l, v]) => <option key={v} value={img(v)}>{l}</option>)}</select>
+            <Select name="img" ariaLabel="Ảnh sản phẩm" defaultValue={p.art ? '' : p.img}
+              options={[...(p.art ? [['', 'Khung minh hoạ (hiện tại)']] : []), ...IMAGE_CHOICES.map(([l, v]) => [img(v), l])]} />
           </div>
-          <div className="field"><label>Tình trạng</label><select className="input" name="status" defaultValue={p.status || 'sale'}><option value="sale">Đang bán</option><option value="soon">Sắp ra mắt</option></select></div>
+          <div className="field"><label>Tình trạng</label><Select name="status" ariaLabel="Tình trạng" defaultValue={p.status || 'sale'} options={[['sale', 'Đang bán'], ['soon', 'Sắp ra mắt']]} /></div>
           <div className="field"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
           <div className="field full"><label>Mô tả ngắn</label><textarea className="input" name="short" rows="2" defaultValue={p.short} /></div>
         </div>

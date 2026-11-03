@@ -42,6 +42,7 @@ export const Jar = icon(<><path d="M8 3h8v3H8z" /><path d="M7 6h10a2 2 0 0 1 2 2
 export const Smile = icon(<><circle cx="12" cy="12" r="9" /><path d="M8.500 14.500a4 4 0 0 0 7 0M9 9.500h.01M15 9.500h.01" /></>);
 
 /* ----- Quản trị ----- */
+export const QrIcon = icon(<><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><path d="M14 14h3v3M21 14v.01M14 21h3M21 18v3h-.01M17.5 17.5h.01" /></>, 20, 2.2);
 export const Chart = icon(<path d="M5 20v-8M11 20V5M17 20v-5M3 20h18" />, 18, 2.2);
 export const Receipt = icon(<><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" /><path d="M9 8h6M9 12h6" /></>, 18);
 export const Edit = icon(<><path d="M4 20h4L19 9l-4-4L4 16z" /><path d="m13.500 6.500 4 4" /></>, 16);

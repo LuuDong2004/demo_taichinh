@@ -29,7 +29,7 @@ export default function Home() {
       <section className="hero">
         <div className="container">
           <div className="reveal">
-            <span className="eyebrow launch"><i />Sắp ra mắt</span>
+            <span className="eyebrow launch"><i />moniyo.vn</span>
             <h1>Chơi thật vui, <span className="accent">giỏi quản lý tiền</span></h1>
             {/* Máy tính: một dòng "A – B – C – D!"; điện thoại: 4 nhãn bước nối mũi tên, không rớt chữ lẻ */}
             <div className="tagline">
