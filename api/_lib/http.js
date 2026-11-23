@@ -64,3 +64,16 @@ export function handler(methods) {
     }
   };
 }
+
+// Giới hạn số lần gọi theo IP trong một khoảng thời gian (chặn cơ bản, mỗi phiên chạy giữ riêng bộ đếm)
+const buckets = new Map();
+export function tooManyRequests(req, name, max, windowMs) {
+  const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+  const key = `${name}:${ip}`;
+  const now = Date.now();
+  const recent = (buckets.get(key) || []).filter(t => now - t < windowMs);
+  recent.push(now);
+  buckets.set(key, recent);
+  if (buckets.size > 10_000) buckets.clear();
+  return recent.length > max;
+}

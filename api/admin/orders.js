@@ -2,6 +2,7 @@
 // Cần header "Authorization: Bearer <ADMIN_PASSWORD>"
 import { query } from '../_lib/db.js';
 import { fail, getQuery, handler, isAdmin, send } from '../_lib/http.js';
+import { expireOrders } from '../_lib/shop.js';
 
 const STATUSES = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 const PAYMENTS = ['unpaid', 'partial', 'paid'];
@@ -9,6 +10,7 @@ const PAYMENTS = ['unpaid', 'partial', 'paid'];
 export default handler({
   async GET(req, res) {
     if (!isAdmin(req)) return fail(res, 401, 'Sai mật khẩu quản trị');
+    await expireOrders();
     const q = getQuery(req);
     const where = [];
     const params = [];
@@ -22,7 +24,7 @@ export default handler({
     const orders = await query(
       `SELECT o.code, o.name, o.phone, o.email, o.city, o.district, o.address, o.note, o.pay_method,
               o.subtotal, o.discount, o.shipping, o.total, o.coupon, o.status, o.payment_status, o.paid_amount,
-              o.paid_at, o.created_at, o.updated_at,
+              o.paid_at, o.created_at, o.updated_at, o.cancel_reason,
               COALESCE((SELECT json_agg(json_build_object('id', i.product_id, 'name', i.name, 'price', i.price, 'qty', i.qty) ORDER BY i.id)
                         FROM order_items i WHERE i.order_id = o.id), '[]') AS items
        FROM orders o ${where.length ? 'WHERE ' + where.join(' AND ') : ''}

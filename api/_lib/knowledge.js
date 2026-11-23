@@ -60,6 +60,8 @@ Muốn được báo khi mở bán: bấm chuông ở trang sản phẩm đó v�
 - Phí ship: miễn phí cho đơn từ ${vnd(FREE_SHIP_FROM)}, đơn nhỏ hơn phí ${vnd(SHIP_FEE)}. Giao toàn quốc, thường 2–4 ngày.
 - Mã giảm giá: hiện CHƯA có mã giảm giá hay chương trình khuyến mãi nào. Không được bịa mã.
 - Sau khi đặt, khách có trang theo dõi đơn /don-hang/<mã đơn> (đường dẫn hiện ngay sau khi đặt).
+- Tra cứu đơn đã đặt: vào /gio-hang, mục "Tra cứu đơn hàng", nhập số điện thoại hoặc email đã dùng khi đặt.
+- Đơn chọn chuyển khoản được giữ 15 phút (trang đơn có đồng hồ đếm ngược). Quá 15 phút chưa nhận được tiền thì đơn tự hủy; nếu khách vẫn chuyển tiền sau đó thì đơn tự mở lại.
 - Đổi trả: đổi mới trong 7 ngày nếu lỗi sản xuất hoặc thiếu thành phần. Mất thẻ, tiền, quân cờ: nhắn fanpage để được hỗ trợ.
 - Lưu ý an toàn: có chi tiết nhỏ, không dành cho trẻ dưới 3 tuổi.
 

@@ -92,6 +92,7 @@ function OrdersTable({ list, editable, onChange }) {
                   {editable
                     ? <Select size="sm" ariaLabel={`Trạng thái đơn ${o.code}`} value={o.status} onChange={v => patch(o.code, { status: v })} options={STATUS_OPTS} />
                     : <span className={`status ${sc}`}>{sl}</span>}
+                  {o.cancel_reason === 'expired' && <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>Tự hủy: quá 15 phút chưa chuyển khoản</div>}
                 </td>
               </tr>
             );

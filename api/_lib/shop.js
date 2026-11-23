@@ -1,6 +1,7 @@
 import { randomBytes, randomInt } from 'node:crypto';
 import { DEFAULT_PRODUCTS, isSoon } from '../../src/data.js';
 import { DVHC } from '../../src/data/dvhc.js';
+import { query } from './db.js';
 
 // Tỉnh/thành → tập phường/xã (địa giới mới từ 01/07/2025)
 const AREAS = new Map(DVHC.map(([p, wards]) => [p, new Set(wards)]));
@@ -54,7 +55,9 @@ export function bankInfo() {
   const bank = process.env.SEPAY_BANK;
   const acc = process.env.SEPAY_ACCOUNT_NUMBER;
   if (!bank || !acc) return null;
-  return { bank, account: acc, holder: process.env.SEPAY_ACCOUNT_NAME || '' };
+  // Cho phép ghi tên bằng dấu gạch dưới trên Vercel (VU_BICH_HUE) → hiển thị VU BICH HUE
+  const holder = (process.env.SEPAY_ACCOUNT_NAME || '').replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
+  return { bank, account: acc, holder };
 }
 
 export function qrUrl(info, amount, content) {
@@ -78,12 +81,29 @@ export function readCustomer(c = {}) {
   return out;
 }
 
+// Đơn chuyển khoản được giữ 15 phút; quá hạn mà chưa nhận đồng nào thì tự hủy.
+// Không cần cron: mỗi lần khách xem đơn / quản trị mở danh sách thì chạy câu UPDATE này trước.
+export const PAY_WINDOW_MIN = 15;
+export function expiresAt(o) {
+  if (o.pay_method !== 'bank' || o.status !== 'pending' || o.payment_status !== 'unpaid') return null;
+  return new Date(new Date(o.created_at).getTime() + PAY_WINDOW_MIN * 60_000).toISOString();
+}
+export function expireOrders(code) {
+  return query(
+    `UPDATE orders SET status = 'cancelled', cancel_reason = 'expired', updated_at = now()
+     WHERE pay_method = 'bank' AND payment_status = 'unpaid' AND status = 'pending'
+       AND created_at < now() - make_interval(mins => $1) ${code ? 'AND code = $2' : ''}`,
+    code ? [PAY_WINDOW_MIN, code] : [PAY_WINDOW_MIN],
+  );
+}
+
 // Dữ liệu đơn trả về cho khách (không lộ khóa truy cập)
 export function publicOrder(o, items = []) {
   return {
     code: o.code, name: o.name, phone: o.phone, payMethod: o.pay_method,
     subtotal: o.subtotal, discount: o.discount, shipping: o.shipping, total: o.total,
     status: o.status, paymentStatus: o.payment_status, paidAmount: o.paid_amount, paidAt: o.paid_at, createdAt: o.created_at,
+    expiresAt: expiresAt(o), cancelReason: o.cancel_reason ?? null,
     items: items.map(i => ({ id: i.product_id, name: i.name, price: i.price, qty: i.qty })),
   };
 }

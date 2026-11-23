@@ -38,7 +38,12 @@ export default handler({
          paid_amount = o.paid_amount + p.amount,
          payment_status = CASE WHEN o.paid_amount + p.amount >= o.total THEN 'paid' ELSE 'partial' END,
          paid_at = CASE WHEN o.paid_amount + p.amount >= o.total THEN now() ELSE o.paid_at END,
-         status = CASE WHEN o.status = 'pending' AND o.paid_amount + p.amount >= o.total THEN 'confirmed' ELSE o.status END,
+         -- Đơn tự hủy vì quá hạn mà khách vẫn chuyển tiền → mở lại (đủ tiền: xác nhận, thiếu: chờ xử lý)
+         status = CASE
+           WHEN (o.status = 'pending' OR o.cancel_reason = 'expired') AND o.paid_amount + p.amount >= o.total THEN 'confirmed'
+           WHEN o.cancel_reason = 'expired' THEN 'pending'
+           ELSE o.status END,
+         cancel_reason = CASE WHEN o.cancel_reason = 'expired' THEN NULL ELSE o.cancel_reason END,
          updated_at = now()
        FROM p
        WHERE p.transfer_type = 'in' AND o.code = p.order_code

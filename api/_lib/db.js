@@ -57,6 +57,8 @@ const SCHEMA = [
     created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS payments_order_idx ON payments (order_code)`,
+  // 'expired' = tự hủy vì quá hạn chuyển khoản; NULL = không hủy hoặc quản trị viên hủy
+  `ALTER TABLE orders ADD COLUMN IF NOT EXISTS cancel_reason TEXT`,
 ];
 
 let client = null;

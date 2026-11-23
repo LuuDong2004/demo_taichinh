@@ -33,7 +33,7 @@ export default handler({
     const body = await readJson(req);
     if (body.status !== undefined) {
       if (!STATUSES.includes(body.status)) return fail(res, 400, 'Trạng thái không hợp lệ');
-      await query('UPDATE orders SET status = $2, updated_at = now() WHERE code = $1', [code, body.status]);
+      await query('UPDATE orders SET status = $2, cancel_reason = NULL, updated_at = now() WHERE code = $1', [code, body.status]);
     }
     if (body.markPaid === true) {
       await query(

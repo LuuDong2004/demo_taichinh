@@ -72,7 +72,7 @@ export default function Checkout() {
                   <Combo name="district" required ariaLabel="Phường / Xã" options={wards} value={ward} onChange={setWard}
                     placeholder={province ? 'Gõ hoặc chọn phường / xã...' : 'Chọn tỉnh / thành phố trước'} disabled={!province} />
                 </div>
-                <div className="field full"><label>Địa chỉ chi tiết *</label><input className="input" name="address" required maxLength={200} autoComplete="street-address" placeholder="Số nhà, tên đường, thôn/tổ dân phố..." /></div>
+                <div className="field full"><label>Địa chỉ chi tiết *</label><input className="input" name="address" required maxLength={200} autoComplete="street-address" placeholder="Số nhà, tên đường..." /></div>
                 <div className="field full"><label>Ghi chú</label><textarea className="input" name="note" rows="2" maxLength={500} placeholder="VD: gói quà sinh nhật cho bé..." /></div>
               </div>
             </div>

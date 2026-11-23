@@ -45,6 +45,6 @@ export default handler({
     const payment = pay === 'bank'
       ? { method: 'bank', ...bank, amount: o.total, content: o.code, qr: qrUrl(bank, o.total, o.code) }
       : { method: 'cod' };
-    send(res, 201, { order: publicOrder(o, cart.lines), accessKey, payment });
+    send(res, 201, { order: publicOrder(o, cart.lines), accessKey, payment, now: new Date().toISOString() });
   },
 });

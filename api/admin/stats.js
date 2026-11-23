@@ -2,6 +2,7 @@
 // Ngày tính theo giờ Việt Nam. Ngày không có đơn vẫn trả về (giá trị 0) để biểu đồ không bị hở.
 import { query } from '../_lib/db.js';
 import { fail, getQuery, handler, isAdmin, send } from '../_lib/http.js';
+import { expireOrders } from '../_lib/shop.js';
 
 const TZ = 'Asia/Ho_Chi_Minh';
 
@@ -9,6 +10,7 @@ export default handler({
   async GET(req, res) {
     if (!isAdmin(req)) return fail(res, 401, 'Sai mật khẩu quản trị');
     const days = Math.min(Math.max(parseInt(getQuery(req).days, 10) || 14, 7), 90);
+    await expireOrders();
     const daily = await query(
       `WITH d AS (
          SELECT generate_series((now() AT TIME ZONE '${TZ}')::date - ($1::int - 1), (now() AT TIME ZONE '${TZ}')::date, interval '1 day')::date AS day

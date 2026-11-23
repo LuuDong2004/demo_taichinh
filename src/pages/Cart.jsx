@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { EmptyState, PageHero, QtyInput } from '../components/Blocks';
 import { ArrowLeft, Truck, X } from '../components/Icons';
+import OrderLookup from '../components/OrderLookup';
 import { ProductThumb } from '../components/ProductArt';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
@@ -29,6 +30,7 @@ export default function Cart() {
             Chưa có gì trong giỏ. Xem Bộ 1 cho bé 5–8 tuổi hoặc Bộ 2 cho trẻ 9–15 tuổi nhé!
           </EmptyState>
         </div>
+        <div className="container lookup-wrap"><OrderLookup /></div>
       </section>
     </>
   );
@@ -64,6 +66,7 @@ export default function Cart() {
             <Link to="/thanh-toan" className="btn btn-block" style={{ marginTop: 16 }}>Tiến hành thanh toán</Link>
           </div>
         </div>
+        <div className="container lookup-wrap"><OrderLookup /></div>
       </section>
     </>
   );
