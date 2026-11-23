@@ -1,5 +1,9 @@
 import { randomBytes, randomInt } from 'node:crypto';
-import { COUPON, DEFAULT_PRODUCTS, isSoon } from '../../src/data.js';
+import { DEFAULT_PRODUCTS, isSoon } from '../../src/data.js';
+import { DVHC } from '../../src/data/dvhc.js';
+
+// Tỉnh/thành → tập phường/xã (địa giới mới từ 01/07/2025)
+const AREAS = new Map(DVHC.map(([p, wards]) => [p, new Set(wards)]));
 
 // Giá luôn tính lại ở máy chủ theo danh mục sản phẩm, không tin giá trình duyệt gửi lên
 const CATALOG = new Map(DEFAULT_PRODUCTS.map(p => [p.id, p]));
@@ -9,7 +13,8 @@ const MAX_QTY = 20;
 
 const bad = msg => Object.assign(new Error(msg), { status: 400 });
 
-export function priceCart(items, coupon) {
+// Chưa có mã giảm giá: discount luôn 0 (cột discount/coupon trong database để dành cho sau này)
+export function priceCart(items) {
   if (!Array.isArray(items) || !items.length) throw bad('Giỏ hàng trống');
   if (items.length > 20) throw bad('Giỏ hàng có quá nhiều sản phẩm');
   const merged = new Map();
@@ -27,11 +32,8 @@ export function priceCart(items, coupon) {
     return { product_id: id, name: p.name, price: p.price, qty };
   });
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
-  const code = String(coupon || '').trim().toUpperCase();
-  const validCoupon = code === COUPON ? code : null;
-  const discount = validCoupon ? Math.round(subtotal * 0.1) : 0;
   const shipping = subtotal >= FREE_SHIP_FROM ? 0 : SHIP_FEE;
-  return { lines, subtotal, discount, shipping, total: subtotal - discount + shipping, coupon: validCoupon };
+  return { lines, subtotal, discount: 0, shipping, total: subtotal + shipping, coupon: null };
 }
 
 // Mã đơn "DH" + 8 chữ số – trùng cấu hình "Cấu trúc mã thanh toán" trên SePay (tiền tố DH, 8 chữ số)
@@ -71,6 +73,8 @@ export function readCustomer(c = {}) {
   if (!/^(\+?84|0)\d{8,10}$/.test(out.phone)) throw bad('Số điện thoại không hợp lệ');
   if (out.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(out.email)) throw bad('Email không hợp lệ');
   if (!out.city || !out.district || !out.address) throw bad('Vui lòng nhập đủ địa chỉ giao hàng');
+  if (!AREAS.has(out.city)) throw bad('Tỉnh / thành phố không hợp lệ, vui lòng chọn lại');
+  if (!AREAS.get(out.city).has(out.district)) throw bad(`Phường / xã không thuộc ${out.city}, vui lòng chọn lại`);
   return out;
 }
 

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { COUPON, DEFAULT_PRODUCTS, PRODUCT_ALIAS, isSoon } from '../data';
+import { DEFAULT_PRODUCTS, PRODUCT_ALIAS, isSoon } from '../data';
 import { adminPass } from './api';
 import { storage } from './utils';
 
@@ -17,7 +17,6 @@ export function ShopProvider({ children }) {
   const [products, setProducts] = usePersisted('my_products_v11', DEFAULT_PRODUCTS);
   const [cart, setCart] = usePersisted('my_cart_v2', []);
   const [messages, setMessages] = usePersisted('my_msgs', []);
-  const [coupon, setCoupon] = useState('');
   // Đã đăng nhập quản trị trong phiên này (mật khẩu lưu sessionStorage, máy chủ kiểm tra ở mỗi lần gọi API)
   const [isAdmin, setIsAdmin] = useState(() => !!adminPass.get());
   const [toastMsg, setToastMsg] = useState({ text: '', show: false });
@@ -45,18 +44,17 @@ export function ShopProvider({ children }) {
   const totals = useMemo(() => {
     const lines = cart.map(l => ({ ...l, p: products.find(p => p.id === l.id) })).filter(l => l.p && !isSoon(l.p));
     const sub = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
-    const discount = coupon === COUPON ? Math.round(sub * 0.1) : 0;
     const ship = sub === 0 || sub >= 500000 ? 0 : 30000;
     const count = lines.reduce((s, l) => s + l.qty, 0);
-    return { lines, sub, discount, ship, count, total: sub - discount + ship };
-  }, [cart, products, coupon]);
+    return { lines, sub, ship, count, total: sub + ship };
+  }, [cart, products]);
 
   // Đơn đã tạo trên máy chủ → làm trống giỏ
-  const clearCart = useCallback(() => { setCart([]); setCoupon(''); }, [setCart]);
+  const clearCart = useCallback(() => setCart([]), [setCart]);
 
   const value = {
     products, setProducts, findProduct,
-    cart, addToCart, changeQty, removeFromCart, totals, coupon, setCoupon,
+    cart, addToCart, changeQty, removeFromCart, totals,
     clearCart,
     messages, setMessages,
     isAdmin, setIsAdmin,

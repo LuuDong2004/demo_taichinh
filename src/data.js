@@ -421,4 +421,3 @@ export const REVIEWS = [
 ];
 
 
-export const COUPON = 'MONIYO10';

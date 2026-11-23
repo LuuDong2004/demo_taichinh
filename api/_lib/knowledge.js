@@ -1,7 +1,7 @@
 // Kiến thức cho trợ lý AI, dựng từ src/data.js (cùng nguồn với web) để giá, luật chơi luôn khớp.
 // Nội dung cố định giữa các lần gọi → được cache (prompt caching), không chèn giờ/ngày hay dữ liệu thay đổi vào đây.
 import {
-  BRAND, BUSINESSES, COMPONENTS, COMPONENTS_2, COUPON, DEFAULT_PRODUCTS, HOUSES, ITEM_PRICE, JOBS, KID_TIPS, NOTES, NOTES_2,
+  BRAND, BUSINESSES, COMPONENTS, COMPONENTS_2, DEFAULT_PRODUCTS, HOUSES, ITEM_PRICE, JOBS, KID_TIPS, NOTES, NOTES_2,
   PARENT_TIPS, RULES, RULES_2, SETUP, SETUP_2, SHOP_STEPS, START_MONEY_2, STRATEGY_2, TILES, TILES_2, TUIMU_2, TURN, WIN, WIN_2, isSoon,
 } from '../../src/data.js';
 import { FREE_SHIP_FROM, SHIP_FEE } from './shop.js';
@@ -58,7 +58,7 @@ Muốn được báo khi mở bán: bấm chuông ở trang sản phẩm đó v�
 - Đặt hàng: thêm vào giỏ ở trang /san-pham → /gio-hang → /thanh-toan.
 - Thanh toán: chuyển khoản / quét mã VietQR (đơn tự xác nhận khi ngân hàng báo nhận tiền, nội dung chuyển khoản là mã đơn DHxxxxxxxx), hoặc trả tiền khi nhận hàng (COD). Không hỗ trợ ví điện tử.
 - Phí ship: miễn phí cho đơn từ ${vnd(FREE_SHIP_FROM)}, đơn nhỏ hơn phí ${vnd(SHIP_FEE)}. Giao toàn quốc, thường 2–4 ngày.
-- Mã giảm giá: ${COUPON} giảm 10% tạm tính, nhập ở giỏ hàng.
+- Mã giảm giá: hiện CHƯA có mã giảm giá hay chương trình khuyến mãi nào. Không được bịa mã.
 - Sau khi đặt, khách có trang theo dõi đơn /don-hang/<mã đơn> (đường dẫn hiện ngay sau khi đặt).
 - Đổi trả: đổi mới trong 7 ngày nếu lỗi sản xuất hoặc thiếu thành phần. Mất thẻ, tiền, quân cờ: nhắn fanpage để được hỗ trợ.
 - Lưu ý an toàn: có chi tiết nhỏ, không dành cho trẻ dưới 3 tuổi.

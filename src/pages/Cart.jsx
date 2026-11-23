@@ -1,34 +1,16 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState, PageHero, QtyInput } from '../components/Blocks';
 import { ArrowLeft, Truck, X } from '../components/Icons';
 import { ProductThumb } from '../components/ProductArt';
-import { COUPON } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 
-export function OrderSummary({ withCoupon }) {
-  const { totals: t, coupon, setCoupon, toast } = useShop();
-  const [code, setCode] = useState(coupon);
-  const apply = () => {
-    const c = code.trim().toUpperCase();
-    if (c === COUPON) { setCoupon(c); toast('Áp dụng mã thành công 🎉'); }
-    else toast('Mã giảm giá không hợp lệ');
-  };
+export function OrderSummary() {
+  const { totals: t } = useShop();
   return (
     <>
       <div className="sum-line"><span>Tạm tính</span><span>{money(t.sub)}</span></div>
-      {t.discount > 0 && <div className="sum-line" style={{ color: 'var(--green)' }}><span>Giảm giá ({COUPON})</span><span>−{money(t.discount)}</span></div>}
       <div className="sum-line"><span>Phí vận chuyển</span><span>{t.ship ? money(t.ship) : 'Miễn phí'}</span></div>
-      {withCoupon && (
-        <>
-          <div className="coupon">
-            <input className="input" value={code} onChange={e => setCode(e.target.value)} placeholder="Mã giảm giá" />
-            <button type="button" className="btn btn-sm btn-yellow" onClick={apply}>Áp dụng</button>
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--muted)' }}>Thử mã <b>{COUPON}</b> để giảm 10%</div>
-        </>
-      )}
       <div className="sum-line total"><span>Tổng cộng</span><span>{money(t.total)}</span></div>
     </>
   );
@@ -78,7 +60,7 @@ export default function Cart() {
           </div>
           <div className="panel">
             <h3>Tóm tắt đơn hàng</h3>
-            <OrderSummary withCoupon />
+            <OrderSummary />
             <Link to="/thanh-toan" className="btn btn-block" style={{ marginTop: 16 }}>Tiến hành thanh toán</Link>
           </div>
         </div>

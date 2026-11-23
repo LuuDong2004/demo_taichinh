@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BRAND, BUSINESSES, COUPON, DEFAULT_PRODUCTS, ITEM_PRICE, JOBS } from '../data';
+import { BRAND, BUSINESSES, DEFAULT_PRODUCTS, ITEM_PRICE, JOBS } from '../data';
 import { money, noAccent } from './utils';
 
 // Câu trả lời có sẵn – dùng khi chưa bật AI thật (/api/chat) hoặc mất kết nối.
@@ -34,7 +34,7 @@ const RULES = [
   { k: ['tui mu'], a: () => 'Thẻ Túi mù là điều bất ngờ. Bộ 1 có 25 thẻ: được thưởng, mất tiền hoặc hiệu ứng như Lá chắn may mắn hủy 1 thẻ Trừ tiền. Bộ 2 có 40 thẻ: May mắn +30 đến +300 đồng, Đánh thuế, Sinh nhật, Tiến thẳng tới một ô, Phá nhà, Bảo vệ nhà…' },
   { k: ['trong hop', 'thanh phan', 'gom nhung gi', 'hop co gi', 'bo co gi'], a: () => <>{L1}: bàn cờ, 8 thẻ nghề, 32 thẻ đồ vật, 65 thẻ tình huống, 4 quân cờ, 1 xúc xắc, 180 tờ tiền, sách hướng dẫn.{'\n'}{L2}: bàn cờ, 12 thẻ doanh nghiệp, 40 thẻ Túi mù, 4 quân cờ, 4 nhà, 2 xúc xắc, 240 tờ tiền, sách hướng dẫn.</> },
   { k: ['bao lau', 'may nguoi', 'bao nhieu nguoi', 'thoi gian choi'], a: () => `Cả 2 bộ đều 2–4 người chơi. Bộ 1 mỗi ván ${p1.time}, Bộ 2 mỗi ván ${p2.time}.` },
-  { k: [' gia ', 'gia ban', 'bao nhieu tien', 'khuyen mai', 'giam gia', 'ma giam', 'mua o dau', 'dat hang', 'mua hang'], a: () => <>{L1} giá <b>{money(p1.price)}</b>, {L2} giá <b>{money(p2.price)}</b>. Mua cả hai là {money(p1.price + p2.price)}, được miễn phí ship. Nhập mã <b>{COUPON}</b> ở giỏ hàng để giảm 10%.{'\n'}Bộ 3, Bộ 4, Bộ 5 đang hoàn thiện, chưa có giá. Bấm chuông ở trang sản phẩm để được báo khi mở bán nhé 🔔</> },
+  { k: [' gia ', 'gia ban', 'bao nhieu tien', 'khuyen mai', 'giam gia', 'ma giam', 'mua o dau', 'dat hang', 'mua hang'], a: () => <>{L1} giá <b>{money(p1.price)}</b>, {L2} giá <b>{money(p2.price)}</b>. Mua cả hai là {money(p1.price + p2.price)}, được miễn phí ship. Hiện Moni Yo chưa có mã giảm giá.{'\n'}Bộ 3, Bộ 4, Bộ 5 đang hoàn thiện, chưa có giá. Bấm chuông ở trang sản phẩm để được báo khi mở bán nhé 🔔</> },
   { k: ['giao hang', 'ship', 'van chuyen', 'nhan hang'], a: () => <>Giao toàn quốc, thường 2–4 ngày 🚚. <b>Miễn phí</b> cho đơn từ 500.000đ, đơn nhỏ hơn phí 30.000đ.</> },
   { k: ['thanh toan', 'chuyen khoan', ' cod ', ' qr ', 'tra tien'], a: () => 'Bạn chọn chuyển khoản (quét mã VietQR, đơn tự xác nhận khi nhận được tiền) hoặc trả tiền khi nhận hàng (COD). Sau khi đặt, trang đơn hàng hiện mã QR và tự cập nhật khi tiền về.' },
   { k: ['don hang', 'kiem tra don', 'theo doi don', 'ma don'], a: () => <>Ngay sau khi đặt, bạn được đưa tới trang theo dõi đơn (đường dẫn dạng /don-hang/DH…), hãy lưu lại để xem sau. Cần hỗ trợ thêm thì gọi {BRAND.hotline} hoặc <Link to="/lien-he">gửi lời nhắn</Link>.</> },

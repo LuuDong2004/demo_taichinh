@@ -16,7 +16,7 @@ npm run preview   # xem thử bản build
 | Trang chủ | `/` |
 | Danh sách sản phẩm (lọc, tìm, sắp xếp) | `/san-pham` |
 | Chi tiết sản phẩm | `/san-pham/:id` |
-| Giỏ hàng (mã giảm giá `MONIYO10`) | `/gio-hang` |
+| Giỏ hàng | `/gio-hang` |
 | Thanh toán | `/thanh-toan` |
 | Giới thiệu: sứ mệnh, thành phần, luật chơi, 8 nghề, 65 thẻ, góc phụ huynh, sách hướng dẫn | `/gioi-thieu` |
 | Liên hệ | `/lien-he` |

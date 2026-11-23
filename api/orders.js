@@ -1,5 +1,5 @@
 // POST /api/orders – khách đặt hàng
-// Body: { items: [{ id, qty }], customer: { name, phone, email, city, district, address, note }, pay: 'cod' | 'bank', coupon }
+// Body: { items: [{ id, qty }], customer: { name, phone, email, city, district, address, note }, pay: 'cod' | 'bank' }
 // Trả về: { order, accessKey, payment } – payment có mã QR khi chuyển khoản
 import { query } from './_lib/db.js';
 import { fail, handler, readJson, send } from './_lib/http.js';
@@ -14,7 +14,7 @@ export default handler({
     if (pay === 'bank' && !bank) return fail(res, 503, 'Chuyển khoản đang tạm ngưng, vui lòng chọn thanh toán khi nhận hàng');
 
     const c = readCustomer(body.customer);
-    const cart = priceCart(body.items, body.coupon);
+    const cart = priceCart(body.items);
     const accessKey = newAccessKey();
 
     // Thêm đơn + các dòng sản phẩm trong MỘT câu lệnh (không có đơn thiếu sản phẩm). Trùng mã thì thử mã khác.

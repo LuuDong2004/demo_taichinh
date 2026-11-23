@@ -80,6 +80,22 @@ function ChatPane({ active }) {
   );
 }
 
+// Ô nhập tiền: chỉ nhận chữ số (không âm, không chữ e), tự thêm dấu chấm hàng nghìn, xóa trống được
+const MAX_MONEY = 999_999_999;
+function MoneyInput({ value, onChange, label }) {
+  const text = value ? value.toLocaleString('vi-VN') : '';
+  const change = e => {
+    const digits = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
+    onChange(Math.min(Number(digits || 0), MAX_MONEY));
+  };
+  return (
+    <div className="money-input">
+      <input className="input" type="text" inputMode="numeric" autoComplete="off" placeholder="0" aria-label={label} value={text} onChange={change} />
+      <span className="money-unit" aria-hidden="true">đ</span>
+    </div>
+  );
+}
+
 function GoalCalculator() {
   const [goal, setGoal] = useState(350000);
   const [weekly, setWeekly] = useState(20000);
@@ -87,13 +103,15 @@ function GoalCalculator() {
   return (
     <div className="panel tool">
       <h3><Target size={22} />Máy tính mục tiêu tiết kiệm</h3>
-      <div className="field"><label>Món đồ bé muốn mua (giá)</label><input className="input" type="number" step="10000" value={goal} onChange={e => setGoal(+e.target.value)} /></div>
+      <div className="field"><label>Món đồ bé muốn mua (giá)</label><MoneyInput label="Giá món đồ" value={goal} onChange={setGoal} /></div>
       <div style={{ marginTop: 12 }}>
         <div className="range-row"><span>Tiết kiệm mỗi tuần</span><span>{money(weekly)}</span></div>
         <input type="range" min="5000" max="100000" step="5000" value={weekly} onChange={e => setWeekly(+e.target.value)} />
       </div>
       <div className="result-box">
-        Bé cần tiết kiệm trong<b className="big">{weeks} tuần</b>≈ {Math.ceil(weeks / 4.3)} tháng. {weeks > 20 ? 'Mục tiêu hơi xa – thử chia nhỏ hoặc tăng tiền để dành nhé!' : 'Mục tiêu vừa sức, cố lên nào! 💪'}
+        {weeks > 0
+          ? <>Bé cần tiết kiệm trong<b className="big">{weeks} tuần</b>≈ {Math.ceil(weeks / 4.3)} tháng. {weeks > 20 ? 'Mục tiêu hơi xa – thử chia nhỏ hoặc tăng tiền để dành nhé!' : 'Mục tiêu vừa sức, cố lên nào! 💪'}</>
+          : 'Nhập giá món đồ bé muốn mua để xem cần để dành bao lâu nhé.'}
       </div>
     </div>
   );
@@ -104,7 +122,7 @@ function JarSplitter() {
   return (
     <div className="panel tool">
       <h3><Jar size={22} />Chia 3 hũ tiền</h3>
-      <div className="field"><label>Bé vừa nhận được (đ)</label><input className="input" type="number" step="10000" value={amount} onChange={e => setAmount(+e.target.value)} /></div>
+      <div className="field"><label>Bé vừa nhận được</label><MoneyInput label="Số tiền bé nhận được" value={amount} onChange={setAmount} /></div>
       <div className="result-box">
         {JARS.map(([n, r, c]) => (
           <div className="sum-line" style={{ padding: '4px 0' }} key={n}><span><b style={{ color: c }}>●</b> {n} ({r * 100}%)</span><b>{money(Math.round((amount || 0) * r))}</b></div>
