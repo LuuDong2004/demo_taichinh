@@ -5,7 +5,7 @@ Nội dung (luật chơi, 8 nghề, 65 thẻ tình huống, thành phần hộp)
 ## Chạy
 ```
 npm install
-npm run dev       # http://localhost:5173
+npm run dev       # http://localhost:8386
 npm run build     # xuất ra dist/
 npm run preview   # xem thử bản build
 ```

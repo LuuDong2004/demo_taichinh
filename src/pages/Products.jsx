@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CommitStrip, PageHero, ProductCard } from '../components/Blocks';
+import { Link } from 'react-router-dom';
+import { CommitStrip, PageHero, ProductCard, SectionHead } from '../components/Blocks';
 import { Arrow, ArrowLeft, Check, Search, X } from '../components/Icons';
-import { isSoon } from '../data';
+import { COMPONENTS, COMPONENTS_2, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
 import { noAccent } from '../lib/utils';
 
@@ -12,18 +13,52 @@ const SORTS = [
   ['desc', 'Giá giảm dần', (a, b) => b.price - a.price],
   ['rate', 'Đánh giá cao', (a, b) => b.rating - a.rating],
 ];
-const kindOf = p => p.kind ?? (p.includes.length > 3 ? 'set' : 'addon');
 const statusOf = p => (isSoon(p) ? 'soon' : 'sale');
 const priceOf = p => (isSoon(p) ? null : p.price < 100000 ? 'lt100' : p.price <= 300000 ? '100-300' : 'gt300');
 
 // Nhóm lọc: [khoá, tiêu đề, kiểu chọn, các lựa chọn [giá trị, nhãn], hàm lấy giá trị của sản phẩm]
 const GROUPS = [
   ['status', 'Tình trạng', 'multi', [['sale', 'Đang bán'], ['soon', 'Sắp ra mắt']], statusOf],
-  ['kind', 'Loại sản phẩm', 'multi', [['set', 'Bộ trò chơi đầy đủ'], ['addon', 'Phụ kiện mở rộng']], kindOf],
   ['price', 'Mức giá', 'single', [['lt100', 'Dưới 100.000đ'], ['100-300', '100.000 – 300.000đ'], ['gt300', 'Trên 300.000đ']], priceOf],
 ];
-const EMPTY = { status: [], kind: [], price: [] };
+const EMPTY = { status: [], price: [] };
 const PER_PAGE = 6; // số sản phẩm mỗi trang
+
+// So sánh nhanh 2 bộ trò chơi để bố mẹ chọn theo tuổi của con
+const count = (list, name) => list.find(([n]) => n === name)?.[1];
+const ROWS = [
+  ['Độ tuổi', p => p.age],
+  ['Số người chơi', p => p.players],
+  ['Một ván', p => p.time],
+  ['Mục tiêu để thắng', p => (p.set === 1 ? 'Mua đủ 4 đồ vật của nghề mình' : 'Xây đủ 4 mức nhà')],
+  ['Tiền trong bộ', p => (p.set === 1 ? `${count(COMPONENTS, 'Tiền Moni Yo')}, 4 mệnh giá` : `${count(COMPONENTS_2, 'Tiền Moni Yo')}, 9 mệnh giá`)],
+  ['Thẻ chính', p => (p.set === 1 ? '8 thẻ nghề, 32 thẻ đồ vật' : '12 thẻ doanh nghiệp')],
+  ['Thẻ tình huống', p => (p.set === 1 ? '65 thẻ (Cộng tiền, Trừ tiền, Túi mù)' : '40 thẻ Túi mù')],
+  ['Xúc xắc', p => (p.set === 1 ? '1' : '2')],
+  ['Con tập được', p => (p.set === 1 ? 'Đếm tiền, so giá, để dành' : 'Tiết kiệm, đầu tư, lập kế hoạch')],
+];
+
+function CompareSets({ sets }) {
+  return (
+    <section className="section section-alt">
+      <div className="container">
+        <SectionHead eyebrow="So sánh" title="Bộ 1 và Bộ 2 khác nhau thế nào?" sub="Bộ 1 cho bé mới làm quen với tiền. Bộ 2 cho trẻ 9–15 tuổi, đã quen cộng trừ số lớn và muốn thử đầu tư, tiết kiệm." />
+        <div className="compare-wrap reveal">
+          <table className="compare">
+            <thead>
+              <tr><th />{sets.map(p => <th key={p.id}><img src={p.img} alt="" /><span>Bộ {p.set}</span></th>)}</tr>
+            </thead>
+            <tbody>
+              {ROWS.map(([h, get]) => <tr key={h}><th scope="row">{h}</th>{sets.map(p => <td key={p.id}>{get(p)}</td>)}</tr>)}
+              <tr><th scope="row">Giá</th>{sets.map(p => <td key={p.id}><b className="compare-price">{p.priceFrom ? 'Từ ' : ''}{p.price.toLocaleString('vi-VN')}đ</b> <Link to={`/san-pham/${p.id}`} className="link-more">Xem Bộ {p.set} <Arrow size={15} /></Link></td>)}</tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="compare-note">Nhà có hai bé chênh tuổi? Bộ 1 vẫn chơi được với cả nhà, anh chị lớn có thể làm “ngân hàng” và giúp em đếm tiền.</p>
+      </div>
+    </section>
+  );
+}
 
 function SortMenu({ value, onChange }) {
   const [open, setOpen] = useState(false);
@@ -60,6 +95,7 @@ const FilterIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="n
 
 export default function Products() {
   const { products } = useShop();
+  const sets = products.filter(p => p.set).sort((a, b) => a.set - b.set);
   const [q, setQ] = useState('');
   const [sel, setSel] = useState(EMPTY);
   const [sort, setSort] = useState('pop');
@@ -105,7 +141,7 @@ export default function Products() {
               <h3><FilterIcon />Bộ lọc{activeCount > 0 && <span className="count-dot">{activeCount}</span>}</h3>
               {activeCount > 0 && <button type="button" className="link-btn" onClick={() => setSel(EMPTY)}>Xóa tất cả</button>}
             </div>
-            {/* Ẩn nhóm chưa có sản phẩm nào (vd. Mức giá khi mọi sản phẩm đều sắp ra mắt) */}
+            {/* Ẩn nhóm chưa có sản phẩm nào */}
             {GROUPS.filter(([, , , opts, get]) => opts.some(([v]) => products.some(p => get(p) === v))).map(([key, title, mode, opts, get]) => (
               <fieldset className="fgroup" key={key}>
                 <legend>{title}</legend>
@@ -164,6 +200,7 @@ export default function Products() {
           </div>
         </div>
       </section>
+      {sets.length === 2 && <CompareSets sets={sets} />}
       <CommitStrip />
     </>
   );

@@ -3,3 +3,8 @@ dist
 .old
 .playwright-mcp
 docs/
+
+# Biến môi trường & dữ liệu Postgres chạy trên máy
+.env*.local
+.env
+.data/

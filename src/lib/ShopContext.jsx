@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { COUPON, DEFAULT_PRODUCTS, DEMO_ORDERS, isSoon } from '../data';
+import { COUPON, DEFAULT_PRODUCTS, PRODUCT_ALIAS, isSoon } from '../data';
+import { adminPass } from './api';
 import { storage } from './utils';
 
 const ShopContext = createContext(null);
@@ -13,12 +14,12 @@ function usePersisted(key, initial) {
 }
 
 export function ShopProvider({ children }) {
-  const [products, setProducts] = usePersisted('my_products_v6', DEFAULT_PRODUCTS);
+  const [products, setProducts] = usePersisted('my_products_v11', DEFAULT_PRODUCTS);
   const [cart, setCart] = usePersisted('my_cart_v2', []);
-  const [orders, setOrders] = usePersisted('my_orders', DEMO_ORDERS);
   const [messages, setMessages] = usePersisted('my_msgs', []);
   const [coupon, setCoupon] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
+  // Đã đăng nhập quản trị trong phiên này (mật khẩu lưu sessionStorage, máy chủ kiểm tra ở mỗi lần gọi API)
+  const [isAdmin, setIsAdmin] = useState(() => !!adminPass.get());
   const [toastMsg, setToastMsg] = useState({ text: '', show: false });
   const toastTimer = useRef();
 
@@ -28,7 +29,7 @@ export function ShopProvider({ children }) {
     toastTimer.current = setTimeout(() => setToastMsg(t => ({ ...t, show: false })), 2200);
   }, []);
 
-  const findProduct = useCallback(id => products.find(p => p.id === id), [products]);
+  const findProduct = useCallback(id => products.find(p => p.id === (PRODUCT_ALIAS[id] || id)), [products]);
 
   const addToCart = useCallback((id, qty = 1, silent = false) => {
     const p = products.find(x => x.id === id);
@@ -50,19 +51,13 @@ export function ShopProvider({ children }) {
     return { lines, sub, discount, ship, count, total: sub - discount + ship };
   }, [cart, products, coupon]);
 
-  const placeOrder = info => {
-    const id = 'DH' + (1025 + orders.length - DEMO_ORDERS.length + Math.floor(Math.random() * 9));
-    const order = { id, name: info.name, phone: info.phone, total: totals.total, status: 'Chờ xác nhận', date: new Date().toISOString().slice(0, 10), items: totals.count, pay: info.pay };
-    setOrders(o => [order, ...o]);
-    setCart([]);
-    setCoupon('');
-    return order;
-  };
+  // Đơn đã tạo trên máy chủ → làm trống giỏ
+  const clearCart = useCallback(() => { setCart([]); setCoupon(''); }, [setCart]);
 
   const value = {
     products, setProducts, findProduct,
     cart, addToCart, changeQty, removeFromCart, totals, coupon, setCoupon,
-    orders, setOrders, placeOrder,
+    clearCart,
     messages, setMessages,
     isAdmin, setIsAdmin,
     toast, toastMsg,

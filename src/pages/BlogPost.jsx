@@ -22,9 +22,9 @@ export default function BlogPost() {
           {b.body.map((p, i) => <p key={i}>{p}</p>)}
           <div className="story-banner" style={{ margin: '32px 0 0', gridTemplateColumns: '1fr' }}>
             <div className="txt">
-              <h2 style={{ fontSize: 32 }}>Biến bài học thành trò chơi</h2>
-              <p>Bộ đồ chơi Moni Yo giúp bé thực hành mọi điều trong bài viết này.</p>
-              <div><Link to="/san-pham/moni-yo" className="btn btn-yellow btn-sm">Xem sản phẩm <Arrow /></Link></div>
+              <h2 style={{ fontSize: 32 }}>Tập ngay trên bàn cờ</h2>
+              <p>Moni Yo có Bộ 1 cho bé 5–8 tuổi và Bộ 2 cho trẻ 9–15 tuổi.</p>
+              <div><Link to="/san-pham" className="btn btn-yellow btn-sm">Xem 2 bộ <Arrow /></Link></div>
             </div>
           </div>
         </article>

@@ -44,7 +44,7 @@ export default function Cart() {
       <section className="section">
         <div className="container panel">
           <EmptyState pic="kids-sit" title="Giỏ hàng đang trống" action={<Link to="/san-pham" className="btn">Xem sản phẩm</Link>}>
-            Bộ đồ chơi Moni Yo đang hoàn thiện và sắp ra mắt. Đăng ký nhận tin để được báo ngay khi mở bán nhé!
+            Chưa có gì trong giỏ. Xem Bộ 1 cho bé 5–8 tuổi hoặc Bộ 2 cho trẻ 9–15 tuổi nhé!
           </EmptyState>
         </div>
       </section>

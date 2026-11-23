@@ -1,52 +1,48 @@
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { PageHero } from '../components/Blocks';
-import { Bank, Cash, Check, Mobile } from '../components/Icons';
+import { Bank, Cash } from '../components/Icons';
+import Select from '../components/Select';
+import { api } from '../lib/api';
 import { useShop } from '../lib/ShopContext';
 import { money } from '../lib/utils';
 import { OrderSummary } from './Cart';
-import Select from '../components/Select';
 
 const PAYS = [
-  ['COD', <Cash />, 'Thanh toán khi nhận hàng (COD)', 'Kiểm tra hàng rồi mới thanh toán'],
-  ['Chuyển khoản', <Bank />, 'Chuyển khoản / Quét mã QR', 'Nhận mã QR sau khi đặt hàng'],
-  ['Ví điện tử', <Mobile />, 'Ví điện tử', 'MoMo, ZaloPay, VNPay'],
+  ['bank', <Bank />, 'Chuyển khoản / Quét mã QR', 'Quét mã VietQR bằng app ngân hàng, đơn tự xác nhận khi nhận được tiền'],
+  ['cod', <Cash />, 'Thanh toán khi nhận hàng (COD)', 'Kiểm tra hàng rồi mới trả tiền'],
 ];
 
-function Success({ order, info }) {
-  return (
-    <section className="section">
-      <div className="container success">
-        <div className="big"><Check size={60} /></div>
-        <h1 className="title" style={{ fontSize: 36 }}>Đặt hàng thành công!</h1>
-        <p style={{ fontSize: 16 }}>Cảm ơn <b>{info.name}</b>! Mã đơn hàng của bạn là <b style={{ color: 'var(--orange)' }}>{order.id}</b>. Chúng tôi sẽ gọi xác nhận qua số <b>{info.phone}</b> trong ít phút.</p>
-        {info.pay === 'Chuyển khoản' && (
-          <div className="panel" style={{ display: 'inline-block', margin: '10px 0' }}>
-            <div style={{ width: 160, height: 160, background: 'repeating-conic-gradient(var(--ink) 0 25%, #fff 0 50%) 0 0/20px 20px', borderRadius: 8, margin: 'auto' }} />
-            <p style={{ margin: '10px 0 0', fontSize: 13 }}>Quét mã để chuyển <b>{money(order.total)}</b><br />Nội dung: <b>{order.id}</b></p>
-          </div>
-        )}
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
-          <Link to="/trang-chu" className="btn">Về trang chủ</Link>
-          <Link to="/blog" className="btn btn-yellow">Đọc góc phụ huynh</Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function Checkout() {
-  const { totals: t, placeOrder } = useShop();
-  const [done, setDone] = useState(null);
+  const { totals: t, cart, coupon, clearCart, toast } = useShop();
+  const navigate = useNavigate();
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
 
-  if (done) return <Success {...done} />;
-  if (!t.lines.length) return <Navigate to="/gio-hang" replace />;
+  if (!t.lines.length && !sending) return <Navigate to="/gio-hang" replace />;
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault();
-    const info = Object.fromEntries(new FormData(e.target));
-    setDone({ order: placeOrder(info), info });
-    window.scrollTo(0, 0);
+    const f = Object.fromEntries(new FormData(e.target));
+    setSending(true);
+    setError('');
+    try {
+      const data = await api('/orders', {
+        method: 'POST',
+        body: {
+          items: cart.map(l => ({ id: l.id, qty: l.qty })),
+          customer: { name: f.name, phone: f.phone, email: f.email, city: f.city, district: f.district, address: f.address, note: f.note },
+          pay: f.pay,
+          coupon,
+        },
+      });
+      clearCart();
+      navigate(`/don-hang/${data.order.code}?k=${data.accessKey}`, { replace: true, state: data });
+    } catch (err) {
+      setError(err.message);
+      toast(err.message);
+      setSending(false);
+    }
   };
 
   return (
@@ -58,16 +54,16 @@ export default function Checkout() {
             <div className="panel">
               <h3>1. Thông tin giao hàng</h3>
               <div className="form-grid">
-                <div className="field"><label>Họ và tên *</label><input className="input" name="name" required /></div>
-                <div className="field"><label>Số điện thoại *</label><input className="input" name="phone" required pattern="[0-9 ]{9,12}" /></div>
-                <div className="field full"><label>Email</label><input className="input" type="email" name="email" /></div>
+                <div className="field"><label>Họ và tên *</label><input className="input" name="name" required maxLength={80} autoComplete="name" /></div>
+                <div className="field"><label>Số điện thoại *</label><input className="input" name="phone" required inputMode="tel" pattern="(\+?84|0)[0-9 ]{8,12}" title="Số điện thoại Việt Nam, VD: 0912 345 678" autoComplete="tel" /></div>
+                <div className="field full"><label>Email</label><input className="input" type="email" name="email" autoComplete="email" /></div>
                 <div className="field"><label>Tỉnh / Thành phố *</label>
                   <Select name="city" required placeholder="Chọn tỉnh / thành phố..." ariaLabel="Tỉnh / Thành phố"
                     options={['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ', 'Khác']} />
                 </div>
-                <div className="field"><label>Quận / Huyện *</label><input className="input" name="district" required /></div>
-                <div className="field full"><label>Địa chỉ chi tiết *</label><input className="input" name="address" required /></div>
-                <div className="field full"><label>Ghi chú</label><textarea className="input" name="note" rows="2" placeholder="VD: gói quà sinh nhật cho bé..." /></div>
+                <div className="field"><label>Quận / Huyện *</label><input className="input" name="district" required maxLength={80} /></div>
+                <div className="field full"><label>Địa chỉ chi tiết *</label><input className="input" name="address" required maxLength={200} autoComplete="street-address" /></div>
+                <div className="field full"><label>Ghi chú</label><textarea className="input" name="note" rows="2" maxLength={500} placeholder="VD: gói quà sinh nhật cho bé..." /></div>
               </div>
             </div>
             <div className="panel">
@@ -87,8 +83,8 @@ export default function Checkout() {
             {t.lines.map(l => <div className="sum-line" key={l.id}><span>{l.p.name} × {l.qty}</span><span>{money(l.p.price * l.qty)}</span></div>)}
             <hr style={{ border: 0, borderTop: '2px dashed var(--line)' }} />
             <OrderSummary />
-            <button className="btn btn-block btn-orange" style={{ marginTop: 16 }}>Đặt hàng</button>
-            <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>Bản demo – không phát sinh thanh toán thật.</p>
+            {error && <p className="form-error" role="alert">{error}</p>}
+            <button className="btn btn-block btn-orange" style={{ marginTop: 16 }} disabled={sending}>{sending ? 'Đang gửi đơn…' : 'Đặt hàng'}</button>
           </div>
         </form>
       </section>

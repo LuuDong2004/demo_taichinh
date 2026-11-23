@@ -1,15 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { aiReply } from '../lib/ai';
+import { api } from '../lib/api';
 import { money } from '../lib/utils';
 import { Chat, Jar, KidAvatar, Target, X } from './Icons';
 
-const SUGGESTIONS = ['Luật chơi?', 'Có những nghề nào?', 'Thẻ túi mù?', 'Bé 4 tuổi chơi được?', 'Tiền tiêu vặt?', 'Phí giao hàng?'];
+const SUGGESTIONS = ['Bé 7 tuổi nên chơi bộ nào?', 'Bộ 2 có gì khác?', 'Nên cho con bao nhiêu tiền tiêu vặt?', 'Luật chơi?', 'Dạy con tiết kiệm thế nào?', 'Phí giao hàng?'];
 const JARS = [['Tiêu', .5, 'var(--orange)'], ['Tiết kiệm', .4, 'var(--green)'], ['Chia sẻ', .1, 'var(--blue)']];
 const TABS = [['chat', Chat, 'Trò chuyện'], ['goal', Target, 'Mục tiêu'], ['jars', Jar, '3 hũ']];
 const Typing = () => <span className="typing"><span /><span /><span /></span>;
 
+// Câu trả lời của AI là chữ thường: biến đường dẫn nội bộ (/san-pham/..., /lien-he…) thành link bấm được
+const PATH = /(\/(?:san-pham|gio-hang|thanh-toan|gioi-thieu|lien-he|blog|don-hang)(?:\/[a-z0-9-]+)?)/g;
+const RichText = ({ text }) => text.split(PATH).map((part, i) =>
+  i % 2 ? <Link key={i} to={part}>{part}</Link> : <Fragment key={i}>{part}</Fragment>);
+
+// Lần đầu máy chủ báo chưa bật AI thì dùng câu trả lời có sẵn cho cả phiên, khỏi gọi lại
+let aiOff = false;
+
 function ChatPane({ active }) {
-  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! Mình là <b>trợ lý Moni Yo</b> – giải đáp luật chơi, giúp bố mẹ chọn quà và dạy con về tiền. Bạn cần mình giúp gì?</> }]);
+  const [msgs, setMsgs] = useState([{ who: 'bot', body: <>Xin chào! Mình là <b>trợ lý Moni Yo</b>: giải đáp về 2 bộ trò chơi, đặt hàng, và cách dạy con về tiền. Bạn cần mình giúp gì?</> }]);
+  const history = useRef([]); // [{ role, content }] gửi lên AI, chỉ gồm chữ thuần
   const [input, setInput] = useState('');
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
@@ -22,14 +33,32 @@ function ChatPane({ active }) {
   const [asked, setAsked] = useState([]);
   const suggestions = SUGGESTIONS.filter(s => !asked.includes(s)).slice(0, 4);
 
-  const ask = text => {
-    if (!text.trim()) return;
+  const [busy, setBusy] = useState(false);
+  const ask = async raw => {
+    const text = raw.trim();
+    if (!text || busy) return;
     setAsked(a => (SUGGESTIONS.includes(text) ? [...a, text] : a));
     const id = Date.now();
     setMsgs(m => [...m, { who: 'me', body: text }, { who: 'bot', id, body: <Typing /> }]);
-    timers.current.push(setTimeout(() => {
-      setMsgs(m => m.map(x => (x.id === id ? { ...x, body: aiReply(text) } : x)));
-    }, 700 + Math.random() * 500));
+    const answer = body => setMsgs(m => m.map(x => (x.id === id ? { ...x, body } : x)));
+    history.current.push({ role: 'user', content: text });
+
+    if (!aiOff) {
+      setBusy(true);
+      try {
+        const { reply } = await api('/chat', { method: 'POST', body: { messages: history.current.slice(-12) } });
+        history.current.push({ role: 'assistant', content: reply });
+        answer(<RichText text={reply} />);
+        setBusy(false);
+        return;
+      } catch (e) {
+        setBusy(false);
+        if (e.message === 'AI_OFF' || e.status === 404) aiOff = true;
+        else if (e.status === 429 || e.status === 503) { answer(e.message); return; }
+      }
+    }
+    // Chưa bật AI hoặc lỗi mạng → câu trả lời có sẵn
+    timers.current.push(setTimeout(() => answer(aiReply(text)), 500 + Math.random() * 400));
   };
 
   return (
@@ -44,8 +73,8 @@ function ChatPane({ active }) {
         </div>
       )}
       <form className="chat-form" onSubmit={e => { e.preventDefault(); ask(input); setInput(''); }}>
-        <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi trợ lý Moni Yo..." autoComplete="off" />
-        <button className="btn btn-sm">Gửi</button>
+        <input className="input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Hỏi về Moni Yo hoặc cách dạy con về tiền..." autoComplete="off" maxLength={1200} />
+        <button className="btn btn-sm" disabled={busy}>Gửi</button>
       </form>
     </>
   );
@@ -101,7 +130,7 @@ export default function Assistant({ open, onClose }) {
     <div className={`ai-pop ${open ? 'open' : ''}`} role="dialog" aria-label="Trợ lý Moni Yo" aria-hidden={!open}>
       <div className="chat-head">
         <KidAvatar size={42} />
-        <div><b>Trợ lý Moni Yo</b><small>● Đang trực tuyến · trả lời tức thì</small></div>
+        <div><b>Trợ lý Moni Yo</b><small>● Hỏi về Moni Yo và dạy con về tiền</small></div>
         <button className="ai-close" onClick={onClose} aria-label="Đóng trợ lý"><X /></button>
       </div>
       <div className="ai-tabs">

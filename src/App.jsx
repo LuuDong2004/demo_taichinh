@@ -9,6 +9,7 @@ import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import OrderStatus from './pages/OrderStatus';
 import ProductDetail from './pages/ProductDetail';
 import Products from './pages/Products';
 import QrPage from './pages/QrPage';
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="san-pham/:id" element={<ProductDetail />} />
         <Route path="gio-hang" element={<Cart />} />
         <Route path="thanh-toan" element={<Checkout />} />
+        <Route path="don-hang/:code" element={<OrderStatus />} />
         <Route path="gioi-thieu" element={<About />} />
         <Route path="lien-he" element={<Contact />} />
         <Route path="ai" element={<Navigate to="/trang-chu" replace state={{ ai: true }} />} />

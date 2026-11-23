@@ -8,3 +8,5 @@ export const storage = {
   get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* chạy tạm trong phiên */ } },
 };
+// Giá hiển thị: sản phẩm chỉ có khoảng giá dự kiến thì thêm chữ "Từ"
+export const priceText = p => (p.priceFrom ? 'Từ ' : '') + money(p.price);

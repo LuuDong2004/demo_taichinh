@@ -1,24 +1,30 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Chart, Chat, Edit, LogOut, Receipt, Trash } from '../components/Icons';
-import { ProductThumb } from '../components/ProductArt';
-import { BLOG, DEFAULT_PRODUCTS, img, isSoon } from '../data';
+import { useCallback, useEffect, useState } from 'react';
+import { Card, Chart, LogOut, Receipt } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
-import { fmtDate, money, noAccent } from '../lib/utils';
+import { fmtDate, money } from '../lib/utils';
 import Select from '../components/Select';
+import { adminPass, api, ORDER_STATUS, PAY_METHOD, PAY_STATUS } from '../lib/api';
+import { CountBars, DailyChart } from '../components/AdminCharts';
 
-const TABS = [['dash', Chart, 'Tổng quan'], ['products', Box, 'Sản phẩm'], ['orders', Receipt, 'Đơn hàng'], ['msgs', Chat, 'Liên hệ'], ['posts', Edit, 'Bài viết']];
-const STATUSES = ['Chờ xác nhận', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
-const STATUS_CLS = { 'Hoàn thành': 'st-ok', 'Đang giao': 'st-ship', 'Chờ xác nhận': 'st-wait', 'Đã hủy': 'st-cancel' };
-const MONTHLY = [42, 55, 48, 70, 66, 88, 95, 110, 124];
+const TABS = [['dash', Chart, 'Tổng quan'], ['orders', Receipt, 'Đơn hàng'], ['payments', Card, 'Giao dịch SePay']];
+const STATUS_OPTS = Object.entries(ORDER_STATUS).map(([v, [l]]) => [v, l]);
 
 function Login() {
   const { setIsAdmin, toast } = useShop();
-  const submit = e => {
+  const [busy, setBusy] = useState(false);
+  const submit = async e => {
     e.preventDefault();
-    const d = Object.fromEntries(new FormData(e.target));
-    if (d.u === 'admin' && d.p === '123456') setIsAdmin(true);
-    else toast('Sai tài khoản hoặc mật khẩu');
+    const pass = new FormData(e.target).get('p');
+    setBusy(true);
+    adminPass.set(pass);
+    try {
+      await api('/admin/orders?limit=1', { admin: true });
+      setIsAdmin(true);
+    } catch (err) {
+      adminPass.set('');
+      toast(err.status === 401 ? 'Sai mật khẩu quản trị' : err.message);
+    }
+    setBusy(false);
   };
   return (
     <div className="container">
@@ -27,36 +33,60 @@ function Login() {
           <span className="logo-mark" style={{ margin: '0 auto 10px', width: 64, height: 64, fontSize: 26 }}>₫</span>
           <h3>Đăng nhập quản trị</h3>
         </div>
-        <div className="field"><label>Tài khoản</label><input className="input" name="u" defaultValue="admin" autoComplete="username" /></div>
-        <div className="field" style={{ marginTop: 12 }}><label>Mật khẩu</label><input className="input" type="password" name="p" placeholder="123456" autoComplete="current-password" /></div>
-        <button className="btn btn-block" style={{ marginTop: 18 }}>Đăng nhập</button>
-        <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>Demo: admin / 123456</p>
+        <div className="field" style={{ marginTop: 12 }}><label>Mật khẩu quản trị</label><input className="input" type="password" name="p" required autoComplete="current-password" /></div>
+        <button className="btn btn-block" style={{ marginTop: 18 }} disabled={busy}>{busy ? 'Đang kiểm tra…' : 'Đăng nhập'}</button>
       </form>
     </div>
   );
 }
 
-function OrdersTable({ list, editable }) {
-  const { setOrders, toast } = useShop();
-  const setStatus = (id, status) => {
-    setOrders(os => os.map(o => (o.id === id ? { ...o, status } : o)));
-    toast('Đã cập nhật trạng thái');
+// Lấy đơn hàng từ máy chủ; mất phiên (401) thì quay về màn đăng nhập
+function useOrders(filter = '') {
+  const { setIsAdmin, toast } = useShop();
+  const [data, setData] = useState(null);
+  const load = useCallback(async () => {
+    try { setData(await api(`/admin/orders${filter}`, { admin: true })); }
+    catch (e) { if (e.status === 401) { adminPass.set(''); setIsAdmin(false); } else toast(e.message); }
+  }, [filter, setIsAdmin, toast]);
+  useEffect(() => { load(); }, [load]);
+  return [data, load];
+}
+
+function OrdersTable({ list, editable, onChange }) {
+  const { toast } = useShop();
+  const patch = async (code, body) => {
+    try { await api(`/admin/orders/${code}`, { method: 'PATCH', body, admin: true }); toast('Đã cập nhật đơn'); onChange?.(); }
+    catch (e) { toast(e.message); }
   };
+  if (!list) return <p className="empty">Đang tải…</p>;
+  if (!list.length) return <p className="empty">Chưa có đơn hàng nào.</p>;
   return (
     <div className="table-wrap">
       <table>
-        <thead><tr><th>Mã</th><th>Khách hàng</th><th>SĐT</th><th>SL</th><th>Tổng</th><th>Ngày</th><th>Trạng thái</th></tr></thead>
+        <thead><tr><th>Mã</th><th>Khách hàng</th><th>SĐT</th><th>Sản phẩm</th><th>Tổng</th><th>Thanh toán</th><th>Ngày</th><th>Trạng thái</th></tr></thead>
         <tbody>
-          {list.map(o => (
-            <tr key={o.id}>
-              <td><b>{o.id}</b></td><td>{o.name}</td><td>{o.phone}</td><td>{o.items}</td><td>{money(o.total)}</td><td>{fmtDate(o.date)}</td>
-              <td>
-                {editable
-                  ? <Select size="sm" ariaLabel={`Trạng thái đơn ${o.id}`} value={o.status} onChange={v => setStatus(o.id, v)} options={STATUSES} />
-                  : <span className={`status ${STATUS_CLS[o.status] || 'st-wait'}`}>{o.status}</span>}
-              </td>
-            </tr>
-          ))}
+          {list.map(o => {
+            const [pl, pc] = PAY_STATUS[o.payment_status] || PAY_STATUS.unpaid;
+            const [sl, sc] = ORDER_STATUS[o.status] || ORDER_STATUS.pending;
+            return (
+              <tr key={o.code}>
+                <td><b>{o.code}</b></td><td>{o.name}</td><td>{o.phone}</td>
+                <td style={{ whiteSpace: 'normal' }}>{o.items.map(i => `${i.name} ×${i.qty}`).join(', ')}</td>
+                <td>{money(o.total)}</td>
+                <td>
+                  <span className={`status ${pc}`}>{pl}</span>
+                  <div style={{ fontSize: 12, color: 'var(--muted)' }}>{PAY_METHOD[o.pay_method]}{o.paid_amount > 0 && o.payment_status !== 'paid' ? ` · đã nhận ${money(o.paid_amount)}` : ''}</div>
+                  {editable && o.payment_status !== 'paid' && <button className="link-btn" onClick={() => patch(o.code, { markPaid: true })}>Đánh dấu đã thu</button>}
+                </td>
+                <td>{fmtDate(o.created_at)}</td>
+                <td>
+                  {editable
+                    ? <Select size="sm" ariaLabel={`Trạng thái đơn ${o.code}`} value={o.status} onChange={v => patch(o.code, { status: v })} options={STATUS_OPTS} />
+                    : <span className={`status ${sc}`}>{sl}</span>}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -64,153 +94,109 @@ function OrdersTable({ list, editable }) {
 }
 
 function Dashboard() {
-  const { orders, products, messages } = useShop();
-  const revenue = orders.filter(o => o.status !== 'Đã hủy').reduce((s, o) => s + o.total, 0);
-  const max = Math.max(...MONTHLY);
+  const [data] = useOrders('?limit=5');
+  const st = data?.stats;
   return (
     <>
       <h2>Tổng quan</h2>
       <div className="kpis">
-        <div className="kpi"><span>Doanh thu (đơn gần đây)</span><b>{money(revenue)}</b><em>▲ 18% so với tuần trước</em></div>
-        <div className="kpi"><span>Đơn hàng</span><b>{orders.length}</b><em>▲ {orders.filter(o => o.status === 'Chờ xác nhận').length} chờ xác nhận</em></div>
-        <div className="kpi"><span>Sản phẩm</span><b>{products.length}</b><em>{products.reduce((s, p) => s + p.stock, 0)} tồn kho</em></div>
-        <div className="kpi"><span>Tin nhắn liên hệ</span><b>{messages.length}</b><em>mới</em></div>
+        <div className="kpi"><span>Đã thu (đơn chưa hủy)</span><b>{st ? money(st.collected) : '…'}</b><em>Giá trị đơn: {st ? money(st.revenue) : '…'}</em></div>
+        <div className="kpi"><span>Đơn hàng</span><b>{st ? st.orders : '…'}</b><em>{st ? st.pending : 0} chờ xác nhận</em></div>
+        <div className="kpi"><span>Chờ chuyển khoản</span><b>{st ? st.awaiting_payment : '…'}</b><em>chưa nhận đủ tiền</em></div>
+        <div className="kpi"><span>Còn phải thu</span><b>{st ? money(Math.max(st.revenue - st.collected, 0)) : '…'}</b><em>COD + chuyển khoản chưa đủ</em></div>
       </div>
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-        <div className="panel">
-          <h3>Doanh số theo tháng (triệu đồng)</h3>
-          <div className="bars">{MONTHLY.map((v, i) => <div key={i}><b>{v}</b><i style={{ height: `${(v / max) * 85}%` }} />T{i + 1}</div>)}</div>
-        </div>
-        <div className="panel">
-          <h3>Bán chạy</h3>
-          {[...products].sort((a, b) => b.sold - a.sold).slice(0, 5).map(p => <div className="sum-line" key={p.id}><span>{p.name}</span><b>{p.sold}</b></div>)}
-        </div>
-      </div>
-      <div className="panel" style={{ marginTop: 20 }}><h3>Đơn hàng mới nhất</h3><OrdersTable list={orders.slice(0, 5)} /></div>
+      <Charts />
+      <div className="panel" style={{ marginTop: 20 }}><h3>Đơn hàng mới nhất</h3><OrdersTable list={data?.orders} /></div>
     </>
   );
 }
 
-const EMPTY = { name: '', price: 0, oldPrice: '', stock: 0, age: '5–15 tuổi', img: img('brand/kids-jump'), short: '', badge: '' };
-// Chưa dùng ảnh sản phẩm thật: chỉ cho chọn hình nhận diện thương hiệu
-const IMAGE_CHOICES = [
-  ['Nhân vật Moni Yo – nhảy', 'brand/kids-jump'], ['Nhân vật Moni Yo – ngồi', 'brand/kids-sit'], ['Nhân vật Moni Yo – ló đầu', 'brand/kids-peek'], ['Logo Moni Yo', 'brand/logo'],
-];
+const RANGES = [[7, '7 ngày'], [14, '14 ngày'], [30, '30 ngày']];
 
-function ProductModal({ product, onClose }) {
-  const { setProducts, toast } = useShop();
-  const p = product || EMPTY;
-  const submit = e => {
-    e.preventDefault();
-    const d = Object.fromEntries(new FormData(e.target));
-    const data = { ...d, price: +d.price, oldPrice: +d.oldPrice || undefined, stock: +d.stock };
-    // Giữ khung minh hoạ nếu không chọn ảnh khác; chọn ảnh thì bỏ khung minh hoạ
-    if (d.img === '') delete data.img; else data.art = undefined;
-    if (product) setProducts(ps => ps.map(x => (x.id === product.id ? { ...x, ...data } : x)));
-    else setProducts(ps => [{ ...data, id: noAccent(d.name).replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString(36), rating: 5, sold: 0, desc: d.short, includes: ['Đang cập nhật'], kind: 'addon', gallery: [d.img] }, ...ps]);
-    toast('Đã lưu sản phẩm ✔');
-    onClose();
-  };
+function Charts() {
+  const { toast } = useShop();
+  const [days, setDays] = useState(14);
+  const [s, setS] = useState(null);
+  useEffect(() => {
+    api(`/admin/stats?days=${days}`, { admin: true }).then(setS).catch(e => toast(e.message));
+  }, [days, toast]);
+  const rows = (map, list) => Object.entries(map).map(([key, [label]]) => ({ key, label, n: list.find(r => r.key === key)?.n || 0 }));
   return (
-    <div className="modal" onClick={e => e.target === e.currentTarget && onClose()}>
-      <form className="panel" onSubmit={submit}>
-        <h3>{product ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h3>
-        <div className="form-grid">
-          <div className="field full"><label>Tên sản phẩm *</label><input className="input" name="name" required defaultValue={p.name} /></div>
-          <div className="field"><label>Giá bán *</label><input className="input" name="price" type="number" required defaultValue={p.price} /></div>
-          <div className="field"><label>Giá gốc</label><input className="input" name="oldPrice" type="number" defaultValue={p.oldPrice || ''} /></div>
-          <div className="field"><label>Tồn kho</label><input className="input" name="stock" type="number" defaultValue={p.stock} /></div>
-          <div className="field"><label>Độ tuổi</label><input className="input" name="age" defaultValue={p.age} /></div>
-          <div className="field full"><label>Ảnh sản phẩm</label>
-            <Select name="img" ariaLabel="Ảnh sản phẩm" defaultValue={p.art ? '' : p.img}
-              options={[...(p.art ? [['', 'Khung minh hoạ (hiện tại)']] : []), ...IMAGE_CHOICES.map(([l, v]) => [img(v), l])]} />
+    <div className="charts">
+      <div className="panel chart-wide">
+        <div className="chart-head">
+          <h3>Giá trị đơn theo ngày</h3>
+          <div className="seg" role="group" aria-label="Khoảng thời gian">
+            {RANGES.map(([v, l]) => <button key={v} type="button" className={days === v ? 'on' : ''} aria-pressed={days === v} onClick={() => setDays(v)}>{l}</button>)}
           </div>
-          <div className="field"><label>Tình trạng</label><Select name="status" ariaLabel="Tình trạng" defaultValue={p.status || 'sale'} options={[['sale', 'Đang bán'], ['soon', 'Sắp ra mắt']]} /></div>
-          <div className="field"><label>Nhãn (badge)</label><input className="input" name="badge" defaultValue={p.badge || ''} /></div>
-          <div className="field full"><label>Mô tả ngắn</label><textarea className="input" name="short" rows="2" defaultValue={p.short} /></div>
         </div>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 18 }}>
-          <button type="button" className="btn btn-ghost btn-sm" onClick={onClose}>Hủy</button>
-          <button className="btn btn-sm">Lưu</button>
-        </div>
-      </form>
+        <p className="chart-sub">Không tính đơn đã hủy · rê chuột vào cột để xem số đơn và tiền đã thu</p>
+        {s ? <DailyChart daily={s.daily} /> : <p className="empty">Đang tải…</p>}
+      </div>
+      <div className="panel">
+        <h3>Đơn theo trạng thái</h3>
+        {s ? <CountBars label="Số đơn theo trạng thái giao hàng" rows={rows(ORDER_STATUS, s.byStatus)} /> : <p className="empty">Đang tải…</p>}
+      </div>
+      <div className="panel">
+        <h3>Tình trạng thanh toán</h3>
+        <p className="chart-sub">Đơn chưa hủy</p>
+        {s ? <CountBars label="Số đơn theo tình trạng thanh toán" rows={rows(PAY_STATUS, s.byPayment)} /> : <p className="empty">Đang tải…</p>}
+      </div>
     </div>
   );
 }
 
-function ProductsAdmin() {
-  const { products, setProducts, toast } = useShop();
-  const [editing, setEditing] = useState(null); // null: đóng, 'new': thêm mới, object: sửa
-  const [confirmId, setConfirmId] = useState(null);
-  const del = id => {
-    if (confirmId !== id) return setConfirmId(id);
-    setProducts(ps => ps.filter(p => p.id !== id));
-    setConfirmId(null);
-    toast('Đã xóa sản phẩm');
-  };
+function OrdersAdmin() {
+  const [status, setStatus] = useState('');
+  const [payment, setPayment] = useState('');
+  const [q, setQ] = useState('');
+  const qs = new URLSearchParams(Object.entries({ status, payment, q }).filter(([, v]) => v)).toString();
+  const [data, reload] = useOrders(qs ? `?${qs}` : '');
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-        <h2>Sản phẩm</h2>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-sm btn-ghost" onClick={() => { setProducts(structuredClone(DEFAULT_PRODUCTS)); toast('Đã khôi phục dữ liệu mẫu'); }}>Khôi phục mẫu</button>
-          <button className="btn btn-sm" onClick={() => setEditing('new')}>+ Thêm sản phẩm</button>
-        </div>
+        <h2>Đơn hàng</h2>
+        <button className="btn btn-sm btn-ghost" onClick={reload}>Tải lại</button>
       </div>
-      <div className="panel table-wrap">
-        <table>
-          <thead><tr><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Tình trạng</th><th /></tr></thead>
-          <tbody>
-            {products.map(p => (
-              <tr key={p.id}>
-                <td><span className="thumb-sm"><ProductThumb p={p} size="sm" /></span></td><td><b>{p.name}</b></td><td>{money(p.price)}</td><td>{p.stock}</td><td>{p.sold}</td><td>{isSoon(p) ? <span className="status st-wait">Sắp ra mắt</span> : <span className="status st-ok">Đang bán</span>}</td>
-                <td className="row-actions">
-                  <button onClick={() => setEditing(p)}><Edit size={14} />Sửa</button>
-                  <button onClick={() => del(p.id)} style={confirmId === p.id ? { background: '#fee2e2' } : undefined}>{confirmId === p.id ? 'Xóa?' : <Trash size={14} />}</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
+        <input className="input" style={{ maxWidth: 260 }} placeholder="Tìm mã đơn, tên, SĐT…" value={q} onChange={e => setQ(e.target.value)} />
+        <Select size="sm" ariaLabel="Lọc trạng thái" value={status} onChange={setStatus} options={[['', 'Mọi trạng thái'], ...STATUS_OPTS]} />
+        <Select size="sm" ariaLabel="Lọc thanh toán" value={payment} onChange={setPayment} options={[['', 'Mọi thanh toán'], ...Object.entries(PAY_STATUS).map(([v, [l]]) => [v, l])]} />
       </div>
-      {editing && <ProductModal product={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />}
+      <div className="panel"><OrdersTable list={data?.orders} editable onChange={reload} /></div>
     </>
   );
 }
 
-function Messages() {
-  const { messages } = useShop();
+function Payments() {
+  const { toast } = useShop();
+  const [list, setList] = useState(null);
+  useEffect(() => { api('/admin/payments', { admin: true }).then(d => setList(d.payments)).catch(e => toast(e.message)); }, [toast]);
   return (
     <>
-      <h2>Liên hệ từ khách hàng</h2>
+      <h2>Giao dịch SePay</h2>
       <div className="panel table-wrap">
-        {messages.length ? (
+        {!list ? <p className="empty">Đang tải…</p> : !list.length ? <p className="empty">Chưa có giao dịch nào SePay gửi về.</p> : (
           <table>
-            <thead><tr><th>Ngày</th><th>Họ tên</th><th>SĐT</th><th>Chủ đề</th><th>Nội dung</th></tr></thead>
-            <tbody>{messages.map((m, i) => <tr key={i}><td>{fmtDate(m.date)}</td><td>{m.name}</td><td>{m.phone}</td><td>{m.topic}</td><td style={{ whiteSpace: 'normal' }}>{m.msg}</td></tr>)}</tbody>
+            <thead><tr><th>Thời gian</th><th>Số tiền</th><th>Nội dung</th><th>Đơn khớp</th><th>Mã GD</th></tr></thead>
+            <tbody>{list.map(p => (
+              <tr key={p.sepay_id}>
+                <td>{p.transaction_date}</td>
+                <td style={{ color: p.transfer_type === 'in' ? 'var(--green)' : 'var(--red)' }}>{p.transfer_type === 'in' ? '+' : '−'}{money(p.amount)}</td>
+                <td style={{ whiteSpace: 'normal' }}>{p.content}</td>
+                <td>{p.order_code ? <b>{p.order_code}</b> : <span className="status st-cancel">Không khớp</span>}</td>
+                <td>{p.reference_code}</td>
+              </tr>
+            ))}</tbody>
           </table>
-        ) : <p className="empty">Chưa có tin nhắn. Thử gửi một lời nhắn ở trang <Link to="/lien-he" style={{ color: 'var(--orange)' }}>Liên hệ</Link>.</p>}
-      </div>
-    </>
-  );
-}
-
-function Posts() {
-  return (
-    <>
-      <h2>Bài viết</h2>
-      <div className="panel table-wrap">
-        <table>
-          <thead><tr><th>Tiêu đề</th><th>Chuyên mục</th><th>Ngày</th><th>Trạng thái</th></tr></thead>
-          <tbody>{BLOG.map(b => <tr key={b.id}><td><Link to={`/blog/${b.id}`}><b>{b.title}</b></Link></td><td>{b.cat}</td><td>{fmtDate(b.date)}</td><td><span className="status st-ok">Đã đăng</span></td></tr>)}</tbody>
-        </table>
+        )}
       </div>
     </>
   );
 }
 
 export default function Admin() {
-  const { isAdmin, setIsAdmin, orders } = useShop();
+  const { isAdmin, setIsAdmin } = useShop();
   const [tab, setTab] = useState('dash');
   if (!isAdmin) return <Login />;
 
@@ -219,14 +205,12 @@ export default function Admin() {
       <aside className="admin-side">
         <div className="logo-text">Moni Yo Admin</div>
         {TABS.map(([k, Icon, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}><Icon size={18} />{l}</button>)}
-        <button onClick={() => setIsAdmin(false)}><LogOut />Đăng xuất</button>
+        <button onClick={() => { adminPass.set(''); setIsAdmin(false); }}><LogOut />Đăng xuất</button>
       </aside>
       <div className="admin-main">
         {tab === 'dash' && <Dashboard />}
-        {tab === 'products' && <ProductsAdmin />}
-        {tab === 'orders' && <><h2>Đơn hàng</h2><div className="panel"><OrdersTable list={orders} editable /></div></>}
-        {tab === 'msgs' && <Messages />}
-        {tab === 'posts' && <Posts />}
+        {tab === 'orders' && <OrdersAdmin />}
+        {tab === 'payments' && <Payments />}
       </div>
     </div>
   );

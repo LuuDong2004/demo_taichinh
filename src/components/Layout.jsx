@@ -60,7 +60,7 @@ function Header() {
           <Link to="/gio-hang" className="icon-btn" aria-label="Giỏ hàng">
             <CartIcon /><span className="badge">{totals.count}</span>
           </Link>
-          <Link to="/san-pham/moni-yo" className="btn btn-sm btn-cta">Nhận tin ra mắt</Link>
+          <Link to="/san-pham" className="btn btn-sm btn-cta">Mua ngay</Link>
           <button className="icon-btn menu-toggle" onClick={() => setOpen(o => !o)} aria-label={open ? 'Đóng menu' : 'Mở menu'} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
         </div>
       </div>

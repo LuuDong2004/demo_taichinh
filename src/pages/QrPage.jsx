@@ -40,6 +40,15 @@ const Backdrop = ({ kids = true }) => (
   </div>
 );
 
+// Ảnh hộp 2 bộ kèm độ tuổi
+const SetBoxes = ({ className }) => (
+  <div className={`qrp-boxes ${className}`}>
+    {[['bo1-box', 'Bộ 1', '5–8 tuổi'], ['bo2-box', 'Bộ 2', '9–15 tuổi']].map(([pic, n, age]) => (
+      <figure key={n}><img src={img(`product/${pic}`)} alt={`Hộp Moni Yo ${n}`} /><figcaption><b>{n}</b>{age}</figcaption></figure>
+    ))}
+  </div>
+);
+
 function MobileScreen({ phoneRef }) {
   return (
     <main className="qrp-phone" ref={phoneRef}>
@@ -47,6 +56,7 @@ function MobileScreen({ phoneRef }) {
       <span className="qrp-island" aria-hidden="true" />
       <img className="qrp-logo" src={img('brand/logo')} alt="Moni Yo" />
       <p className="qrp-sub">Board game giáo dục tài chính cho bé 5–15 tuổi</p>
+      <SetBoxes className="qrp-m-boxes" />
       <QrCode />
       <UrlPill />
       <p className="qrp-hint">Mở Camera, hướng vào mã để ghé thăm</p>
@@ -63,9 +73,9 @@ function PcScreen() {
         <h1>Chơi thật vui,<br /><em>giỏi quản lý tiền</em></h1>
         <p>Board game giáo dục tài chính cho bé 5–15 tuổi</p>
         <ol className="qrp-steps">
-          {['Chọn nghề', 'Kiếm tiền', 'Xử lý tình huống', 'Mua đủ đồ vật!'].map(s => <li key={s}>{s}</li>)}
+          {['Kiếm tiền', 'Chi tiêu', 'Tiết kiệm', 'Đầu tư'].map(s => <li key={s}>{s}</li>)}
         </ol>
-        <img className="qrp-pc-kids" src={img('brand/kids-jump')} alt="Hai bạn nhỏ Moni Yo" />
+        <SetBoxes className="qrp-pc-boxes" />
       </section>
       <section className="qrp-pc-qr">
         <span className="qrp-scan">Quét mã để ghé thăm</span>

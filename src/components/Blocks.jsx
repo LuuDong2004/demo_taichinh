@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { REVIEWS, img, isSoon } from '../data';
 import { useShop } from '../lib/ShopContext';
-import { fmtDate, money } from '../lib/utils';
-import { Bell, Card, Chat, Cloud, Coin, Plus, Shield, Stars, Truck } from './Icons';
+import { fmtDate, money, priceText } from '../lib/utils';
+import { Arrow, Bell, Card, Chat, Clock, Cloud, Coin, Plus, Shield, Smile, Stars, Truck, Users } from './Icons';
 import { ProductThumb } from './ProductArt';
 
 export function ProductCard({ p }) {
@@ -13,18 +13,19 @@ export function ProductCard({ p }) {
     <article className={`card p-card reveal ${soon ? 'soon' : ''}`}>
       <Link to={`/san-pham/${p.id}`} className="thumb">
         {soon ? <span className="tag soon-tag">Sắp ra mắt</span> : p.badge && <span className="tag">{p.badge}</span>}
-        <span className="age">{p.age}</span>
+        {p.age && <span className="age">{p.age}</span>}
         <ProductThumb p={p} />
       </Link>
       <div className="body">
         <h3><Link to={`/san-pham/${p.id}`}>{p.name}</Link></h3>
         {soon
-          ? <div className="meta">Đang hoàn thiện thiết kế</div>
-          : <div className="meta"><Stars n={p.rating} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>}
+          ? <div className="meta">{p.line || 'Sắp mở bán'}</div>
+          : p.sold > 0 ? <div className="meta"><Stars n={p.rating} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</div>
+          : <div className="meta">{p.line || p.age}</div>}
         <div className="price-row">
           {soon
             ? <><div className="price soon-price">Sắp ra mắt</div><Link to={`/san-pham/${p.id}`} className="add-btn" aria-label={`Nhận tin khi ${p.name} ra mắt`}><Bell /></Link></>
-            : <><div className="price">{money(p.price)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
+            : <><div className="price">{priceText(p)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</div>
               <button className="add-btn" onClick={() => addToCart(p.id)} aria-label="Thêm vào giỏ"><Plus /></button></>}
         </div>
       </div>
@@ -40,18 +41,62 @@ export function NotifyForm({ product }) {
     const d = Object.fromEntries(new FormData(e.target));
     setMessages(m => [{ name: d.name, phone: d.contact, topic: 'Nhận tin sản phẩm', msg: `Báo khi ra mắt: ${product.name}`, date: new Date().toISOString().slice(0, 10) }, ...m]);
     e.target.reset();
-    toast('Đã đăng ký! Chúng tôi sẽ báo ngay khi sản phẩm ra mắt 🔔');
+    toast('Đã ghi nhận, Moni Yo sẽ báo bạn khi mở bán 🔔');
   };
   return (
     <form className="notify" onSubmit={submit}>
-      <b><Bell size={18} />Sản phẩm đang hoàn thiện thiết kế</b>
-      <p>Để lại thông tin, Moni Yo sẽ báo bạn ngay khi mở bán.</p>
+      <b><Bell size={18} />Sắp ra mắt</b>
+      <p>Để lại tên và số điện thoại, Moni Yo sẽ báo bạn khi bắt đầu bán.</p>
       <div className="notify-row">
         <input className="input" name="name" placeholder="Tên của bạn" required />
         <input className="input" name="contact" placeholder="Số điện thoại hoặc email" required />
         <button className="btn">Nhận tin</button>
       </div>
     </form>
+  );
+}
+
+// Thẻ giới thiệu lớn cho một bộ trò chơi (trang Sản phẩm, trang chủ)
+export function SetCard({ p, compact }) {
+  const { addToCart } = useShop();
+  const to = `/san-pham/${p.id}`;
+  const soon = isSoon(p);
+  return (
+    <article className={`set-card reveal ${compact ? 'compact' : ''}`} style={{ '--set': p.theme || 'var(--yellow)' }}>
+      <Link to={to} className="set-art" aria-label={p.name}>
+        <span className="set-no">Bộ {p.set}</span>
+        <img src={p.img} alt={p.name} loading="lazy" decoding="async" />
+      </Link>
+      <div className="set-body">
+        <span className="set-line">{p.line}</span>
+        <h3><Link to={to}>{p.name}</Link></h3>
+        <p>{p.short}</p>
+        <ul className="set-facts">
+          <li><Smile size={16} />{p.age}</li><li><Users size={16} />{p.players}</li><li><Clock size={16} />{p.time}</li>
+        </ul>
+        {!compact && p.learn && <ul className="set-learn">{p.learn.map(([h]) => <li key={h}>{h}</li>)}</ul>}
+        <div className="set-price">
+          <span className="price">{priceText(p)}{p.oldPrice ? <s>{money(p.oldPrice)}</s> : null}</span>
+          {soon ? <span className="soon-pill">Sắp ra mắt</span> : p.sold > 0 && <span className="set-rating"><Stars n={p.rating} size={14} /> {p.rating} · Đã bán {p.sold.toLocaleString('vi-VN')}</span>}
+        </div>
+        <div className="set-ctas">
+          {!soon && <button type="button" className="btn btn-sm btn-yellow" onClick={() => addToCart(p.id)}><Plus size={16} /> Thêm vào giỏ</button>}
+          <Link to={to} className={`btn btn-sm ${soon ? '' : 'btn-light'}`}>Xem chi tiết <Arrow size={16} /></Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// Bài báo bên ngoài: mở trang báo gốc ở tab mới
+export function PressCard({ a }) {
+  return (
+    <a className="press-card reveal" href={a.url} target="_blank" rel="noopener noreferrer">
+      <span className="press-src">{a.source}<small>{fmtDate(a.date)}</small></span>
+      <h3>{a.title}</h3>
+      <p>{a.excerpt}</p>
+      <span className="press-go">Đọc bài trên {a.source} <Arrow size={15} /></span>
+    </a>
   );
 }
 
@@ -69,10 +114,10 @@ export function BlogCard({ b }) {
 }
 
 const COMMITS = [
-  [Truck, 'Giao hàng toàn quốc', 'Miễn phí vận chuyển cho đơn từ 500.000đ, nhận hàng 2–4 ngày.'],
-  [Shield, 'Thiết kế cho trẻ', 'Nhân vật dễ thương, chữ to rõ, tình huống gần gũi với cuộc sống của bé.'],
-  [Card, 'Thanh toán đa dạng', 'COD, chuyển khoản, quét mã QR hoặc ví điện tử.'],
-  [Chat, 'Hỗ trợ 24/7', 'Đội ngũ tư vấn và trợ lý AI luôn sẵn sàng giải đáp.'],
+  [Truck, 'Giao toàn quốc', 'Đơn từ 500.000đ được miễn phí ship, thường nhận hàng sau 2–4 ngày.'],
+  [Shield, 'Làm cho trẻ em', 'Chữ to, hình rõ, tình huống lấy từ chuyện hằng ngày của bé.'],
+  [Card, 'Trả tiền dễ', 'Trả khi nhận hàng, chuyển khoản hoặc quét mã QR.'],
+  [Chat, 'Cần hỏi gì cứ nhắn', 'Nhắn fanpage, gửi email hoặc gọi hotline cho nhóm Moni Yo.'],
 ];
 
 export function CommitStrip() {
