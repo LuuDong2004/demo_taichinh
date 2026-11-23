@@ -16,6 +16,8 @@ export const ArrowLeft = icon(<path d="M19 12H5M11 5l-7 7 7 7" />, 16, 2.6);
 export const CartIcon = icon(<><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" /></>, 20, 2.2);
 export const Menu = icon(<path d="M3 6h18M3 12h18M3 18h18" />, 20, 2.4);
 export const X = icon(<path d="M6 6l12 12M18 6 6 18" />, 16, 2.6);
+export const Eye = icon(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></>, 20);
+export const EyeOff = icon(<><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.6 3.5M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18" /></>, 20);
 export const Check = icon(<path d="m5 12.5 4.5 4.5L19 7.5" />, 20, 2.8);
 export const Search = icon(<><circle cx="11" cy="11" r="7" /><path d="m20 20-3.6-3.6" /></>, 18, 2.2);
 export const Phone = icon(<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />, 24, 2.2);

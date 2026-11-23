@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Card, Chart, LogOut, Receipt } from '../components/Icons';
+import { Card, Chart, Eye, EyeOff, LogOut, Receipt } from '../components/Icons';
 import { useShop } from '../lib/ShopContext';
 import { fmtDate, money } from '../lib/utils';
 import Select from '../components/Select';
@@ -12,6 +12,7 @@ const STATUS_OPTS = Object.entries(ORDER_STATUS).map(([v, [l]]) => [v, l]);
 function Login() {
   const { setIsAdmin, toast } = useShop();
   const [busy, setBusy] = useState(false);
+  const [show, setShow] = useState(false);
   const submit = async e => {
     e.preventDefault();
     const pass = new FormData(e.target).get('p');
@@ -33,7 +34,15 @@ function Login() {
           <span className="logo-mark" style={{ margin: '0 auto 10px', width: 64, height: 64, fontSize: 26 }}>₫</span>
           <h3>Đăng nhập quản trị</h3>
         </div>
-        <div className="field" style={{ marginTop: 12 }}><label>Mật khẩu quản trị</label><input className="input" type="password" name="p" required autoComplete="current-password" /></div>
+        <div className="field" style={{ marginTop: 12 }}>
+          <label htmlFor="admin-pass">Mật khẩu quản trị</label>
+          <div className="pass-wrap">
+            <input className="input" id="admin-pass" type={show ? 'text' : 'password'} name="p" required autoComplete="current-password" />
+            <button type="button" className="pass-eye" onClick={() => setShow(s => !s)} aria-label={show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} aria-pressed={show} title={show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}>
+              {show ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
+        </div>
         <button className="btn btn-block" style={{ marginTop: 18 }} disabled={busy}>{busy ? 'Đang kiểm tra…' : 'Đăng nhập'}</button>
       </form>
     </div>

@@ -557,6 +557,13 @@ td .thumb-sm { width: 52px; height: 52px; object-fit: cover; border-radius: 8px;
 .modal { position: fixed; inset: 0; background: rgba(38,50,56,.5); z-index: 100; display: grid; place-items: center; padding: 16px; }
 .modal .panel { width: min(560px, 100%); max-height: calc(90vh / var(--z)); overflow: auto; }
 .login-box { max-width: 400px; margin: 80px auto; }
+.pass-wrap { position: relative; }
+.pass-wrap .input { padding-right: 52px; }
+.pass-eye { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 12px; background: none; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; }
+.pass-eye:hover { background: rgba(250,204,21,.18); color: var(--brown); }
+.pass-eye:focus-visible { outline: 2px solid var(--yellow-2); outline-offset: 1px; }
+/* Ẩn nút con mắt mặc định của Edge để không bị trùng 2 nút */
+.pass-wrap input::-ms-reveal, .pass-wrap input::-ms-clear { display: none; }
 
 /* ---------- Toast ---------- */
 .toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(120px); background: var(--brown); color: var(--on-ink); padding: 14px 24px; border-radius: 999px; font-weight: 600; z-index: 200; transition: transform .35s cubic-bezier(.2,1.4,.4,1); box-shadow: var(--shadow-lg); }
