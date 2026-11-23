@@ -62,14 +62,17 @@ const SCHEMA = [
 let client = null;
 let ready = null;
 
+const dbError = message => Object.assign(new Error(message), { status: 503 });
+
 async function connect() {
-  const url = process.env.DATABASE_URL;
+  // Tích hợp Neon trên Vercel thường tạo DATABASE_URL; một số cách nối khác chỉ tạo POSTGRES_URL
+  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (url) {
     const { neon } = await import('@neondatabase/serverless');
     const sql = neon(url);
     return { query: (text, params = []) => sql.query(text, params) };
   }
-  if (process.env.VERCEL) throw new Error('Chưa cấu hình DATABASE_URL trên Vercel');
+  if (process.env.VERCEL) throw dbError('Chưa kết nối database: thêm Neon Postgres (biến DATABASE_URL) trên Vercel rồi Redeploy');
   // Chỉ dùng khi chạy trên máy. Tên gói để trong biến để Vercel không đóng gói PGlite vào hàm API.
   const pkg = '@electric-sql/pglite';
   const { PGlite } = await import(/* @vite-ignore */ pkg);
@@ -85,7 +88,12 @@ export async function query(text, params) {
     ready = (async () => {
       client = await connect();
       for (const stmt of SCHEMA) await client.query(stmt);
-    })().catch(e => { ready = null; throw e; });
+    })().catch(e => {
+      ready = null;
+      // Lỗi cấu hình / không kết nối được → báo rõ cho trang quản trị (503) thay vì "Lỗi máy chủ" chung chung
+      console.error('[db]', e);
+      throw e.status ? e : dbError('Không kết nối được database, kiểm tra lại DATABASE_URL trên Vercel');
+    });
   }
   await ready;
   return client.query(text, params);

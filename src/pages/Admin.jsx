@@ -207,6 +207,16 @@ function Payments() {
 export default function Admin() {
   const { isAdmin, setIsAdmin } = useShop();
   const [tab, setTab] = useState('dash');
+  // Chiều cao thanh menu trên cùng thay đổi theo cỡ màn hình → đo thật để thanh bên admin nằm ngay dưới, không bị che
+  useEffect(() => {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    const set = () => document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
   if (!isAdmin) return <Login />;
 
   return (
@@ -214,7 +224,7 @@ export default function Admin() {
       <aside className="admin-side">
         <div className="logo-text">Moni Yo Admin</div>
         {TABS.map(([k, Icon, l]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}><Icon size={18} />{l}</button>)}
-        <button onClick={() => { adminPass.set(''); setIsAdmin(false); }}><LogOut />Đăng xuất</button>
+        <button className="logout" onClick={() => { adminPass.set(''); setIsAdmin(false); }}><LogOut />Đăng xuất</button>
       </aside>
       <div className="admin-main">
         {tab === 'dash' && <Dashboard />}
